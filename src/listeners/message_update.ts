@@ -1,10 +1,10 @@
 import { Effect, pipe } from 'effect';
-import { Awaitable, Client, Message } from 'discord.js';
-import { recordCreatedMsg, messageGuard } from '@tasks';
-import { EnvVariables } from '@services/env';
+import { Client, Message, PartialMessage } from 'discord.js';
 import { ChannelStoreRef, ChannelStoreService } from '@services/channel_store';
+import { EnvVariables } from '@services/env';
+import { messageGuard, recordUpdateMsg } from '@tasks';
 
-export const messageCreateListener = (
+export const messageUpdateListener = (
   client: Client<true>,
   channelStoreRef: ChannelStoreRef,
   env: EnvVariables
@@ -14,11 +14,11 @@ export const messageCreateListener = (
     ChannelStoreService.of(channelStoreRef)
   );
 
-  return (msg: Message<boolean>): Awaitable<void> => {
+  return (oldMsg: Message<boolean> | PartialMessage, newMsg: Message<boolean> | PartialMessage) => {
     const program = pipe(
-      Effect.succeed(msg),
+      Effect.succeed(newMsg),
       Effect.tap((msg) => messageGuard(msg, client)),
-      Effect.flatMap(recordCreatedMsg(env)(client))
+      Effect.flatMap((msg) => recordUpdateMsg(env)(client)(oldMsg, msg))
     ).pipe(provideChannelStoreRef);
 
     Effect.runPromise(program);

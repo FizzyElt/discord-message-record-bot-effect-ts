@@ -10,15 +10,15 @@
 
 - record message
   - [X] new message
-  - [ ] update message
-  - [ ] delete message
+  - [X] update message
+  - [X] delete message
 - [ ] discord slash command operations
   - [ ] add channels
   - [ ] remove channels
   - [ ] list channels
   - [ ] ban user
   - [ ] unban user
-- [ ] discord invite link guard
+- [X] discord invite link guard
 - [ ] timeout member
   - [ ] voting flow
 - [ ] subscribe/unsubscribe role
