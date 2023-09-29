@@ -12,9 +12,9 @@
   - [X] new message
   - [X] update message
   - [X] delete message
-- [ ] discord slash command operations
-  - [ ] add channels
-  - [ ] remove channels
+- discord slash command operations
+  - [X] add channels
+  - [X] remove channels
   - [ ] list channels
   - [ ] ban user
   - [ ] unban user

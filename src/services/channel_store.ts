@@ -9,10 +9,38 @@ export const ChannelStoreService = Context.Tag<ChannelStoreRef>();
 
 export const getChannelStoreRef = ChannelStoreService.pipe(Effect.map(identity));
 
-export const getChannelStore = ChannelStoreService.pipe(Effect.flatMap((ref) => Ref.get(ref)));
+export const getChannelStore = ChannelStoreService.pipe(Effect.flatMap(Ref.get));
 
 export const hasChannel = (channelId: string) =>
   pipe(getChannelStore, Effect.map(MutableHashMap.has(channelId)));
+
+export const addChannel = (channelInfo: { id: string; name: string }) =>
+  ChannelStoreService.pipe(
+    Effect.flatMap(Ref.update(MutableHashMap.set(channelInfo.id, channelInfo.name)))
+  );
+
+export const addChannels = (list: Array<{ id: string; name: string }>) =>
+  ChannelStoreService.pipe(
+    Effect.flatMap(
+      Ref.update((store) => {
+        list.forEach(({ id, name }) => MutableHashMap.set(store, id, name));
+        return store;
+      })
+    )
+  );
+
+export const removeChannel = (id: string) =>
+  ChannelStoreService.pipe(Effect.flatMap(Ref.update(MutableHashMap.remove(id))));
+
+export const removeChannels = (ids: Array<string>) =>
+  ChannelStoreService.pipe(
+    Effect.flatMap(
+      Ref.update((store) => {
+        ids.forEach((id) => MutableHashMap.remove(store, id));
+        return store;
+      })
+    )
+  );
 
 export const initialChannelStore = pipe(
   getEnvService,

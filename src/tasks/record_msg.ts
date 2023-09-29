@@ -1,15 +1,13 @@
-import { Message, Client, PartialMessage, GuildTextBasedChannel } from 'discord.js';
+import { Message, Client, PartialMessage } from 'discord.js';
 import { pipe, Effect } from 'effect';
 import { EnvVariables } from '@services/env';
-import { getTextChannelByClient } from '@utils/channel';
+import { getTextChannelByClient, isTextChannel } from '@utils/channel';
 import { format } from 'date-fns';
 
 const getRecordMsgString =
   (type: 'edit' | 'create' | 'delete') =>
   (msg: Message<boolean> | PartialMessage): string => {
-    const channelName = msg.channel.isTextBased()
-      ? (msg.channel as GuildTextBasedChannel)
-      : 'Other';
+    const channelName = isTextChannel(msg.channel) ? msg.channel.name : 'Other';
 
     const userName = msg.author?.username || '';
     const typeString = {

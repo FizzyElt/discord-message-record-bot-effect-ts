@@ -4,9 +4,9 @@ import { clientContext, loginClient, provideClientService } from '@services/clie
 import {
   initialChannelStore,
   ChannelStoreService,
-  getChannelStore,
   getChannelStoreRef,
 } from '@services/channel_store';
+import { createVotingStore } from '@services/voting_store';
 import {
   ready,
   messageCreateListener,
@@ -19,7 +19,8 @@ const program = pipe(
   Effect.bind('client', () => clientContext),
   Effect.bind('env', () => getEnvService),
   Effect.bind('channelStoreRef', () => getChannelStoreRef),
-  Effect.map(({ client, env, channelStoreRef }) =>
+  Effect.bind('votingStoreRef', () => createVotingStore()),
+  Effect.map(({ client, env, channelStoreRef, votingStoreRef }) =>
     client
       .on('ready', ready)
       .on('messageCreate', messageCreateListener(client, channelStoreRef, env))
