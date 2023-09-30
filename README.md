@@ -21,4 +21,4 @@
 - [X] discord invite link guard
 - [ ] timeout member
   - [ ] voting flow
-- [ ] subscribe/unsubscribe role
+- [X] subscribe/unsubscribe role
