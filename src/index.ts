@@ -23,9 +23,9 @@ const program = pipe(
   Effect.map(({ client, env, channelStoreRef, votingStoreRef }) =>
     client
       .on('ready', ready)
-      .on('messageCreate', messageCreateListener(client, channelStoreRef, env))
-      .on('messageDelete', messageDeleteListener(client, channelStoreRef, env))
-      .on('messageUpdate', messageUpdateListener(client, channelStoreRef, env))
+      .on('messageCreate', messageCreateListener(client, env, channelStoreRef))
+      .on('messageDelete', messageDeleteListener(client, env, channelStoreRef))
+      .on('messageUpdate', messageUpdateListener(client, env, channelStoreRef))
   ),
   Effect.flatMap(loginClient)
 );

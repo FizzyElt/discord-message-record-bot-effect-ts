@@ -1,29 +1,33 @@
 import { Message, Client, PartialMessage } from 'discord.js';
-import { pipe, Effect } from 'effect';
+import { pipe, Effect, Equal } from 'effect';
 import { EnvVariables } from '@services/env';
 import { getTextChannelByClient, isTextChannel } from '@utils/channel';
 import { format } from 'date-fns';
 
-const getRecordMsgString =
-  (type: 'edit' | 'create' | 'delete') =>
-  (msg: Message<boolean> | PartialMessage): string => {
+const getRecordMsgString = (type: 'edit' | 'create' | 'delete') => {
+  const typeString = Equal.equals(type, 'edit')
+    ? '**Edit**'
+    : Equal.equals(type, 'delete')
+    ? '**Delete**'
+    : '';
+
+  return (msg: Message<boolean> | PartialMessage): string => {
     const channelName = isTextChannel(msg.channel) ? msg.channel.name : 'Other';
 
     const userName = msg.author?.username || '';
-    const typeString = {
-      edit: '**Edit**',
-      delete: '**Delete**',
-      create: '',
-    };
 
     return [
-      `${channelName} **[Created：${format(msg.createdAt, 'yyyy/MM/dd HH:mm')}]** ${userName} ${
-        typeString[type]
-      }：`,
+      `${channelName} **[Created：${format(
+        msg.createdAt,
+        'yyyy/MM/dd HH:mm'
+      )}]** ${userName} ${typeString}：`,
       msg.content,
       '------------------------------------',
     ].join('\n');
   };
+};
+
+// ======================================================
 
 const getCreatedMsgString = getRecordMsgString('create');
 

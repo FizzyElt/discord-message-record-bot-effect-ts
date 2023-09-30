@@ -6,8 +6,8 @@ import { ChannelStoreRef, ChannelStoreService } from '@services/channel_store';
 
 export const messageCreateListener = (
   client: Client<true>,
-  channelStoreRef: ChannelStoreRef,
-  env: EnvVariables
+  env: EnvVariables,
+  channelStoreRef: ChannelStoreRef
 ) => {
   const provideChannelStoreRef = Effect.provideService(
     ChannelStoreService,

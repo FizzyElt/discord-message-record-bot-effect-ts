@@ -6,8 +6,8 @@ import { messageGuard, recordUpdateMsg } from '@tasks';
 
 export const messageUpdateListener = (
   client: Client<true>,
-  channelStoreRef: ChannelStoreRef,
-  env: EnvVariables
+  env: EnvVariables,
+  channelStoreRef: ChannelStoreRef
 ) => {
   const provideChannelStoreRef = Effect.provideService(
     ChannelStoreService,
