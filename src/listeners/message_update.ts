@@ -18,7 +18,8 @@ export const messageUpdateListener = (
     const program = pipe(
       Effect.succeed(newMsg),
       Effect.tap((msg) => messageGuard(msg, client)),
-      Effect.flatMap((msg) => recordUpdateMsg(env)(client)(oldMsg, msg))
+      Effect.flatMap((msg) => recordUpdateMsg(env)(client)(oldMsg, msg)),
+      Effect.orElse(() => Effect.succeed(newMsg))
     ).pipe(provideChannelStoreRef);
 
     Effect.runPromise(program);

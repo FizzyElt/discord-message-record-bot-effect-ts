@@ -15,7 +15,7 @@
 - discord slash command operations
   - [X] add channels
   - [X] remove channels
-  - [ ] list channels
+  - [X] list channels
   - [ ] ban user
   - [ ] unban user
 - [X] discord invite link guard

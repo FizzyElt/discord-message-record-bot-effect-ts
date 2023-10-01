@@ -4,10 +4,9 @@ import {
   GuildTextBasedChannel,
   CategoryChannel,
   ChannelType,
-  CategoryChildChannel,
   TextChannel,
 } from 'discord.js';
-import { Option, Effect, pipe, Equal, identity, ReadonlyArray, Struct } from 'effect';
+import { Option, pipe, Equal, ReadonlyArray } from 'effect';
 
 export const isTextChannel = (channel: Channel): channel is GuildTextBasedChannel =>
   Equal.equals(channel.type, ChannelType.GuildText);

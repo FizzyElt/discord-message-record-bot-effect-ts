@@ -1,4 +1,4 @@
-import { Effect, Console, pipe } from 'effect';
+import { Effect, pipe } from 'effect';
 import { provideEnvService, getEnvService } from '@services/env';
 import { clientContext, loginClient, provideClientService } from '@services/client';
 import {
@@ -12,6 +12,7 @@ import {
   messageCreateListener,
   messageDeleteListener,
   messageUpdateListener,
+  interactionCreate,
 } from '@listeners';
 
 const program = pipe(
@@ -26,6 +27,7 @@ const program = pipe(
       .on('messageCreate', messageCreateListener(client, env, channelStoreRef))
       .on('messageDelete', messageDeleteListener(client, env, channelStoreRef))
       .on('messageUpdate', messageUpdateListener(client, env, channelStoreRef))
+      .on('interactionCreate', interactionCreate(client, env, votingStoreRef, channelStoreRef))
   ),
   Effect.flatMap(loginClient)
 );

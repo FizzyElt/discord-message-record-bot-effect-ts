@@ -1,4 +1,4 @@
-import { Interaction, CacheType, CommandInteraction, BaseInteraction } from 'discord.js';
+import { CacheType, CommandInteraction, BaseInteraction } from 'discord.js';
 
 export const isCommandInteraction = (
   interaction: BaseInteraction<CacheType>

@@ -1,4 +1,4 @@
-import { Context, Effect, Ref, identity, pipe } from 'effect';
+import { Context, Effect, pipe } from 'effect';
 import { Client, GatewayIntentBits } from 'discord.js';
 import { getEnvService } from '@services/env';
 

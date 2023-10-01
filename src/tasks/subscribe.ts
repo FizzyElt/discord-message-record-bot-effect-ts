@@ -1,11 +1,7 @@
-import {
-  CommandInteraction,
-  GuildMember,
-  GuildMemberManager,
-  MessageMentions,
-  RoleResolvable,
-} from 'discord.js';
+import { CommandInteraction, GuildMember, RoleResolvable } from 'discord.js';
 import { Effect, pipe } from 'effect';
+
+import { findUserFromMembers } from '@utils/member';
 
 const addRoleToMember = (roleId: string) => (member: GuildMember) =>
   Effect.tryPromise(() => member.roles.add(roleId));
@@ -13,23 +9,13 @@ const addRoleToMember = (roleId: string) => (member: GuildMember) =>
 const removeRoleFromMember = (roleId: RoleResolvable) => (member: GuildMember) =>
   Effect.tryPromise(() => member.roles.remove(roleId));
 
-const findUserByMembers = (idOrMention: string) => (members: GuildMemberManager) => {
-  if (MessageMentions.UsersPattern.test(idOrMention)) {
-    return pipe(MessageMentions.UsersPattern.exec(idOrMention)?.at(1) || '', (id) =>
-      Effect.tryPromise(() => members.fetch(id))
-    );
-  }
-
-  return Effect.tryPromise(() => members.fetch(idOrMention));
-};
-
 export const subscribe = (roleId: string) => (interaction: CommandInteraction) => {
   const userId = interaction.user.id;
 
   return pipe(
     Effect.fromNullable(interaction.guild),
     Effect.tap((guild) =>
-      pipe(guild.members, findUserByMembers(userId), Effect.flatMap(addRoleToMember(roleId)))
+      pipe(guild.members, findUserFromMembers(userId), Effect.flatMap(addRoleToMember(roleId)))
     ),
     Effect.flatMap((guild) => Effect.tryPromise(() => guild.roles.fetch(roleId))),
     Effect.flatMap((roleInfo) =>
@@ -49,7 +35,7 @@ export const unsubscribe = (roleId: string) => (interaction: CommandInteraction)
   return pipe(
     Effect.fromNullable(interaction.guild),
     Effect.tap((guild) =>
-      pipe(guild.members, findUserByMembers(userId), Effect.flatMap(removeRoleFromMember(roleId)))
+      pipe(guild.members, findUserFromMembers(userId), Effect.flatMap(removeRoleFromMember(roleId)))
     ),
     Effect.flatMap((guild) => Effect.tryPromise(() => guild.roles.fetch(roleId))),
     Effect.flatMap((roleInfo) =>

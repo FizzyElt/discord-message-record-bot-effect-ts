@@ -18,9 +18,10 @@ export const messageDeleteListener = (
     const program = pipe(
       Effect.succeed(msg),
       Effect.tap((msg) => messageGuard(msg, client)),
-      Effect.flatMap(recordDeleteMsg(env)(client))
-    );
+      Effect.flatMap(recordDeleteMsg(env)(client)),
+      Effect.orElse(() => Effect.succeed(msg))
+    ).pipe(provideChannelStoreRef);
 
-    Effect.runPromise(program.pipe(provideChannelStoreRef));
+    Effect.runPromise(program);
   };
 };

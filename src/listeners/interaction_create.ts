@@ -10,10 +10,18 @@ import {
 import { isCommandInteraction } from '@utils/interaction';
 import { VotingStoreRef, VotingStoreService } from '@services/voting_store';
 import { ChannelStoreRef, ChannelStoreService } from '@services/channel_store';
-import { EnvVariables } from '@services/env';
+import { TimeoutInfo, provideTimeoutInfoService } from '@services/timeout';
+import { EnvVariables, provideEnvService } from '@services/env';
 
 import { CommandName } from '@slashCommand/command';
-import { addChannelFlow, removeChannelFlow, listChannels, subscribe, unsubscribe } from '@tasks';
+import {
+  addChannelFlow,
+  removeChannelFlow,
+  listChannels,
+  subscribe,
+  unsubscribe,
+  banUserFlow,
+} from '@tasks';
 import { Effect, pipe } from 'effect';
 
 export function interactionCreate(
@@ -35,12 +43,16 @@ export function interactionCreate(
     if (!isCommandInteraction(interaction)) {
       return;
     }
-
     const program = pipe(
       interaction,
       commandOperation(client, env),
-      Effect.orElseFail(() => 'reply error')
-    ).pipe(provideChannelStoreRef, provideVotingStoreRef);
+      Effect.orElse(() => Effect.succeed('reply error'))
+    ).pipe(
+      provideChannelStoreRef,
+      provideVotingStoreRef,
+      provideTimeoutInfoService,
+      provideEnvService
+    );
 
     Effect.runPromise(program);
   };
@@ -49,10 +61,15 @@ export function interactionCreate(
 function commandOperation(client: Client<true>, env: EnvVariables) {
   const addChannel = addChannelFlow(client);
   const removeChannel = removeChannelFlow(client);
+  const banUser = banUserFlow(client, env);
 
   return (
     interaction: CommandInteraction
-  ): Effect.Effect<ChannelStoreRef, unknown, Message<boolean> | InteractionResponse> => {
+  ): Effect.Effect<
+    ChannelStoreRef | TimeoutInfo[] | VotingStoreRef | EnvVariables,
+    unknown,
+    Message<boolean> | InteractionResponse<boolean>
+  > => {
     switch (interaction.commandName) {
       case CommandName.add_channels:
         return addChannel(interaction);
@@ -60,8 +77,8 @@ function commandOperation(client: Client<true>, env: EnvVariables) {
         return removeChannel(interaction);
       case CommandName.channel_list:
         return listChannels(interaction);
-      // case CommandName.ban_user:
-      //   return removeChannel(interaction);
+      case CommandName.ban_user:
+        return banUser(interaction);
       // case CommandName.timeout_info:
       //   return removeChannel(interaction);
       case CommandName.subscribe:
