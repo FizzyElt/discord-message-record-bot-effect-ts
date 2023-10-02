@@ -1,7 +1,7 @@
 import { Message, Client, PartialMessage } from 'discord.js';
 import { pipe, Effect, Equal } from 'effect';
 import { EnvVariables } from '@services/env';
-import { getTextChannelByClient, isTextChannel } from '@utils/channel';
+import { getTextChannelByClient, isTextChannel, isPublicThreadChannel } from '@utils/channel';
 import { format } from 'date-fns';
 
 const getRecordMsgString = (type: 'edit' | 'create' | 'delete') => {
@@ -12,7 +12,8 @@ const getRecordMsgString = (type: 'edit' | 'create' | 'delete') => {
     : '';
 
   return (msg: Message<boolean> | PartialMessage): string => {
-    const channelName = isTextChannel(msg.channel) ? msg.channel.name : 'Other';
+    const channelName =
+      isTextChannel(msg.channel) || isPublicThreadChannel(msg.channel) ? msg.channel.name : 'Other';
 
     const userName = msg.author?.username || '';
 

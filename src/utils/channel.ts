@@ -5,11 +5,15 @@ import {
   CategoryChannel,
   ChannelType,
   TextChannel,
+  PublicThreadChannel,
 } from 'discord.js';
 import { Option, pipe, Equal, ReadonlyArray } from 'effect';
 
 export const isTextChannel = (channel: Channel): channel is GuildTextBasedChannel =>
   Equal.equals(channel.type, ChannelType.GuildText);
+
+export const isPublicThreadChannel = (channel: Channel): channel is PublicThreadChannel =>
+  Equal.equals(channel.type, ChannelType.PublicThread);
 
 export const isCategoryChannel = (channel: Channel): channel is CategoryChannel =>
   Equal.equals(channel.type, ChannelType.GuildCategory);
