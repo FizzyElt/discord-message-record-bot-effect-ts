@@ -1,7 +1,7 @@
-import { ActivityType, Client } from 'discord.js';
+import { ActivityType, Client } from "discord.js";
 
 export const ready = (client: Client<true>) => {
-  client.user.setActivity('你的py', { type: ActivityType.Watching });
+	client.user.setActivity("你的py", { type: ActivityType.Watching });
 
-  console.log('ws ready');
+	console.log("ws ready");
 };
