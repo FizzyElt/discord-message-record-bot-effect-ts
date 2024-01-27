@@ -1,6 +1,6 @@
 import { Effect, pipe } from "effect";
 import { Awaitable, Client, Message } from "discord.js";
-import { recordCreatedMsg, messageGuard } from "@tasks";
+import { recordCreatedMsg, messageGuard, twitterRewrite } from "@tasks";
 import { EnvVariables } from "@services/env";
 import { ChannelStoreRef, ChannelStoreService } from "@services/channel_store";
 
@@ -18,6 +18,7 @@ export const messageCreateListener = (
 		const program = pipe(
 			Effect.succeed(msg),
 			Effect.tap((msg) => messageGuard(msg, client)),
+			// Effect.tap(twitterRewrite),
 			Effect.flatMap(recordCreatedMsg(env)(client)),
 			Effect.orElse(() => Effect.succeed(msg)),
 		).pipe(provideChannelStoreRef);
