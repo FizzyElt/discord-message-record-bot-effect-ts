@@ -18,7 +18,7 @@ export const messageCreateListener = (
 		const program = pipe(
 			Effect.succeed(msg),
 			Effect.tap((msg) => messageGuard(msg, client)),
-			// Effect.tap(twitterRewrite),
+			Effect.tap(twitterRewrite),
 			Effect.flatMap(recordCreatedMsg(env)(client)),
 			Effect.orElse(() => Effect.succeed(msg)),
 		).pipe(provideChannelStoreRef);
