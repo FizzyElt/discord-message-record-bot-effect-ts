@@ -11,7 +11,7 @@ export const messageCreateListener = (
 ) => {
 	const provideChannelStoreRef = Effect.provideService(
 		ChannelStoreService,
-		ChannelStoreService.of(channelStoreRef),
+		channelStoreRef,
 	);
 
 	return (msg: Message<boolean>): Awaitable<void> => {

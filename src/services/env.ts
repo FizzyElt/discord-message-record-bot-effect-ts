@@ -15,21 +15,21 @@ export interface EnvVariables {
 	timezone: string;
 }
 
-export const EnvContext = Context.Tag<EnvVariables>();
+export class EnvContext extends Context.Tag("EnvContext")<
+	EnvContext,
+	EnvVariables
+>() {}
 
 export const getEnvService = EnvContext.pipe(Effect.map(identity));
 
-export const provideEnvService = Effect.provideService(
-	EnvContext,
-	EnvContext.of({
-		token: process.env.TOKEN || "",
-		bot_sending_channel_id: process.env.BOT_SENDING_CHANNEL_ID || "",
-		bot_sending_channel_name: process.env.BOT_SENDING_CHANNEL_NAME || "",
-		log_channel_id: process.env.LOG_CHANNEL_ID || "",
-		admin_role_id: process.env.ADMIN_ROLE_ID || "",
-		client_id: process.env.CLIENT_ID || "",
-		guild_id: process.env.GUILD_ID || "",
-		vote_role_id: process.env.VOTE_ROLE_ID || "",
-		timezone: process.env.TIMEZONE || "",
-	}),
-);
+export const provideEnvService = Effect.provideService(EnvContext, {
+	token: process.env.TOKEN || "",
+	bot_sending_channel_id: process.env.BOT_SENDING_CHANNEL_ID || "",
+	bot_sending_channel_name: process.env.BOT_SENDING_CHANNEL_NAME || "",
+	log_channel_id: process.env.LOG_CHANNEL_ID || "",
+	admin_role_id: process.env.ADMIN_ROLE_ID || "",
+	client_id: process.env.CLIENT_ID || "",
+	guild_id: process.env.GUILD_ID || "",
+	vote_role_id: process.env.VOTE_ROLE_ID || "",
+	timezone: process.env.TIMEZONE || "",
+});

@@ -10,8 +10,12 @@ import {
 import { isCommandInteraction } from "@utils/interaction";
 import { VotingStoreRef, VotingStoreService } from "@services/voting_store";
 import { ChannelStoreRef, ChannelStoreService } from "@services/channel_store";
-import { TimeoutInfo, provideTimeoutInfoService } from "@services/timeout";
-import { EnvVariables, provideEnvService } from "@services/env";
+import {
+	TimeoutInfo,
+	provideTimeoutInfoService,
+	TimeoutInfoContext,
+} from "@services/timeout";
+import { EnvVariables, provideEnvService, EnvContext } from "@services/env";
 
 import { CommandName } from "@slashCommand/command";
 import {
@@ -32,11 +36,11 @@ export function interactionCreate(
 ) {
 	const provideChannelStoreRef = Effect.provideService(
 		ChannelStoreService,
-		ChannelStoreService.of(channelStoreRef),
+		channelStoreRef,
 	);
 	const provideVotingStoreRef = Effect.provideService(
 		VotingStoreService,
-		VotingStoreService.of(votingStoreRef),
+		votingStoreRef,
 	);
 
 	return (interaction: Interaction<CacheType>): Awaitable<void> => {
@@ -66,9 +70,9 @@ function commandOperation(client: Client<true>, env: EnvVariables) {
 	return (
 		interaction: CommandInteraction,
 	): Effect.Effect<
-		ChannelStoreRef | TimeoutInfo[] | VotingStoreRef | EnvVariables,
+		Message<boolean> | InteractionResponse<boolean>,
 		unknown,
-		Message<boolean> | InteractionResponse<boolean>
+		ChannelStoreService | TimeoutInfoContext | VotingStoreService | EnvContext
 	> => {
 		switch (interaction.commandName) {
 			case CommandName.add_channels:

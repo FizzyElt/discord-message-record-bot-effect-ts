@@ -11,7 +11,7 @@ export const messageUpdateListener = (
 ) => {
 	const provideChannelStoreRef = Effect.provideService(
 		ChannelStoreService,
-		ChannelStoreService.of(channelStoreRef),
+		channelStoreRef,
 	);
 
 	return (

@@ -2,7 +2,10 @@ import { Context, Effect, pipe } from "effect";
 import { Client, GatewayIntentBits } from "discord.js";
 import { getEnvService } from "@services/env";
 
-export const ClientService = Context.Tag<Client<true>>();
+export class ClientService extends Context.Tag("ClientService")<
+	ClientService,
+	Client<true>
+>() {}
 
 export const clientContext = ClientService.pipe(
 	Effect.map((client) => client as Client<true>),

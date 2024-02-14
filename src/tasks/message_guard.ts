@@ -1,13 +1,17 @@
 import { Client, Message, PartialMessage } from "discord.js";
 import { Effect, Equal, Boolean, pipe } from "effect";
 import { inviteLinkGuard } from "./invite_link_guard";
-import { ChannelStoreRef, hasChannel } from "@services/channel_store";
+import { hasChannel, ChannelStoreService } from "@services/channel_store";
 
 interface MessageGuard {
 	(
 		msg: Message<boolean> | PartialMessage,
 		client: Client<true>,
-	): Effect.Effect<ChannelStoreRef, string, Message<boolean> | PartialMessage>;
+	): Effect.Effect<
+		Message<boolean> | PartialMessage,
+		string,
+		ChannelStoreService
+	>;
 }
 
 export const messageGuard: MessageGuard = (msg, client) => {

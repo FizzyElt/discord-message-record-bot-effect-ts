@@ -14,7 +14,10 @@ export type ChannelStore = MutableHashMap.MutableHashMap<string, string>;
 
 export interface ChannelStoreRef extends Ref.Ref<ChannelStore> {}
 
-export const ChannelStoreService = Context.Tag<ChannelStoreRef>();
+export class ChannelStoreService extends Context.Tag("ChannelStoreService")<
+	ChannelStoreService,
+	ChannelStoreRef
+>() {}
 
 export const getChannelStoreRef = ChannelStoreService.pipe(
 	Effect.map(identity),

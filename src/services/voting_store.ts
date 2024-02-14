@@ -1,10 +1,13 @@
-import { Context, Effect, MutableHashSet, Ref } from "effect";
+import { Effect, MutableHashSet, Context, Ref } from "effect";
 
 export type VotingStore = MutableHashSet.MutableHashSet<string>;
 
 export interface VotingStoreRef extends Ref.Ref<VotingStore> {}
 
-export const VotingStoreService = Context.Tag<VotingStoreRef>();
+export class VotingStoreService extends Context.Tag("VotingStoreService")<
+	VotingStoreService,
+	VotingStoreRef
+>() {}
 
 export const getVotingStore = VotingStoreService.pipe(Effect.flatMap(Ref.get));
 

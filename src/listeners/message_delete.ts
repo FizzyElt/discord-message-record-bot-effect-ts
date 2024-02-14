@@ -11,7 +11,7 @@ export const messageDeleteListener = (
 ) => {
 	const provideChannelStoreRef = Effect.provideService(
 		ChannelStoreService,
-		ChannelStoreService.of(channelStoreRef),
+		channelStoreRef,
 	);
 
 	return (msg: Message<boolean> | PartialMessage): Awaitable<void> => {

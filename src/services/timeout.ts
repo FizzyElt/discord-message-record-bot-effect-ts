@@ -52,7 +52,10 @@ export const choiceList: Array<TimeoutInfo> = [
 	},
 ];
 
-export const TimeoutInfoContext = Context.Tag<Array<TimeoutInfo>>();
+export class TimeoutInfoContext extends Context.Tag("TimeoutInfo")<
+	TimeoutInfoContext,
+	Array<TimeoutInfo>
+>() {}
 
 export const getTimeoutInfoList = TimeoutInfoContext.pipe(Effect.map(identity));
 
@@ -65,5 +68,5 @@ export const getTimeoutInfoByKey = (key: string) =>
 
 export const provideTimeoutInfoService = Effect.provideService(
 	TimeoutInfoContext,
-	TimeoutInfoContext.of(choiceList),
+	choiceList,
 );
