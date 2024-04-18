@@ -18,15 +18,15 @@
   "devDependencies": {
     "@biomejs/biome": "1.5.1",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@types/node": "^20.11.17",
+    "@types/node": "^20.12.7",
     "date-fns": "^2.30.0",
-    "date-fns-tz": "^2.0.0",
+    "date-fns-tz": "^2.0.1",
     "discord.js": "^14.14.1",
-    "dotenv": "^16.4.4",
-    "effect": "^2.3.5",
+    "dotenv": "^16.4.5",
+    "effect": "^3.0.1",
     "ts-node": "^10.9.2"
   }
 }
