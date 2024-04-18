@@ -1,9 +1,24 @@
-import { pipe, Effect, Equal } from 'effect';
+import { pipe, Effect, Equal, Array as ReadonlyArray, String } from 'effect';
 import { getTextChannelByClient, isTextChannel, isPublicThreadChannel } from '@utils/channel';
 import { format } from 'date-fns';
 
 import type { Message, Client, PartialMessage } from 'discord.js';
 import type { EnvVariables } from '@services/env';
+
+const createTimeStringByType = (type: 'edit' | 'create' | 'delete') => {
+  if (Equal.equals(type, 'edit')) {
+    return (msg: Message<boolean> | PartialMessage) =>
+      `**[Edited：${format(msg.editedAt || new Date(), 'yyyy/MM/dd HH:mm')}]**`;
+  }
+
+  if (Equal.equals(type, 'delete')) {
+    return (_msg: Message<boolean> | PartialMessage) =>
+      `**[Deleted：${format(new Date(), 'yyyy/MM/dd HH:mm')}]**`;
+  }
+
+  return (msg: Message<boolean> | PartialMessage) =>
+    `**[Created：${format(msg.createdAt, 'yyyy/MM/dd HH:mm')}]**`;
+};
 
 const getRecordMsgString = (type: 'edit' | 'create' | 'delete') => {
   const typeString = Equal.equals(type, 'edit')
@@ -12,20 +27,27 @@ const getRecordMsgString = (type: 'edit' | 'create' | 'delete') => {
     ? '**Delete**'
     : '';
 
+  const createTimeString = createTimeStringByType(type);
+
   return (msg: Message<boolean> | PartialMessage): string => {
     const channelName =
       isTextChannel(msg.channel) || isPublicThreadChannel(msg.channel) ? msg.channel.name : 'Other';
 
-    const userName = msg.author?.username || '';
+    const userName = msg.member?.displayName
+      ? `**${msg.member?.displayName}** (${msg.author?.username || ''})`
+      : `**${msg.author?.username || ''}**`;
 
-    return [
-      `${channelName} **[Created：${format(
-        msg.createdAt,
-        'yyyy/MM/dd HH:mm'
-      )}]** ${userName} ${typeString}：`,
-      msg.content,
-      '------------------------------------',
-    ].join('\n');
+    const timeString = createTimeString(msg);
+
+    return pipe(
+      [
+        `${userName} ${typeString}`,
+        `${channelName} ${timeString}：`,
+        String.isString(msg.content) ? msg.content : '',
+        '------------------------------------',
+      ],
+      ReadonlyArray.join('\n')
+    );
   };
 };
 
