@@ -1,5 +1,5 @@
-import { Effect, pipe } from 'effect';
-import { CommandName } from '@slashCommand/command';
+import { Effect, pipe } from "effect";
+import { CommandName } from "@slashCommand/command";
 
 import {
   addChannelFlow,
@@ -8,12 +8,12 @@ import {
   subscribe,
   unsubscribe,
   banUserFlow,
-} from '@tasks';
-import { isCommandInteraction } from '@utils/interaction';
-import { VotingStoreService } from '@services/voting_store';
-import { ChannelStoreService } from '@services/channel_store';
-import { provideTimeoutInfoService } from '@services/timeout';
-import { provideEnvService } from '@services/env';
+} from "@tasks";
+import { isCommandInteraction } from "@utils/interaction";
+import { VotingStoreService } from "@services/voting_store";
+import { ChannelStoreService } from "@services/channel_store";
+import { provideTimeoutInfoService } from "@services/timeout";
+import { provideEnvService } from "@services/env";
 
 import type {
   CacheType,
@@ -23,20 +23,26 @@ import type {
   CommandInteraction,
   Message,
   InteractionResponse,
-} from 'discord.js';
-import type { VotingStoreRef } from '@services/voting_store';
-import type { ChannelStoreRef } from '@services/channel_store';
-import type { TimeoutInfoContext } from '@services/timeout';
-import type { EnvVariables, EnvContext } from '@services/env';
+} from "discord.js";
+import type { VotingStoreRef } from "@services/voting_store";
+import type { ChannelStoreRef } from "@services/channel_store";
+import type { TimeoutInfoContext } from "@services/timeout";
+import type { EnvVariables, EnvContext } from "@services/env";
 
 export function interactionCreate(
   client: Client<true>,
   env: EnvVariables,
   votingStoreRef: VotingStoreRef,
-  channelStoreRef: ChannelStoreRef
+  channelStoreRef: ChannelStoreRef,
 ) {
-  const provideChannelStoreRef = Effect.provideService(ChannelStoreService, channelStoreRef);
-  const provideVotingStoreRef = Effect.provideService(VotingStoreService, votingStoreRef);
+  const provideChannelStoreRef = Effect.provideService(
+    ChannelStoreService,
+    channelStoreRef,
+  );
+  const provideVotingStoreRef = Effect.provideService(
+    VotingStoreService,
+    votingStoreRef,
+  );
 
   return (interaction: Interaction<CacheType>): Awaitable<void> => {
     if (!isCommandInteraction(interaction)) {
@@ -45,12 +51,12 @@ export function interactionCreate(
     const program = pipe(
       interaction,
       commandOperation(client, env),
-      Effect.orElse(() => Effect.succeed('reply error'))
+      Effect.orElse(() => Effect.succeed("reply error")),
     ).pipe(
       provideChannelStoreRef,
       provideVotingStoreRef,
       provideTimeoutInfoService,
-      provideEnvService
+      provideEnvService,
     );
 
     Effect.runPromise(program);
@@ -63,7 +69,7 @@ function commandOperation(client: Client<true>, env: EnvVariables) {
   const banUser = banUserFlow(client, env);
 
   return (
-    interaction: CommandInteraction
+    interaction: CommandInteraction,
   ): Effect.Effect<
     Message<boolean> | InteractionResponse<boolean>,
     unknown,
@@ -85,7 +91,7 @@ function commandOperation(client: Client<true>, env: EnvVariables) {
       case CommandName.unsubscribe:
         return unsubscribe(env.vote_role_id)(interaction);
       default:
-        return Effect.tryPromise(() => interaction.reply('不支援的指令'));
+        return Effect.tryPromise(() => interaction.reply("不支援的指令"));
     }
   };
 }

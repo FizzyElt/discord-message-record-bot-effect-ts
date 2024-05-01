@@ -7,28 +7,34 @@ import {
   identity,
   Equal,
   Array as ReadonlyArray,
-} from 'effect';
-import { getEnvService } from '@services/env';
+} from "effect";
+import { getEnvService } from "@services/env";
 
 export type ChannelStore = MutableHashMap.MutableHashMap<string, string>;
 
 export interface ChannelStoreRef extends Ref.Ref<ChannelStore> {}
 
-export class ChannelStoreService extends Context.Tag('ChannelStoreService')<
+export class ChannelStoreService extends Context.Tag("ChannelStoreService")<
   ChannelStoreService,
   ChannelStoreRef
 >() {}
 
-export const getChannelStoreRef = ChannelStoreService.pipe(Effect.map(identity));
+export const getChannelStoreRef = ChannelStoreService.pipe(
+  Effect.map(identity),
+);
 
-export const getChannelStore = ChannelStoreService.pipe(Effect.flatMap(Ref.get));
+export const getChannelStore = ChannelStoreService.pipe(
+  Effect.flatMap(Ref.get),
+);
 
 export const hasChannel = (channelId: string) =>
   pipe(getChannelStore, Effect.map(MutableHashMap.has(channelId)));
 
 export const addChannel = (channelInfo: { id: string; name: string }) =>
   ChannelStoreService.pipe(
-    Effect.flatMap(Ref.update(MutableHashMap.set(channelInfo.id, channelInfo.name)))
+    Effect.flatMap(
+      Ref.update(MutableHashMap.set(channelInfo.id, channelInfo.name)),
+    ),
   );
 
 export const addChannels = (list: Array<{ id: string; name: string }>) =>
@@ -40,18 +46,23 @@ export const addChannels = (list: Array<{ id: string; name: string }>) =>
         }
 
         return store;
-      })
-    )
+      }),
+    ),
   );
 
 export const removeChannel = (id: string) =>
-  ChannelStoreService.pipe(Effect.flatMap(Ref.update(MutableHashMap.remove(id))));
+  ChannelStoreService.pipe(
+    Effect.flatMap(Ref.update(MutableHashMap.remove(id))),
+  );
 
 export const removeChannels = (ids: Array<string>) =>
   pipe(
     getEnvService,
     Effect.map((env) =>
-      ReadonlyArray.filter(ids, (id) => !Equal.equals(id, env.bot_sending_channel_id))
+      ReadonlyArray.filter(
+        ids,
+        (id) => !Equal.equals(id, env.bot_sending_channel_id),
+      ),
     ),
     Effect.flatMap((ids) => {
       return ChannelStoreService.pipe(
@@ -61,15 +72,20 @@ export const removeChannels = (ids: Array<string>) =>
               MutableHashMap.remove(store, id);
             }
             return store;
-          })
-        )
+          }),
+        ),
       );
-    })
+    }),
   );
 
 export const initialChannelStore = pipe(
   getEnvService,
   Effect.flatMap((env) =>
-    Ref.make(MutableHashMap.make([env.bot_sending_channel_id, env.bot_sending_channel_name]))
-  )
+    Ref.make(
+      MutableHashMap.make([
+        env.bot_sending_channel_id,
+        env.bot_sending_channel_name,
+      ]),
+    ),
+  ),
 );
