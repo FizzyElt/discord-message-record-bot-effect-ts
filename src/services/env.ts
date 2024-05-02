@@ -13,6 +13,8 @@ export interface EnvVariables {
   guild_id: string;
   vote_role_id: string;
   timezone: string;
+  cat_api_key: string;
+  emoji_kitchen_key: string;
 }
 
 export class EnvContext extends Context.Tag("EnvContext")<
@@ -32,4 +34,6 @@ export const provideEnvService = Effect.provideService(EnvContext, {
   guild_id: process.env.GUILD_ID || "",
   vote_role_id: process.env.VOTE_ROLE_ID || "",
   timezone: process.env.TIMEZONE || "",
+  cat_api_key: process.env.CAT_API_KEY || "",
+  emoji_kitchen_key: process.env.EMOJI_KITCHEN_KEY || "",
 });

@@ -1,7 +1,8 @@
 import { REST, Routes } from "discord.js";
 import { Effect, pipe, Console } from "effect";
 import { provideEnvService, getEnvService } from "../services/env";
-import { commands } from "./command";
+import { commands } from "./main_command";
+import { memeCommands } from "./meme_command";
 
 import type { SlashCommandBuilder } from "discord.js";
 
@@ -28,6 +29,8 @@ const pushCommands = (
   );
 };
 
-const program = pushCommands(commands).pipe(provideEnvService);
+const program = pushCommands([...commands, ...memeCommands]).pipe(
+  provideEnvService,
+);
 
 Effect.runPromise(program);

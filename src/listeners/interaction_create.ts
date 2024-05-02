@@ -1,5 +1,6 @@
 import { Effect, pipe } from "effect";
-import { CommandName } from "@slashCommand/command";
+import { CommandName } from "~/slash_command/main_command";
+import { MemeCommandName } from "~/slash_command/meme_command";
 
 import {
   addChannelFlow,
@@ -8,6 +9,11 @@ import {
   subscribe,
   unsubscribe,
   banUserFlow,
+  getMyPartyGif,
+  getPyPartyGif,
+  getNoImageGif,
+  getEmoJiJi,
+  getCatImage,
 } from "@tasks";
 import { isCommandInteraction } from "@utils/interaction";
 import { VotingStoreService } from "@services/voting_store";
@@ -75,6 +81,7 @@ function commandOperation(client: Client<true>, env: EnvVariables) {
     unknown,
     ChannelStoreService | TimeoutInfoContext | VotingStoreService | EnvContext
   > => {
+    console.log(interaction.commandName, MemeCommandName.pyParty);
     switch (interaction.commandName) {
       case CommandName.add_channels:
         return addChannel(interaction);
@@ -90,6 +97,18 @@ function commandOperation(client: Client<true>, env: EnvVariables) {
         return subscribe(env.vote_role_id)(interaction);
       case CommandName.unsubscribe:
         return unsubscribe(env.vote_role_id)(interaction);
+
+      // meme commands
+      case MemeCommandName.pyParty:
+        return getPyPartyGif(interaction);
+      case MemeCommandName.myParty:
+        return getMyPartyGif(interaction);
+      case MemeCommandName.noImage:
+        return getNoImageGif(interaction);
+      case MemeCommandName.emoJiji:
+        return getEmoJiJi(interaction);
+      case MemeCommandName.cat:
+        return getCatImage(interaction);
       default:
         return Effect.tryPromise(() => interaction.reply("不支援的指令"));
     }
