@@ -23,7 +23,7 @@ const pushCommands = (
       );
     }),
     Effect.matchEffect({
-      onFailure: () => Console.error("put fail"),
+      onFailure: (err) => Console.error("put fail", err),
       onSuccess: (res) => Console.log("put success", res),
     }),
   );

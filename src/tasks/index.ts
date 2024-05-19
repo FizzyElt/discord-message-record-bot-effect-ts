@@ -5,3 +5,4 @@ export * from "./channels/channel";
 export * from "./role/subscribe";
 export * from "./member/ban_user";
 export * from "./meme/images";
+export * from "./cloudflare_ai/chat";

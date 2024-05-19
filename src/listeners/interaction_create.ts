@@ -14,6 +14,7 @@ import {
   getNoImageGif,
   getEmoJiJi,
   getCatImage,
+  replyWithAi,
 } from "@tasks";
 import { isCommandInteraction } from "@utils/interaction";
 import { VotingStoreService } from "@services/voting_store";
@@ -81,7 +82,6 @@ function commandOperation(client: Client<true>, env: EnvVariables) {
     unknown,
     ChannelStoreService | TimeoutInfoContext | VotingStoreService | EnvContext
   > => {
-    console.log(interaction.commandName, MemeCommandName.pyParty);
     switch (interaction.commandName) {
       case CommandName.add_channels:
         return addChannel(interaction);
@@ -98,6 +98,9 @@ function commandOperation(client: Client<true>, env: EnvVariables) {
       case CommandName.unsubscribe:
         return unsubscribe(env.vote_role_id)(interaction);
 
+      case CommandName.chat_ai:
+        return replyWithAi(env)(interaction);
+
       // meme commands
       case MemeCommandName.pyParty:
         return getPyPartyGif(interaction);
@@ -109,6 +112,7 @@ function commandOperation(client: Client<true>, env: EnvVariables) {
         return getEmoJiJi(interaction);
       case MemeCommandName.cat:
         return getCatImage(interaction);
+
       default:
         return Effect.tryPromise(() => interaction.reply("不支援的指令"));
     }

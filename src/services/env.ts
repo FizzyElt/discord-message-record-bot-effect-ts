@@ -15,6 +15,8 @@ export interface EnvVariables {
   timezone: string;
   cat_api_key: string;
   emoji_kitchen_key: string;
+  cloudflare_account_id: string;
+  cloudflare_ai_token: string;
 }
 
 export class EnvContext extends Context.Tag("EnvContext")<
@@ -36,4 +38,6 @@ export const provideEnvService = Effect.provideService(EnvContext, {
   timezone: process.env.TIMEZONE || "",
   cat_api_key: process.env.CAT_API_KEY || "",
   emoji_kitchen_key: process.env.EMOJI_KITCHEN_KEY || "",
+  cloudflare_account_id: process.env.CLOUDFLARE_ACCOUNT_ID || "",
+  cloudflare_ai_token: process.env.CLOUDFLARE_AI_TOKEN || "",
 });
