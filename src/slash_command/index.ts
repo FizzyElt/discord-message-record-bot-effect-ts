@@ -4,11 +4,11 @@ import { provideEnvService, getEnvService } from "../services/env";
 import { commands } from "./main_command";
 import { memeCommands } from "./meme_command";
 
-import type { SlashCommandBuilder } from "discord.js";
+import type { SlashCommandOptionsOnlyBuilder } from "discord.js";
 
 const pushCommands = (
   commands: Array<
-    Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">
+    Omit<SlashCommandOptionsOnlyBuilder, "addSubcommand" | "addSubcommandGroup">
   >,
 ) => {
   const rest = new REST({ version: "10" });

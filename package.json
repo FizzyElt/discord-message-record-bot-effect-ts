@@ -20,13 +20,13 @@
     "typescript": "^5.4.5"
   },
   "dependencies": {
-    "@biomejs/biome": "^1.7.2",
-    "@types/node": "^20.12.7",
+    "@biomejs/biome": "^1.8.0",
+    "@types/node": "^20.14.2",
     "date-fns": "^2.30.0",
     "date-fns-tz": "^2.0.1",
-    "discord.js": "^14.14.1",
+    "discord.js": "^14.15.3",
     "dotenv": "^16.4.5",
-    "effect": "^3.1.0",
+    "effect": "^3.2.8",
     "ts-node": "^10.9.2"
   }
 }
