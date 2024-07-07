@@ -64,8 +64,8 @@ export const removeChannels = (ids: Array<string>) =>
         (id) => !Equal.equals(id, env.bot_sending_channel_id),
       ),
     ),
-    Effect.flatMap((ids) => {
-      return ChannelStoreService.pipe(
+    Effect.flatMap((ids) =>
+      ChannelStoreService.pipe(
         Effect.flatMap(
           Ref.update((store) => {
             for (const id of ids) {
@@ -74,8 +74,8 @@ export const removeChannels = (ids: Array<string>) =>
             return store;
           }),
         ),
-      );
-    }),
+      ),
+    ),
   );
 
 export const initialChannelStore = pipe(

@@ -1,4 +1,4 @@
-import { Context, Effect, pipe } from "effect";
+import { Context, Effect, pipe, identity } from "effect";
 import { Client, GatewayIntentBits } from "discord.js";
 import { getEnvService } from "@services/env";
 
@@ -7,9 +7,7 @@ export class ClientService extends Context.Tag("ClientService")<
   Client<true>
 >() {}
 
-export const clientContext = ClientService.pipe(
-  Effect.map((client) => client as Client<true>),
-);
+export const clientContext = ClientService.pipe(Effect.map(identity));
 
 export const provideClientService = Effect.provideService(
   ClientService,
