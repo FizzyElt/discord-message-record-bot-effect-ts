@@ -245,7 +245,7 @@ export const banUserFlow =
             );
           }
 
-          return banUserVote({
+          return votingFlow({
             member,
             interaction,
             timeoutInfo,
