@@ -20,6 +20,7 @@ import type {
 
 import { getCommandOptionString } from "@utils/command";
 import { findUserFromMembers, isAdmin } from "@utils/member";
+import { createVoting } from "@utils/vote_flow";
 import {
   canNotFindUser,
   doNotBanBot,
@@ -144,6 +145,50 @@ const votingFlow = (params: {
     Effect.tap(() => removeVoting(params.member.user.id)),
   );
 
+// new ban user function
+const banUserVote = (params: {
+  member: GuildMember;
+  interaction: CommandInteraction;
+  timeoutInfo: TimeoutInfo;
+  mentionRole?: string;
+  emoji: EmojiIdentifierResolvable;
+}) => {
+  const { member, interaction, timeoutInfo, mentionRole, emoji } = params;
+
+  const startContent = {
+    allowedMentions: mentionRole ? { roles: [mentionRole] } : undefined,
+    content: startMemberVote(member, timeoutInfo, mentionRole),
+  };
+
+  return pipe(
+    createVoting(
+      interaction,
+      startContent,
+      {
+        emoji,
+        time: timeoutInfo.votingMinutes,
+      },
+      {
+        started: () => addNewVoting(member.user.id),
+        result: (count, msg) => {
+          if (member.isCommunicationDisabled()) {
+            return Effect.tryPromise(() =>
+              msg.reply({ content: memberDisableTime(member) }),
+            );
+          }
+
+          if (count >= timeoutInfo.voteThreshold) {
+            return timeoutMember({ count, msg, timeoutInfo, member });
+          }
+
+          return Effect.tryPromise(() => msg.reply(memberFree(member, count)));
+        },
+      },
+    ),
+    Effect.tap(() => removeVoting(params.member.user.id)),
+  );
+};
+
 export const banUserFlow =
   (client: Client<true>, env: EnvVariables) =>
   (interaction: CommandInteraction) =>
@@ -200,7 +245,7 @@ export const banUserFlow =
             );
           }
 
-          return votingFlow({
+          return banUserVote({
             member,
             interaction,
             timeoutInfo,
