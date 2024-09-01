@@ -1,7 +1,7 @@
 import { MessageMentions, PermissionFlagsBits } from "discord.js";
 import { Effect, pipe } from "effect";
 
-import type { GuildMemberManager, GuildMember } from "discord.js";
+import type { GuildMember, GuildMemberManager } from "discord.js";
 
 export const findUserFromMembers =
   (idOrMention: string) => (members: GuildMemberManager) => {

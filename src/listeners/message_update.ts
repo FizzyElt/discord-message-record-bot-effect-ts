@@ -1,10 +1,10 @@
-import { Effect, pipe } from "effect";
 import { ChannelStoreService } from "@services/channel_store";
 import { messageGuard, recordUpdateMsg } from "@tasks";
+import { Effect, pipe } from "effect";
 
-import type { Client, Message, PartialMessage } from "discord.js";
-import type { EnvVariables } from "@services/env";
 import type { ChannelStoreRef } from "@services/channel_store";
+import type { EnvVariables } from "@services/env";
+import type { Client, Message, PartialMessage } from "discord.js";
 
 export const messageUpdateListener = (
   client: Client<true>,

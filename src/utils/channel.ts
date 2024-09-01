@@ -1,13 +1,13 @@
 import { ChannelType } from "discord.js";
-import { Option, pipe, Equal, Array as ReadonlyArray } from "effect";
+import { Equal, Option, Array as ReadonlyArray, pipe } from "effect";
 
 import type {
-  Client,
-  Channel,
-  GuildTextBasedChannel,
   CategoryChannel,
-  TextChannel,
+  Channel,
+  Client,
+  GuildTextBasedChannel,
   PublicThreadChannel,
+  TextChannel,
 } from "discord.js";
 
 export const isTextChannel = (

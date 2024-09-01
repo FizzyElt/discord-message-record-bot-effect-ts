@@ -1,4 +1,4 @@
-import { Effect, MutableHashSet, Context, Ref } from "effect";
+import { Context, Effect, MutableHashSet, Ref } from "effect";
 
 export type VotingStore = MutableHashSet.MutableHashSet<string>;
 

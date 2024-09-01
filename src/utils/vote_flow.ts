@@ -1,12 +1,13 @@
-import { Effect, pipe, Equal } from "effect";
-import type {
-  CommandInteraction,
-  InteractionReplyOptions,
-  EmojiIdentifierResolvable,
-  Message,
-  AwaitReactionsOptions,
-} from "discord.js";
 import { minute } from "@services/timeout";
+import { Effect, Equal, pipe } from "effect";
+
+import type {
+  AwaitReactionsOptions,
+  CommandInteraction,
+  EmojiIdentifierResolvable,
+  InteractionReplyOptions,
+  Message,
+} from "discord.js";
 
 const awaitReactions =
   (options?: AwaitReactionsOptions) => (msg: Message<boolean>) =>

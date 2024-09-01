@@ -1,5 +1,5 @@
-import { Effect, pipe, Option } from "effect";
 import { getEnvService } from "@services/env";
+import { Effect, Option, pipe } from "effect";
 
 export const fetchCatImage = () =>
   pipe(

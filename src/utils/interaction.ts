@@ -1,7 +1,7 @@
 import type {
+  BaseInteraction,
   CacheType,
   CommandInteraction,
-  BaseInteraction,
 } from "discord.js";
 
 export const isCommandInteraction = (

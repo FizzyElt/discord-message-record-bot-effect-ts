@@ -1,10 +1,10 @@
-import { Effect, pipe } from "effect";
-import { messageGuard } from "@tasks";
 import { ChannelStoreService } from "@services/channel_store";
+import { messageGuard } from "@tasks";
+import { Effect, pipe } from "effect";
 
+import type { ChannelStoreRef } from "@services/channel_store";
 import type { EnvVariables } from "@services/env";
 import type { Awaitable, Client, Message } from "discord.js";
-import type { ChannelStoreRef } from "@services/channel_store";
 
 export const messageCreateListener = (
   client: Client<true>,

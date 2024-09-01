@@ -1,8 +1,7 @@
-import type { APIApplicationCommandOptionChoice } from "discord.js";
-
 import { SlashCommandBuilder, SlashCommandStringOption } from "discord.js";
-
 import { choiceList } from "../services/timeout";
+
+import type { APIApplicationCommandOptionChoice } from "discord.js";
 
 const createStringChoice = (
   name: string,

@@ -1,9 +1,9 @@
-import type { CommandInteraction } from "discord.js";
-import type { EnvVariables } from "@services/env";
-
-import { Effect, pipe } from "effect";
-import { getCommandOptionString } from "@utils/command";
 import { fetchLlama } from "@utils/cloudflare_ai_api";
+import { getCommandOptionString } from "@utils/command";
+import { Effect, pipe } from "effect";
+
+import type { EnvVariables } from "@services/env";
+import type { CommandInteraction } from "discord.js";
 
 export const replyWithAi =
   (env: EnvVariables) => (interaction: CommandInteraction) => {

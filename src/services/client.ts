@@ -1,6 +1,6 @@
-import { Context, Effect, pipe, identity } from "effect";
-import { Client, GatewayIntentBits } from "discord.js";
 import { getEnvService } from "@services/env";
+import { Client, GatewayIntentBits } from "discord.js";
+import { Context, Effect, identity, pipe } from "effect";
 
 export class ClientService extends Context.Tag("ClientService")<
   ClientService,

@@ -1,14 +1,14 @@
+import { getEnvService } from "@services/env";
 import {
   Context,
-  Ref,
-  MutableHashMap,
   Effect,
-  pipe,
-  identity,
   Equal,
+  MutableHashMap,
   Array as ReadonlyArray,
+  Ref,
+  identity,
+  pipe,
 } from "effect";
-import { getEnvService } from "@services/env";
 
 export type ChannelStore = MutableHashMap.MutableHashMap<string, string>;
 

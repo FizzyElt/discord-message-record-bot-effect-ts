@@ -1,4 +1,5 @@
 import { Effect, String } from "effect";
+
 import type { Message, PartialMessage } from "discord.js";
 
 const discordInviteRegex = /discord\.gg\/(\w|\d)+/;

@@ -1,6 +1,6 @@
 import { REST, Routes } from "discord.js";
-import { Effect, pipe, Console } from "effect";
-import { provideEnvService, getEnvService } from "../services/env";
+import { Console, Effect, pipe } from "effect";
+import { getEnvService, provideEnvService } from "../services/env";
 import { commands } from "./main_command";
 import { memeCommands } from "./meme_command";
 

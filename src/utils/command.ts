@@ -1,8 +1,8 @@
 import { ApplicationCommandOptionType } from "discord.js";
-import { Option, pipe, Equal } from "effect";
-import * as String from "effect/String";
-import * as Number from "effect/Number";
+import { Equal, Option, pipe } from "effect";
 import * as Function from "effect/Function";
+import * as Number from "effect/Number";
+import * as String from "effect/String";
 
 import type { CommandInteraction } from "discord.js";
 

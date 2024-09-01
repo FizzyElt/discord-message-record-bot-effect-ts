@@ -1,5 +1,5 @@
-import { Effect, Context, identity } from "effect";
 import dotenv from "dotenv";
+import { Context, Effect, identity } from "effect";
 
 dotenv.config();
 

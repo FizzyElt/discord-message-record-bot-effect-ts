@@ -1,28 +1,28 @@
 import {
-  flow,
-  pipe,
-  Option,
-  Equal,
-  Effect,
-  Array as ReadonlyArray,
-} from "effect";
-import {
-  getCategoryTextChannels,
-  getTextChannelsInfo,
-  getTextChannelInfo,
-  isCategoryChannel,
-  isTextChannel,
-} from "@utils/channel";
-import { getCommandOptionString } from "@utils/command";
-import {
   addChannel,
   addChannels,
   getChannelStore,
   removeChannel,
   removeChannels,
 } from "@services/channel_store";
+import {
+  getCategoryTextChannels,
+  getTextChannelInfo,
+  getTextChannelsInfo,
+  isCategoryChannel,
+  isTextChannel,
+} from "@utils/channel";
+import { getCommandOptionString } from "@utils/command";
+import {
+  Effect,
+  Equal,
+  Option,
+  Array as ReadonlyArray,
+  flow,
+  pipe,
+} from "effect";
 
-import type { CommandInteraction, Channel, Client } from "discord.js";
+import type { Channel, Client, CommandInteraction } from "discord.js";
 
 const excludeChannels = (channel: Channel) => {
   if (isCategoryChannel(channel)) {

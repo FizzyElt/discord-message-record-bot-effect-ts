@@ -1,24 +1,24 @@
-import { Effect, pipe } from "effect";
-import { constant } from "effect/Function";
-import { provideEnvService, getEnvService } from "@services/env";
+import {
+  interactionCreate,
+  messageCreateListener,
+  messageDeleteListener,
+  messageUpdateListener,
+  ready,
+} from "@listeners";
+import {
+  ChannelStoreService,
+  getChannelStoreRef,
+  initialChannelStore,
+} from "@services/channel_store";
 import {
   clientContext,
   loginClient,
   provideClientService,
 } from "@services/client";
-import {
-  initialChannelStore,
-  ChannelStoreService,
-  getChannelStoreRef,
-} from "@services/channel_store";
+import { getEnvService, provideEnvService } from "@services/env";
 import { createVotingStore } from "@services/voting_store";
-import {
-  ready,
-  messageCreateListener,
-  messageDeleteListener,
-  messageUpdateListener,
-  interactionCreate,
-} from "@listeners";
+import { Effect, pipe } from "effect";
+import { constant } from "effect/Function";
 
 const program = pipe(
   Effect.Do,
