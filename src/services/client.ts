@@ -36,7 +36,7 @@ export const loginClient = (client: Client<boolean>) =>
   );
 
 // layer
-class ClientContext extends Context.Tag("ClientContext")<
+export class ClientContext extends Context.Tag("ClientContext")<
   ClientContext,
   Client<true>
 >() {}
