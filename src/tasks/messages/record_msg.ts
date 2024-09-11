@@ -1,3 +1,4 @@
+import { ClientContext, EnvConfig } from "@services";
 import {
   getTextChannelByClient,
   isPublicThreadChannel,
@@ -7,8 +8,7 @@ import { bold, strikeThrough } from "@utils/mark_string";
 import { format } from "date-fns";
 import { Effect, Array as ReadonlyArray, String, pipe } from "effect";
 
-import type { EnvVariables } from "@services/env";
-import type { Client, Message, PartialMessage } from "discord.js";
+import type { Message, PartialMessage } from "discord.js";
 
 const getChannelNameByMsg = (msg: Message<boolean> | PartialMessage) =>
   isTextChannel(msg.channel) || isPublicThreadChannel(msg.channel)
@@ -19,6 +19,13 @@ const getUserNameByMsg = (msg: Message<boolean> | PartialMessage) =>
   msg.member?.displayName
     ? `${bold(msg.member.displayName)} (${msg.author?.username || ""})`
     : bold(msg.author?.username || "");
+
+const getSendChannel = () =>
+  Effect.gen(function* () {
+    const client = yield* ClientContext;
+    const env = yield* EnvConfig;
+    return yield* getTextChannelByClient(env.BOT_SENDING_CHANNEL_ID)(client);
+  });
 
 // ======================================================
 
@@ -42,33 +49,28 @@ const getCreatedMsgString = (
   );
 };
 
-export const recordCreatedMsg =
-  (env: EnvVariables) => (client: Client<true>) => (msg: Message<boolean>) => {
-    return pipe(
-      Effect.Do,
-      Effect.bind("sendChannel", () =>
-        getTextChannelByClient(env.bot_sending_channel_id)(client),
+export const recordCreatedMsg = (msg: Message<boolean>) =>
+  pipe(
+    Effect.Do,
+    Effect.bind("sendChannel", getSendChannel),
+    Effect.bind("sentMsg", ({ sendChannel }) =>
+      Effect.tryPromise(() =>
+        sendChannel.send({
+          content: getCreatedMsgString(msg),
+          allowedMentions: { parse: [] },
+        }),
       ),
-      Effect.let("sendString", () => getCreatedMsgString(msg)),
-      Effect.bind("sentMsg", ({ sendChannel, sendString }) =>
-        Effect.tryPromise(() =>
-          sendChannel.send({
-            content: sendString,
-            allowedMentions: { parse: [] },
-          }),
-        ),
-      ),
-      Effect.tap(({ sentMsg }) => {
-        msg.reference = {
-          channelId: sentMsg.channelId,
-          guildId: sentMsg.guildId,
-          messageId: sentMsg.id,
-        };
-        return Effect.void;
-      }),
-      Effect.map(({ sentMsg }) => sentMsg),
-    );
-  };
+    ),
+    Effect.tap(({ sentMsg }) => {
+      msg.reference = {
+        channelId: sentMsg.channelId,
+        guildId: sentMsg.guildId,
+        messageId: sentMsg.id,
+      };
+      return Effect.void;
+    }),
+    Effect.map(({ sentMsg }) => sentMsg),
+  );
 
 // ======================================================
 
@@ -92,26 +94,18 @@ const getDeletedMsgString = (
   );
 };
 
-export const recordDeleteMsg =
-  (env: EnvVariables) =>
-  (client: Client<true>) =>
-  (msg: Message<boolean> | PartialMessage) => {
-    return pipe(
-      Effect.Do,
-      Effect.bind("sendChannel", () =>
-        getTextChannelByClient(env.bot_sending_channel_id)(client),
+export const recordDeleteMsg = (msg: Message<boolean> | PartialMessage) =>
+  pipe(
+    getSendChannel(),
+    Effect.flatMap((sendChannel) =>
+      Effect.tryPromise(() =>
+        sendChannel.send({
+          content: getDeletedMsgString(msg),
+          allowedMentions: { parse: [] },
+        }),
       ),
-      Effect.let("sendString", () => getDeletedMsgString(msg)),
-      Effect.flatMap(({ sendChannel, sendString }) =>
-        Effect.tryPromise(() =>
-          sendChannel.send({
-            content: sendString,
-            allowedMentions: { parse: [] },
-          }),
-        ),
-      ),
-    );
-  };
+    ),
+  );
 
 // ======================================================
 
@@ -138,29 +132,19 @@ const getUpdatedMsgString = (
   );
 };
 
-export const recordUpdateMsg =
-  (env: EnvVariables) =>
-  (client: Client<true>) =>
-  (
-    oldMsg: Message<boolean> | PartialMessage,
-    msg: Message<boolean> | PartialMessage,
-  ) => {
-    return pipe(
-      Effect.Do,
-      Effect.bind("sendChannel", () =>
-        getTextChannelByClient(env.bot_sending_channel_id)(client),
+export const recordUpdateMsg = (
+  oldMsg: Message<boolean> | PartialMessage,
+  msg: Message<boolean> | PartialMessage,
+) =>
+  pipe(
+    getSendChannel(),
+    Effect.flatMap((sendChannel) =>
+      Effect.tryPromise(() =>
+        sendChannel.send({
+          content: getUpdatedMsgString(oldMsg, msg),
+          allowedMentions: { parse: [] },
+          reply: { messageReference: oldMsg.reference?.messageId || "" },
+        }),
       ),
-      Effect.let("sendString", () => getUpdatedMsgString(oldMsg, msg)),
-      Effect.flatMap(({ sendChannel, sendString }) =>
-        Effect.tryPromise(() =>
-          sendChannel.send({
-            content: sendString,
-            allowedMentions: { parse: [] },
-            reply: {
-              messageReference: oldMsg.reference?.messageId || "",
-            },
-          }),
-        ),
-      ),
-    );
-  };
+    ),
+  );

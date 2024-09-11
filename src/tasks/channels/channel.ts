@@ -1,3 +1,4 @@
+import { ClientContext } from "@services";
 import {
   addChannel,
   addChannels,
@@ -22,93 +23,96 @@ import {
   pipe,
 } from "effect";
 
-import type { Channel, Client, CommandInteraction } from "discord.js";
+import type { Channel, CommandInteraction } from "discord.js";
 
-const excludeChannels = (channel: Channel) => {
-  if (isCategoryChannel(channel)) {
-    return pipe(
-      Effect.succeed(channel),
-      Effect.tap((channel) => pipe(getTextChannelsInfo(channel), addChannels)),
-      Effect.map((channel) => `已排除 **${channel.name}** 下的所有文字頻道`),
-    );
-  }
+const excludeChannels = (channel: Channel) =>
+  Effect.gen(function* () {
+    if (isCategoryChannel(channel)) {
+      return yield* pipe(
+        getTextChannelsInfo(channel),
+        addChannels,
+        Effect.map(() => `已排除 **${channel.name}** 下的所有文字頻道`),
+      );
+    }
 
-  if (isTextChannel(channel)) {
-    return pipe(
-      Effect.succeed(channel),
-      Effect.tap((channel) => pipe(getTextChannelInfo(channel), addChannel)),
-      Effect.map((channel) => `已排除 **${channel.name}**`),
-    );
-  }
+    if (isTextChannel(channel)) {
+      return yield* pipe(
+        getTextChannelInfo(channel),
+        addChannel,
+        Effect.map(() => `已排除 **${channel.name}**`),
+      );
+    }
 
-  return Effect.succeed("不支援的頻道類型");
-};
+    return "不支援的頻道類型";
+  });
 
-export const addChannelFlow =
-  (client: Client<true>) => (interaction: CommandInteraction) =>
-    pipe(
-      Effect.succeed(interaction),
-      Effect.flatMap((interaction) =>
-        pipe(interaction, getCommandOptionString("id"), (idOrName) =>
-          Option.fromNullable(
-            client.channels.cache.find((channel) =>
-              Equal.equals(channel.id, idOrName),
-            ),
+export const addChannelFlow = (interaction: CommandInteraction) =>
+  Effect.gen(function* () {
+    const client = yield* ClientContext;
+
+    return yield* pipe(
+      interaction,
+      getCommandOptionString("id"),
+      (idOrName) =>
+        Option.fromNullable(
+          client.channels.cache.find((channel) =>
+            Equal.equals(channel.id, idOrName),
           ),
         ),
-      ),
-      Effect.flatMap(excludeChannels),
-      Effect.orElseFail(() => "找不到頻道"),
+
+      Option.match({
+        onSome: excludeChannels,
+        onNone: () => Effect.succeed("找不到頻道"),
+      }),
       Effect.flatMap((msg) => Effect.tryPromise(() => interaction.reply(msg))),
     );
+  });
 
-const includeChannels = (channel: Channel) => {
-  if (isCategoryChannel(channel)) {
-    return pipe(
-      Effect.succeed(channel),
-      Effect.tap((channel) =>
-        pipe(
-          getCategoryTextChannels(channel),
-          ReadonlyArray.map((channel) => channel.id),
-          removeChannels,
-        ),
-      ),
-      Effect.map((channel) => `已監聽 **${channel.name}** 下的所有文字頻道`),
-    );
-  }
+const includeChannels = (channel: Channel) =>
+  Effect.gen(function* () {
+    if (isCategoryChannel(channel)) {
+      return yield* pipe(
+        getCategoryTextChannels(channel),
+        ReadonlyArray.map((channel) => channel.id),
+        removeChannels,
+        Effect.map(() => `已監聽 **${channel.name}** 下的所有文字頻道`),
+      );
+    }
 
-  if (isTextChannel(channel)) {
-    return pipe(
-      Effect.succeed(channel),
-      Effect.tap((channel) => removeChannel(channel.id)),
-      Effect.map((channel) => `已監聽 **${channel.name}**`),
-    );
-  }
+    if (isTextChannel(channel)) {
+      return yield* pipe(
+        removeChannel(channel.id),
+        Effect.map(() => `已監聽 **${channel.name}**`),
+      );
+    }
 
-  return Effect.succeed("不支援的頻道類型");
-};
+    return "不支援的頻道類型";
+  });
 
-export const removeChannelFlow =
-  (client: Client<true>) => (interaction: CommandInteraction) =>
-    pipe(
-      Effect.succeed(interaction),
-      Effect.flatMap((interaction) =>
-        pipe(interaction, getCommandOptionString("id"), (idOrName) =>
-          Option.fromNullable(
-            client.channels.cache.find((channel) =>
-              Equal.equals(channel.id, idOrName),
-            ),
+export const removeChannelFlow = (interaction: CommandInteraction) =>
+  Effect.gen(function* () {
+    const client = yield* ClientContext;
+
+    return yield* pipe(
+      interaction,
+      getCommandOptionString("id"),
+      (idOrName) =>
+        Option.fromNullable(
+          client.channels.cache.find((channel) =>
+            Equal.equals(channel.id, idOrName),
           ),
         ),
-      ),
-      Effect.flatMap(includeChannels),
-      Effect.orElseFail(() => "找不到頻道"),
+      Option.match({
+        onSome: includeChannels,
+        onNone: () => Effect.succeed("找不到頻道"),
+      }),
       Effect.flatMap((msg) => Effect.tryPromise(() => interaction.reply(msg))),
     );
+  });
 
 export const listChannels = (interaction: CommandInteraction) =>
   pipe(
-    getChannelStore,
+    getChannelStore(),
     Effect.map(
       flow(
         ReadonlyArray.fromIterable,

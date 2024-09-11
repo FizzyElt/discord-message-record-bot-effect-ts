@@ -1,29 +1,17 @@
-import { ChannelStoreService } from "@services/channel_store";
+import { MainLive } from "@services";
 import { messageGuard, recordDeleteMsg } from "@tasks";
 import { Effect, pipe } from "effect";
 
-import type { ChannelStoreRef } from "@services/channel_store";
-import type { EnvVariables } from "@services/env";
-import type { Awaitable, Client, Message, PartialMessage } from "discord.js";
+import type { Awaitable, Message, PartialMessage } from "discord.js";
 
 export const messageDeleteListener = (
-  client: Client<true>,
-  env: EnvVariables,
-  channelStoreRef: ChannelStoreRef,
-) => {
-  const provideChannelStoreRef = Effect.provideService(
-    ChannelStoreService,
-    channelStoreRef,
+  msg: Message<boolean> | PartialMessage,
+): Awaitable<void> => {
+  const program = pipe(
+    messageGuard(msg),
+    Effect.flatMap(recordDeleteMsg),
+    Effect.orElse(() => Effect.succeed(msg)),
   );
 
-  return (msg: Message<boolean> | PartialMessage): Awaitable<void> => {
-    const program = pipe(
-      Effect.succeed(msg),
-      Effect.tap((msg) => messageGuard(msg, client)),
-      Effect.flatMap(recordDeleteMsg(env)(client)),
-      Effect.orElse(() => Effect.succeed(msg)),
-    ).pipe(provideChannelStoreRef);
-
-    Effect.runPromise(program);
-  };
+  Effect.runPromise(program.pipe(Effect.provide(MainLive)));
 };

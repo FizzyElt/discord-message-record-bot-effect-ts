@@ -1,4 +1,4 @@
-import { EnvConfig, getEnvService } from "@services/env";
+import { EnvConfig } from "@services/env";
 import {
   Context,
   Effect,
@@ -15,83 +15,6 @@ export type ChannelStore = MutableHashMap.MutableHashMap<string, string>;
 
 export interface ChannelStoreRef extends Ref.Ref<ChannelStore> {}
 
-export class ChannelStoreService extends Context.Tag("ChannelStoreService")<
-  ChannelStoreService,
-  ChannelStoreRef
->() {}
-
-export const getChannelStoreRef = ChannelStoreService.pipe(
-  Effect.map(identity),
-);
-
-export const getChannelStore = ChannelStoreService.pipe(
-  Effect.flatMap(Ref.get),
-);
-
-export const hasChannel = (channelId: string) =>
-  pipe(getChannelStore, Effect.map(MutableHashMap.has(channelId)));
-
-export const addChannel = (channelInfo: { id: string; name: string }) =>
-  ChannelStoreService.pipe(
-    Effect.flatMap(
-      Ref.update(MutableHashMap.set(channelInfo.id, channelInfo.name)),
-    ),
-  );
-
-export const addChannels = (list: Array<{ id: string; name: string }>) =>
-  ChannelStoreService.pipe(
-    Effect.flatMap(
-      Ref.update((store) => {
-        for (const { id, name } of list) {
-          MutableHashMap.set(store, id, name);
-        }
-
-        return store;
-      }),
-    ),
-  );
-
-export const removeChannel = (id: string) =>
-  ChannelStoreService.pipe(
-    Effect.flatMap(Ref.update(MutableHashMap.remove(id))),
-  );
-
-export const removeChannels = (ids: Array<string>) =>
-  pipe(
-    getEnvService,
-    Effect.map((env) =>
-      ReadonlyArray.filter(
-        ids,
-        (id) => !Equal.equals(id, env.bot_sending_channel_id),
-      ),
-    ),
-    Effect.flatMap((ids) =>
-      ChannelStoreService.pipe(
-        Effect.flatMap(
-          Ref.update((store) => {
-            for (const id of ids) {
-              MutableHashMap.remove(store, id);
-            }
-            return store;
-          }),
-        ),
-      ),
-    ),
-  );
-
-export const initialChannelStore = pipe(
-  getEnvService,
-  Effect.flatMap((env) =>
-    Ref.make(
-      MutableHashMap.make([
-        env.bot_sending_channel_id,
-        env.bot_sending_channel_name,
-      ]),
-    ),
-  ),
-);
-
-// layer
 export class ChannelService extends Context.Tag("ChannelService")<
   ChannelService,
   {
@@ -144,12 +67,19 @@ export const ChannelServiceLive = Layer.effect(
         return store;
       });
 
-    const removeChannel = (id: string) =>
-      Ref.update(channelStoreRef, MutableHashMap.remove(id));
+    const removeChannel = (id: string) => {
+      if (Equal.equals(id, env.BOT_SENDING_CHANNEL_ID)) return Effect.void;
+      return Ref.update(channelStoreRef, MutableHashMap.remove(id));
+    };
 
     const removeChannels = (ids: Array<string>) =>
       Ref.update(channelStoreRef, (store) => {
-        for (const id of ids) {
+        const removeIds = ReadonlyArray.filter(
+          ids,
+          (id) => !Equal.equals(id, env.BOT_SENDING_CHANNEL_ID),
+        );
+
+        for (const id of removeIds) {
           MutableHashMap.remove(store, id);
         }
         return store;
@@ -166,3 +96,39 @@ export const ChannelServiceLive = Layer.effect(
     };
   }),
 );
+
+export const removeChannels = (ids: Array<string>) =>
+  pipe(
+    ChannelService,
+    Effect.flatMap((service) => service.removeChannels(ids)),
+  );
+
+export const removeChannel = (id: string) =>
+  pipe(
+    ChannelService,
+    Effect.flatMap((service) => service.removeChannel(id)),
+  );
+
+export const addChannel = (channelInfo: { id: string; name: string }) =>
+  pipe(
+    ChannelService,
+    Effect.flatMap((service) => service.addChannel(channelInfo)),
+  );
+
+export const addChannels = (list: Array<{ id: string; name: string }>) =>
+  pipe(
+    ChannelService,
+    Effect.flatMap((service) => service.addChannels(list)),
+  );
+
+export const getChannelStore = () =>
+  pipe(
+    ChannelService,
+    Effect.flatMap((service) => service.getChannelStore()),
+  );
+
+export const hasChannel = (channelId: string) =>
+  pipe(
+    ChannelService,
+    Effect.flatMap((service) => service.hasChannel(channelId)),
+  );

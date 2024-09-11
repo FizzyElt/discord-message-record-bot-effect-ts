@@ -1,4 +1,4 @@
-import { getTimeoutInfoByKey, minute } from "@services/timeout";
+import { minute, getTimeoutInfo } from "@services/timeout";
 import {
   addNewVoting,
   getVotingStore,
@@ -19,8 +19,8 @@ import {
 } from "@utils/reply_msg";
 import { createVoting } from "@utils/vote_flow";
 import { Effect, Equal, pipe } from "effect";
+import { ClientContext, EnvConfig } from "@services";
 
-import type { EnvVariables } from "@services/env";
 import type { TimeoutInfo } from "@services/timeout";
 import type {
   AwaitReactionsOptions,
@@ -188,69 +188,76 @@ const banUserVote = (params: {
   );
 };
 
-export const banUserFlow =
-  (client: Client<true>, env: EnvVariables) =>
-  (interaction: CommandInteraction) =>
-    pipe(
-      Effect.succeed({
-        userId: getCommandOptionString("mention_user")(interaction),
-      }),
-      Effect.bind("timeoutInfo", () =>
-        pipe(getCommandOptionString("time")(interaction), getTimeoutInfoByKey),
-      ),
-      Effect.bind("member", ({ userId }) =>
-        pipe(
-          Effect.fromNullable(interaction.guild),
-          Effect.flatMap((guild) => findUserFromMembers(userId)(guild.members)),
-        ),
-      ),
-      Effect.bind("votingStore", () => getVotingStore),
-      Effect.matchEffect({
-        onFailure: () =>
-          Effect.tryPromise(() =>
-            interaction.reply({ content: canNotFindUser(), fetchReply: true }),
-          ),
-        onSuccess: ({ member, timeoutInfo, votingStore }) => {
-          if (isAdmin(member)) {
-            return Effect.tryPromise(() =>
-              interaction.reply({ content: doNotBanAdmin(), fetchReply: true }),
-            );
-          }
-
-          // bot self
-          if (Equal.equals(member.user.id, client.user.id)) {
-            return Effect.tryPromise(() =>
-              interaction.reply({ content: doNotBanBot(), fetchReply: true }),
-            );
-          }
-
-          // member disabled
-          if (member.isCommunicationDisabled()) {
-            return Effect.tryPromise(() =>
-              interaction.reply({
-                content: memberDisableTime(member, env.timezone),
-                fetchReply: true,
-              }),
-            );
-          }
-
-          // member voting
-          if (isUserVoting(member.user.id)(votingStore)) {
-            return Effect.tryPromise(() =>
-              interaction.reply({
-                content: memberVoting(member),
-                fetchReply: true,
-              }),
-            );
-          }
-
-          return votingFlow({
-            member,
-            interaction,
-            timeoutInfo,
-            mentionRole: env.vote_role_id,
-            emoji: "✅",
-          });
-        },
-      }),
+export const banUser = (interaction: CommandInteraction) =>
+  Effect.gen(function* () {
+    const timeoutInfo = yield* getTimeoutInfo(
+      getCommandOptionString("time")(interaction),
     );
+    const client = yield* ClientContext;
+    const env = yield* EnvConfig;
+
+    const userId = getCommandOptionString("mention_user")(interaction);
+    const member = yield* pipe(
+      Effect.fromNullable(interaction.guild),
+      Effect.flatMap((guild) => findUserFromMembers(userId)(guild.members)),
+    );
+
+    const userVoting = yield* isUserVoting(member.id);
+
+    return {
+      userVoting,
+      timeoutInfo,
+      member,
+      env,
+      client,
+    };
+  }).pipe(
+    Effect.matchEffect({
+      onFailure: () =>
+        Effect.tryPromise(() =>
+          interaction.reply({ content: canNotFindUser(), fetchReply: true }),
+        ),
+      onSuccess: ({ member, timeoutInfo, userVoting, client, env }) => {
+        if (isAdmin(member)) {
+          return Effect.tryPromise(() =>
+            interaction.reply({ content: doNotBanAdmin(), fetchReply: true }),
+          );
+        }
+
+        // bot self
+        if (Equal.equals(member.user.id, client.user.id)) {
+          return Effect.tryPromise(() =>
+            interaction.reply({ content: doNotBanBot(), fetchReply: true }),
+          );
+        }
+
+        // member disabled
+        if (member.isCommunicationDisabled()) {
+          return Effect.tryPromise(() =>
+            interaction.reply({
+              content: memberDisableTime(member, env.TIMEZONE),
+              fetchReply: true,
+            }),
+          );
+        }
+
+        // member voting
+        if (userVoting) {
+          return Effect.tryPromise(() =>
+            interaction.reply({
+              content: memberVoting(member),
+              fetchReply: true,
+            }),
+          );
+        }
+
+        return votingFlow({
+          member,
+          interaction,
+          timeoutInfo,
+          mentionRole: env.VOTE_ROLE_ID,
+          emoji: "✅",
+        });
+      },
+    }),
+  );

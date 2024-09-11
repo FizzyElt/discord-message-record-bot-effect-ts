@@ -1,120 +1,100 @@
-import { Effect, pipe } from "effect";
-import { CommandName } from "~/slash_command/main_command";
-import { MemeCommandName } from "~/slash_command/meme_command";
-
-import { ChannelStoreService } from "@services/channel_store";
-import { provideEnvService } from "@services/env";
-import { provideTimeoutInfoService } from "@services/timeout";
-import { VotingStoreService } from "@services/voting_store";
 import {
   addChannelFlow,
-  banUserFlow,
-  getCatImage,
+  banUser,
   getEmoJiJi,
   getMyPartyGif,
   getNoImageGif,
   getPyPartyGif,
   listChannels,
   removeChannelFlow,
-  replyWithAi,
   subscribe,
   unsubscribe,
 } from "@tasks";
 import { isCommandInteraction } from "@utils/interaction";
+import { Effect, pipe } from "effect";
+import { CommandName } from "~/slash_command/main_command";
+import { MemeCommandName } from "~/slash_command/meme_command";
 
-import type { ChannelStoreRef } from "@services/channel_store";
-import type { EnvContext, EnvVariables } from "@services/env";
-import type { TimeoutInfoContext } from "@services/timeout";
-import type { VotingStoreRef } from "@services/voting_store";
+import {
+  type ChannelService,
+  type ClientContext,
+  EnvConfig,
+  MainLive,
+  type TimeoutInfoListService,
+  type VotingService,
+} from "@services";
 import type {
   Awaitable,
   CacheType,
-  Client,
   CommandInteraction,
   Interaction,
   InteractionResponse,
   Message,
 } from "discord.js";
 
-export function interactionCreate(
-  client: Client<true>,
-  env: EnvVariables,
-  votingStoreRef: VotingStoreRef,
-  channelStoreRef: ChannelStoreRef,
-) {
-  const provideChannelStoreRef = Effect.provideService(
-    ChannelStoreService,
-    channelStoreRef,
-  );
-  const provideVotingStoreRef = Effect.provideService(
-    VotingStoreService,
-    votingStoreRef,
+export function interactionCreateListener(
+  interaction: Interaction<CacheType>,
+): Awaitable<void> {
+  if (!isCommandInteraction(interaction)) {
+    return;
+  }
+
+  const program = pipe(
+    interaction,
+    commandOperation,
+    Effect.orElse(() => Effect.succeed("reply error")),
   );
 
-  return (interaction: Interaction<CacheType>): Awaitable<void> => {
-    if (!isCommandInteraction(interaction)) {
-      return;
-    }
-    const program = pipe(
-      interaction,
-      commandOperation(client, env),
-      Effect.orElse(() => Effect.succeed("reply error")),
-    ).pipe(
-      provideChannelStoreRef,
-      provideVotingStoreRef,
-      provideTimeoutInfoService,
-      provideEnvService,
-    );
-
-    Effect.runPromise(program);
-  };
+  Effect.runPromise(program.pipe(Effect.provide(MainLive)));
 }
 
-function commandOperation(client: Client<true>, env: EnvVariables) {
-  const addChannel = addChannelFlow(client);
-  const removeChannel = removeChannelFlow(client);
-  const banUser = banUserFlow(client, env);
+function commandOperation(
+  interaction: CommandInteraction,
+): Effect.Effect<
+  Message<boolean> | InteractionResponse<boolean>,
+  unknown,
+  | ClientContext
+  | ChannelService
+  | EnvConfig
+  | TimeoutInfoListService
+  | VotingService
+> {
+  switch (interaction.commandName) {
+    case CommandName.add_channels:
+      return addChannelFlow(interaction);
+    case CommandName.remove_channels:
+      return removeChannelFlow(interaction);
+    case CommandName.channel_list:
+      return listChannels(interaction);
+    case CommandName.ban_user:
+      return banUser(interaction);
 
-  return (
-    interaction: CommandInteraction,
-  ): Effect.Effect<
-    Message<boolean> | InteractionResponse<boolean>,
-    unknown,
-    ChannelStoreService | TimeoutInfoContext | VotingStoreService | EnvContext
-  > => {
-    switch (interaction.commandName) {
-      case CommandName.add_channels:
-        return addChannel(interaction);
-      case CommandName.remove_channels:
-        return removeChannel(interaction);
-      case CommandName.channel_list:
-        return listChannels(interaction);
-      case CommandName.ban_user:
-        return banUser(interaction);
-      // case CommandName.timeout_info:
-      //   return removeChannel(interaction);
-      case CommandName.subscribe:
-        return subscribe(env.vote_role_id)(interaction);
-      case CommandName.unsubscribe:
-        return unsubscribe(env.vote_role_id)(interaction);
+    case CommandName.subscribe:
+      return pipe(
+        EnvConfig,
+        Effect.flatMap(({ VOTE_ROLE_ID }) =>
+          subscribe(VOTE_ROLE_ID)(interaction),
+        ),
+      );
+    case CommandName.unsubscribe:
+      return pipe(
+        EnvConfig,
+        Effect.flatMap(({ VOTE_ROLE_ID }) =>
+          unsubscribe(VOTE_ROLE_ID)(interaction),
+        ),
+      );
 
-      case CommandName.chat_ai:
-        return replyWithAi(env)(interaction);
+    // meme commands
+    case MemeCommandName.pyParty:
+      return getPyPartyGif(interaction);
+    case MemeCommandName.myParty:
+      return getMyPartyGif(interaction);
+    case MemeCommandName.noImage:
+      return getNoImageGif(interaction);
+    case MemeCommandName.emoJiji:
+      return getEmoJiJi(interaction);
 
-      // meme commands
-      case MemeCommandName.pyParty:
-        return getPyPartyGif(interaction);
-      case MemeCommandName.myParty:
-        return getMyPartyGif(interaction);
-      case MemeCommandName.noImage:
-        return getNoImageGif(interaction);
-      case MemeCommandName.emoJiji:
-        return getEmoJiJi(interaction);
-      case MemeCommandName.cat:
-        return getCatImage(interaction);
-
-      default:
-        return Effect.tryPromise(() => interaction.reply("不支援的指令"));
-    }
-  };
+    default:
+      return Effect.tryPromise(() => interaction.reply("不支援的指令"));
+  }
 }

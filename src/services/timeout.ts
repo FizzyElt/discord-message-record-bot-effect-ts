@@ -2,6 +2,7 @@ import {
   Context,
   Effect,
   Equal,
+  Layer,
   Array as ReadonlyArray,
   identity,
   pipe,
@@ -59,21 +60,18 @@ export const choiceList: Array<TimeoutInfo> = [
   },
 ];
 
-export class TimeoutInfoContext extends Context.Tag("TimeoutInfo")<
-  TimeoutInfoContext,
-  Array<TimeoutInfo>
->() {}
+export class TimeoutInfoListService extends Context.Tag(
+  "TimeoutInfoListService",
+)<TimeoutInfoListService, Array<TimeoutInfo>>() {}
 
-export const getTimeoutInfoList = TimeoutInfoContext.pipe(Effect.map(identity));
+export const TimeoutInfoListLive = Layer.succeed(
+  TimeoutInfoListService,
+  choiceList,
+);
 
-export const getTimeoutInfoByKey = (key: string) =>
+export const getTimeoutInfo = (key: string) =>
   pipe(
-    getTimeoutInfoList,
+    TimeoutInfoListService,
     Effect.map(ReadonlyArray.findFirst((info) => Equal.equals(info.key, key))),
     Effect.flatMap(identity),
   );
-
-export const provideTimeoutInfoService = Effect.provideService(
-  TimeoutInfoContext,
-  choiceList,
-);

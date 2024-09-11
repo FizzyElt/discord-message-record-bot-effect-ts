@@ -1,6 +1,6 @@
 import { REST, Routes } from "discord.js";
 import { Console, Effect, pipe } from "effect";
-import { getEnvService, provideEnvService } from "../services/env";
+import { EnvConfig, EnvLive } from "../services/env";
 import { commands } from "./main_command";
 import { memeCommands } from "./meme_command";
 
@@ -13,11 +13,11 @@ const pushCommands = (
 ) => {
   const rest = new REST({ version: "10" });
   return pipe(
-    getEnvService,
+    EnvConfig,
     Effect.flatMap((env) => {
-      rest.setToken(env.token);
+      rest.setToken(env.TOKEN);
       return Effect.tryPromise(() =>
-        rest.put(Routes.applicationGuildCommands(env.client_id, env.guild_id), {
+        rest.put(Routes.applicationGuildCommands(env.CLIENT_ID, env.GUILD_ID), {
           body: commands.map((command) => command.toJSON()),
         }),
       );
@@ -30,7 +30,7 @@ const pushCommands = (
 };
 
 const program = pushCommands([...commands, ...memeCommands]).pipe(
-  provideEnvService,
+  Effect.provide(EnvLive),
 );
 
 Effect.runPromise(program);
