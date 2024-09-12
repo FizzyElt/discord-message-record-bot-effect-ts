@@ -3,12 +3,11 @@ import {
   Context,
   Effect,
   Equal,
+  Layer,
   MutableHashMap,
   Array as ReadonlyArray,
-  Ref,
-  identity,
+  type Ref,
   pipe,
-  Layer,
 } from "effect";
 
 export type ChannelStore = MutableHashMap.MutableHashMap<string, string>;
@@ -18,8 +17,7 @@ export interface ChannelStoreRef extends Ref.Ref<ChannelStore> {}
 export class ChannelService extends Context.Tag("ChannelService")<
   ChannelService,
   {
-    getChannelStoreRef: () => ChannelStoreRef;
-    getChannelStore: () => Effect.Effect<ChannelStore>;
+    getChannelStore: () => ChannelStore;
     hasChannel: (channelId: string) => Effect.Effect<boolean>;
     addChannel: (channelInfo: {
       id: string;
@@ -38,55 +36,48 @@ export const ChannelServiceLive = Layer.effect(
   Effect.gen(function* () {
     const env = yield* EnvConfig;
 
-    const channelStoreRef = yield* Ref.make(
-      MutableHashMap.make([
-        env.BOT_SENDING_CHANNEL_ID,
-        env.BOT_SENDING_CHANNEL_NAME,
-      ]),
-    );
+    const channelStore = MutableHashMap.make([
+      env.BOT_SENDING_CHANNEL_ID,
+      env.BOT_SENDING_CHANNEL_NAME,
+    ]);
 
-    const getChannelStoreRef = () => channelStoreRef;
-
-    const getChannelStore = () => Ref.get(channelStoreRef);
+    const getChannelStore = () => channelStore;
 
     const hasChannel = (id: string) =>
-      pipe(getChannelStore(), Effect.map(MutableHashMap.has(id)));
+      Effect.succeed(MutableHashMap.has(channelStore, id));
 
     const addChannel = (channelInfo: { id: string; name: string }) =>
-      Ref.update(
-        channelStoreRef,
-        MutableHashMap.set(channelInfo.id, channelInfo.name),
+      Effect.succeed(
+        MutableHashMap.set(channelStore, channelInfo.id, channelInfo.name),
       );
 
-    const addChannels = (list: Array<{ id: string; name: string }>) =>
-      Ref.update(channelStoreRef, (store) => {
-        for (const { id, name } of list) {
-          MutableHashMap.set(store, id, name);
-        }
+    const addChannels = (list: Array<{ id: string; name: string }>) => {
+      for (const { id, name } of list) {
+        MutableHashMap.set(channelStore, id, name);
+      }
 
-        return store;
-      });
+      return Effect.void;
+    };
 
     const removeChannel = (id: string) => {
       if (Equal.equals(id, env.BOT_SENDING_CHANNEL_ID)) return Effect.void;
-      return Ref.update(channelStoreRef, MutableHashMap.remove(id));
+      return Effect.succeed(MutableHashMap.remove(channelStore, id));
     };
 
-    const removeChannels = (ids: Array<string>) =>
-      Ref.update(channelStoreRef, (store) => {
-        const removeIds = ReadonlyArray.filter(
-          ids,
-          (id) => !Equal.equals(id, env.BOT_SENDING_CHANNEL_ID),
-        );
+    const removeChannels = (ids: Array<string>) => {
+      const removeIds = ReadonlyArray.filter(
+        ids,
+        (id) => !Equal.equals(id, env.BOT_SENDING_CHANNEL_ID),
+      );
 
-        for (const id of removeIds) {
-          MutableHashMap.remove(store, id);
-        }
-        return store;
-      });
+      for (const id of removeIds) {
+        MutableHashMap.remove(channelStore, id);
+      }
+
+      return Effect.void;
+    };
 
     return {
-      getChannelStoreRef,
       getChannelStore,
       hasChannel,
       addChannel,
@@ -124,7 +115,7 @@ export const addChannels = (list: Array<{ id: string; name: string }>) =>
 export const getChannelStore = () =>
   pipe(
     ChannelService,
-    Effect.flatMap((service) => service.getChannelStore()),
+    Effect.map((service) => service.getChannelStore()),
   );
 
 export const hasChannel = (channelId: string) =>

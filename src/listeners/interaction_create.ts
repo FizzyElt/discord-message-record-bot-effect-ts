@@ -19,7 +19,7 @@ import {
   type ChannelService,
   type ClientContext,
   EnvConfig,
-  MainLive,
+  type MainLive,
   type TimeoutInfoListService,
   type VotingService,
 } from "@services";
@@ -32,21 +32,20 @@ import type {
   Message,
 } from "discord.js";
 
-export function interactionCreateListener(
-  interaction: Interaction<CacheType>,
-): Awaitable<void> {
-  if (!isCommandInteraction(interaction)) {
-    return;
-  }
+export const interactionCreateListener =
+  (live: typeof MainLive) =>
+  (interaction: Interaction<CacheType>): Awaitable<void> => {
+    if (!isCommandInteraction(interaction)) {
+      return;
+    }
 
-  const program = pipe(
-    interaction,
-    commandOperation,
-    Effect.orElse(() => Effect.succeed("reply error")),
-  );
+    const program = pipe(
+      commandOperation(interaction),
+      Effect.orElse(() => Effect.succeed("reply error")),
+    );
 
-  Effect.runPromise(program.pipe(Effect.provide(MainLive)));
-}
+    Effect.runPromise(program.pipe(Effect.provide(live)));
+  };
 
 function commandOperation(
   interaction: CommandInteraction,

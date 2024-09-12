@@ -5,21 +5,25 @@ import {
   interactionCreateListener,
   ready,
 } from "@listeners";
-import { ClientContext, ClientLive } from "@services/client";
-import { EnvLive } from "@services/env";
+import { ClientContext } from "@services/client";
+import { MainLive } from "@services";
 import { Effect, Layer } from "effect";
 
-const MainLive = ClientLive.pipe(Layer.provideMerge(EnvLive));
+const program = Effect.scoped(
+  Layer.memoize(MainLive).pipe(
+    Effect.flatMap((mainLive) =>
+      Effect.gen(function* () {
+        const client = yield* ClientContext;
 
-const program = Effect.gen(function* () {
-  const client = yield* ClientContext;
+        client
+          .on("ready", ready)
+          .on("messageCreate", messageCreateListener(mainLive))
+          .on("messageDelete", messageDeleteListener(mainLive))
+          .on("messageUpdate", messageUpdateListener(mainLive))
+          .on("interactionCreate", interactionCreateListener(mainLive));
+      }).pipe(Effect.provide(mainLive)),
+    ),
+  ),
+);
 
-  client
-    .on("ready", ready)
-    .on("messageCreate", messageCreateListener)
-    .on("messageDelete", messageDeleteListener)
-    .on("messageUpdate", messageUpdateListener)
-    .on("interactionCreate", interactionCreateListener);
-});
-
-Effect.runPromise(program.pipe(Effect.provide(MainLive)));
+Effect.runPromise(program);

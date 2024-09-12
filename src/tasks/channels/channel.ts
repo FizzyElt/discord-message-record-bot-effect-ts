@@ -53,16 +53,11 @@ export const addChannelFlow = (interaction: CommandInteraction) =>
     return yield* pipe(
       interaction,
       getCommandOptionString("id"),
-      (idOrName) =>
-        Option.fromNullable(
-          client.channels.cache.find((channel) =>
-            Equal.equals(channel.id, idOrName),
-          ),
-        ),
-
-      Option.match({
-        onSome: excludeChannels,
-        onNone: () => Effect.succeed("找不到頻道"),
+      (idOrName) => Effect.tryPromise(() => client.channels.fetch(idOrName)),
+      Effect.flatMap((channel) => pipe(channel, Option.fromNullable)),
+      Effect.matchEffect({
+        onSuccess: excludeChannels,
+        onFailure: () => Effect.succeed("找不到頻道"),
       }),
       Effect.flatMap((msg) => Effect.tryPromise(() => interaction.reply(msg))),
     );
