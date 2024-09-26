@@ -1,7 +1,6 @@
 import { minute, getTimeoutInfo } from "@services/timeout";
 import {
   addNewVoting,
-  getVotingStore,
   isUserVoting,
   removeVoting,
 } from "@services/voting_store";
@@ -24,7 +23,6 @@ import { ClientContext, EnvConfig } from "@services";
 import type { TimeoutInfo } from "@services/timeout";
 import type {
   AwaitReactionsOptions,
-  Client,
   CommandInteraction,
   EmojiIdentifierResolvable,
   GuildMember,
@@ -145,7 +143,7 @@ const votingFlow = (params: {
   );
 
 // new ban user function
-const banUserVote = (params: {
+const _banUserVote = (params: {
   member: GuildMember;
   interaction: CommandInteraction;
   timeoutInfo: TimeoutInfo;
@@ -159,31 +157,30 @@ const banUserVote = (params: {
     content: startMemberVote(member, timeoutInfo, mentionRole),
   };
 
+  const options = {
+    emoji,
+    time: timeoutInfo.votingMinutes,
+  };
+
+  const resultFlow = (count: number, msg: Message<boolean>) => {
+    if (member.isCommunicationDisabled()) {
+      return Effect.tryPromise(() =>
+        msg.reply({ content: memberDisableTime(member) }),
+      );
+    }
+
+    if (count >= timeoutInfo.voteThreshold) {
+      return timeoutMember({ count, msg, timeoutInfo, member });
+    }
+
+    return Effect.tryPromise(() => msg.reply(memberFree(member, count)));
+  };
+
   return pipe(
-    createVoting(
-      interaction,
-      startContent,
-      {
-        emoji,
-        time: timeoutInfo.votingMinutes,
-      },
-      {
-        started: () => addNewVoting(member.user.id),
-        result: (count, msg) => {
-          if (member.isCommunicationDisabled()) {
-            return Effect.tryPromise(() =>
-              msg.reply({ content: memberDisableTime(member) }),
-            );
-          }
-
-          if (count >= timeoutInfo.voteThreshold) {
-            return timeoutMember({ count, msg, timeoutInfo, member });
-          }
-
-          return Effect.tryPromise(() => msg.reply(memberFree(member, count)));
-        },
-      },
-    ),
+    createVoting(interaction, startContent, options, {
+      started: () => addNewVoting(member.user.id),
+      result: resultFlow,
+    }),
     Effect.tap(() => removeVoting(params.member.user.id)),
   );
 };

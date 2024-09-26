@@ -1,8 +1,5 @@
 import { ApplicationCommandOptionType } from "discord.js";
-import { Equal, Option, pipe } from "effect";
-import * as Function from "effect/Function";
-import * as Number from "effect/Number";
-import * as String from "effect/String";
+import { Equal, Option, pipe, Struct, Function, Number, String } from "effect";
 
 import type { CommandInteraction } from "discord.js";
 
@@ -22,7 +19,7 @@ export const getCommandOptionString =
     pipe(
       interaction,
       getCommandOptionOfType(ApplicationCommandOptionType.String, optionName),
-      Option.map((option) => option.value),
+      Option.map(Struct.get("value")),
       Option.filter(String.isString),
       Option.getOrElse(Function.constant("")),
     );
@@ -32,7 +29,7 @@ export const getCommandOptionInteger =
     pipe(
       interaction,
       getCommandOptionOfType(ApplicationCommandOptionType.Integer, optionName),
-      Option.map((option) => option.value),
+      Option.map(Struct.get("value")),
       Option.filter(Number.isNumber),
       Option.getOrElse(Function.constant(0)),
     );
