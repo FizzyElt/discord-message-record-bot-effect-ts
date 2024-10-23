@@ -1,5 +1,3 @@
-version: '2'
-
 services:
   app:
     build: .
@@ -7,3 +5,7 @@ services:
     container_name: dc-bot
     env_file:
       - .env
+    volumes:
+      - dc-bot:/dc_bot
+volumes:
+  dc-bot:

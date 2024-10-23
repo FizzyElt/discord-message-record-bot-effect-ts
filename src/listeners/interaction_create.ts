@@ -1,19 +1,22 @@
+import { CommandName } from "@slashCommand/main_command";
+import { MemeCommandName } from "@slashCommand/meme_command";
 import {
   addChannelFlow,
   banUser,
+  createSticky,
   getEmoJiJi,
   getMyPartyGif,
   getNoImageGif,
   getPyPartyGif,
   listChannels,
   removeChannelFlow,
+  showSticky,
   subscribe,
+  deleteSticky,
   unsubscribe,
 } from "@tasks";
 import { isCommandInteraction } from "@utils/interaction";
 import { Effect, pipe } from "effect";
-import { CommandName } from "~/slash_command/main_command";
-import { MemeCommandName } from "~/slash_command/meme_command";
 
 import {
   type ChannelService,
@@ -23,6 +26,8 @@ import {
   type TimeoutInfoListService,
   type VotingService,
 } from "@services";
+import type { StickyService } from "@services/sticky_store";
+import { StickyCommandName } from "@slashCommand/sticky_command";
 import type {
   Awaitable,
   CacheType,
@@ -57,6 +62,7 @@ function commandOperation(
   | EnvConfig
   | TimeoutInfoListService
   | VotingService
+  | StickyService
 > {
   switch (interaction.commandName) {
     case CommandName.add_channels:
@@ -82,6 +88,14 @@ function commandOperation(
           unsubscribe(VOTE_ROLE_ID)(interaction),
         ),
       );
+
+    // sticky commands
+    case StickyCommandName.create_sticky:
+      return createSticky(interaction);
+    case StickyCommandName.delete_sticky:
+      return deleteSticky(interaction);
+    case StickyCommandName.sticky:
+      return showSticky(interaction);
 
     // meme commands
     case MemeCommandName.pyParty:
