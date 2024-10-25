@@ -1,9 +1,11 @@
 import { CommandName } from "@slashCommand/main_command";
 import { MemeCommandName } from "@slashCommand/meme_command";
+import { StickyCommandName } from "@slashCommand/sticky_command";
 import {
   addChannelFlow,
   banUser,
   createSticky,
+  deleteSticky,
   getEmoJiJi,
   getMyPartyGif,
   getNoImageGif,
@@ -12,10 +14,9 @@ import {
   removeChannelFlow,
   showSticky,
   subscribe,
-  deleteSticky,
   unsubscribe,
 } from "@tasks";
-import { isCommandInteraction } from "@utils/interaction";
+
 import { Effect, pipe } from "effect";
 
 import {
@@ -27,20 +28,21 @@ import {
   type VotingService,
 } from "@services";
 import type { StickyService } from "@services/sticky_store";
-import { StickyCommandName } from "@slashCommand/sticky_command";
 import type {
   Awaitable,
   CacheType,
-  CommandInteraction,
+  ChatInputCommandInteraction,
   Interaction,
   InteractionResponse,
   Message,
 } from "discord.js";
+import type { NoSuchElementException, UnknownException } from "effect/Cause";
+import type { Database } from "~/services/database";
 
 export const interactionCreateListener =
   (live: typeof MainLive) =>
   (interaction: Interaction<CacheType>): Awaitable<void> => {
-    if (!isCommandInteraction(interaction)) {
+    if (!interaction.isChatInputCommand()) {
       return;
     }
 
@@ -53,16 +55,17 @@ export const interactionCreateListener =
   };
 
 function commandOperation(
-  interaction: CommandInteraction,
+  interaction: ChatInputCommandInteraction<CacheType>,
 ): Effect.Effect<
   Message<boolean> | InteractionResponse<boolean>,
-  unknown,
+  UnknownException | NoSuchElementException,
   | ClientContext
   | ChannelService
   | EnvConfig
   | TimeoutInfoListService
   | VotingService
   | StickyService
+  | Database
 > {
   switch (interaction.commandName) {
     case CommandName.add_channels:

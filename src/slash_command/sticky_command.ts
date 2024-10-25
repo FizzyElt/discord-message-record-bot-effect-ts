@@ -1,12 +1,4 @@
-import type { APIApplicationCommandOptionChoice } from "discord.js";
 import { SlashCommandBuilder, SlashCommandStringOption } from "discord.js";
-import { map } from "effect/Array";
-import { pipe } from "effect";
-
-export type Sticky = {
-  name: string;
-  url: string;
-};
 
 export enum StickyCommandName {
   sticky = "sticky",
@@ -29,6 +21,12 @@ export const stickyCommands = [
         .setName("url")
         .setDescription("sticky url")
         .setRequired(true),
+    )
+    .addStringOption(
+      new SlashCommandStringOption()
+        .setName("group")
+        .setDescription("sticky group 預設 default")
+        .setRequired(false),
     ),
   new SlashCommandBuilder()
     .setName(StickyCommandName.delete_sticky)
@@ -40,25 +38,3 @@ export const stickyCommands = [
         .setRequired(true),
     ),
 ];
-
-export const createStickyChoicesCommand = (data: ReadonlyArray<Sticky>) =>
-  pipe(
-    data,
-    map<ReadonlyArray<Sticky>, APIApplicationCommandOptionChoice<string>>(
-      ({ name }) => ({
-        name,
-        value: name,
-      }),
-    ),
-    (choices) =>
-      new SlashCommandBuilder()
-        .setName(StickyCommandName.sticky)
-        .setDescription("貼圖")
-        .addStringOption(
-          new SlashCommandStringOption()
-            .setName("name")
-            .setDescription("name")
-            .setChoices(...choices)
-            .setRequired(true),
-        ),
-  );

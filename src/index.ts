@@ -26,4 +26,4 @@ const program = Effect.scoped(
   ),
 );
 
-Effect.runPromise(program);
+Effect.runPromise(program).then((err) => console.log(err));

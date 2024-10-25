@@ -1,11 +1,14 @@
 import { EnvConfig } from "@services/env";
+import type {
+  SlashCommandOptionsOnlyBuilder,
+  SlashCommandSubcommandsOnlyBuilder,
+} from "discord.js";
 import { REST, Routes } from "discord.js";
-import type { SlashCommandOptionsOnlyBuilder } from "discord.js";
 import { Console, Effect, pipe } from "effect";
 
 export const pushCommands = (
   commands: Array<
-    Omit<SlashCommandOptionsOnlyBuilder, "addSubcommand" | "addSubcommandGroup">
+    SlashCommandSubcommandsOnlyBuilder | SlashCommandOptionsOnlyBuilder
   >,
 ) => {
   const rest = new REST({ version: "10" });
@@ -21,7 +24,7 @@ export const pushCommands = (
     }),
     Effect.matchEffect({
       onFailure: (err) => Console.error("put fail", err),
-      onSuccess: (res) => Console.log("put success", res),
+      onSuccess: () => Effect.void,
     }),
   );
 };
