@@ -1,12 +1,12 @@
-import { ClientContext, EnvConfig } from "@services";
+import { format } from "date-fns";
+import { Effect, Array as ReadonlyArray, String, pipe } from "effect";
+import { ClientContext, EnvConfig } from "~/services";
 import {
   getTextChannelByClient,
   isPublicThreadChannel,
   isTextChannel,
-} from "@utils/channel";
-import { bold, strikeThrough } from "@utils/mark_string";
-import { format } from "date-fns";
-import { Effect, Array as ReadonlyArray, String, pipe } from "effect";
+} from "~/utils/channel";
+import { bold, strikeThrough } from "~/utils/mark_string";
 
 import type { Message, PartialMessage } from "discord.js";
 

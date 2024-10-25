@@ -1,5 +1,5 @@
-import { ChannelService, ClientContext } from "@services";
 import { Boolean, Effect, Equal, pipe } from "effect";
+import { ChannelService, ClientContext } from "~/services";
 import { inviteLinkGuard } from "./invite_link_guard";
 
 import type { Message, PartialMessage } from "discord.js";

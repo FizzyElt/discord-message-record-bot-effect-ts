@@ -1,4 +1,4 @@
-import { Context, Effect, Layer, MutableHashSet, pipe, Ref } from "effect";
+import { Context, Effect, Layer, MutableHashSet, Ref, pipe } from "effect";
 
 export type VotingStore = MutableHashSet.MutableHashSet<string>;
 

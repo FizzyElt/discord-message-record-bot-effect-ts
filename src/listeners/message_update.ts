@@ -1,7 +1,7 @@
 import { messageGuard, recordUpdateMsg } from "@tasks";
 import { Effect, pipe } from "effect";
 
-import type { MainLive } from "@services";
+import type { MainLive } from "~/services";
 import type { Message, PartialMessage } from "discord.js";
 
 export const messageUpdateListener =

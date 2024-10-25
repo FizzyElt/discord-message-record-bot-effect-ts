@@ -1,30 +1,9 @@
-import { fetchCatImage } from "@utils/cat_image";
-import { getCommandOptionString } from "@utils/command";
-import { fetchEmoji } from "@utils/google_emoji";
 import { Effect, String, pipe } from "effect";
+import { fetchCatImage } from "~/utils/cat_image";
+import { getCommandOptionString } from "~/utils/command";
+import { fetchEmoji } from "~/utils/google_emoji";
 
 import type { CommandInteraction } from "discord.js";
-
-export const getPyPartyGif = (interaction: CommandInteraction) =>
-  Effect.tryPromise(() =>
-    interaction.reply(
-      "https://cdn.discordapp.com/attachments/903662488258760707/914521041710248006/KGYJi5c.gif",
-    ),
-  );
-
-export const getMyPartyGif = (interaction: CommandInteraction) =>
-  Effect.tryPromise(() =>
-    interaction.reply(
-      "https://memeprod.ap-south-1.linodeobjects.com/user-gif/f617320247c594d021a00064f359fae5.gif",
-    ),
-  );
-
-export const getNoImageGif = (interaction: CommandInteraction) =>
-  Effect.tryPromise(() =>
-    interaction.reply(
-      "https://cdn.discordapp.com/attachments/903662488258760707/917419682900889620/027023d73c4a7e0edee6047909e3f57b.gif",
-    ),
-  );
 
 export const getEmoJiJi = (interaction: CommandInteraction) =>
   pipe(

@@ -5,8 +5,8 @@ import {
 } from "discord.js";
 import { Array, Context, Data, Effect, Equal, Layer, Ref, pipe } from "effect";
 
-import * as StickyModel from "~/model/sticky";
 import type { Sticky } from "~/model/sticky";
+import * as StickyModel from "~/model/sticky";
 import { commands } from "~/slash_command/main_command";
 import { memeCommands } from "~/slash_command/meme_command";
 import { pushCommands } from "~/slash_command/push_commands";

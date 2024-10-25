@@ -1,10 +1,10 @@
-import { EnvConfig } from "@services/env";
 import type {
   SlashCommandOptionsOnlyBuilder,
   SlashCommandSubcommandsOnlyBuilder,
 } from "discord.js";
 import { REST, Routes } from "discord.js";
 import { Console, Effect, pipe } from "effect";
+import { EnvConfig } from "~/services/env";
 
 export const pushCommands = (
   commands: Array<

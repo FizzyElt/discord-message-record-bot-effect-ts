@@ -1,8 +1,8 @@
 import { formatDistanceToNow } from "date-fns";
 import { formatInTimeZone } from "date-fns-tz";
 
-import type { TimeoutInfo } from "@services/timeout";
 import type { GuildMember } from "discord.js";
+import type { TimeoutInfo } from "~/services/timeout";
 
 export const canNotFindUser = (): string => "找不到使用者";
 

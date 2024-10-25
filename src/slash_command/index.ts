@@ -1,11 +1,11 @@
-import { Effect } from "effect";
-import { EnvLive } from "../services/env";
-import { pushCommands } from "./push_commands";
 import {
   SlashCommandBuilder,
   SlashCommandStringOption,
   SlashCommandSubcommandBuilder,
 } from "discord.js";
+import { Effect } from "effect";
+import { EnvLive } from "~/services/env";
+import { pushCommands } from "./push_commands";
 
 const testCommands = [
   new SlashCommandBuilder()

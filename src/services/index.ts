@@ -18,9 +18,9 @@ export const MainLive = pipe(
 );
 
 export {
-  EnvConfig,
   ChannelService,
   ClientContext,
-  VotingService,
+  EnvConfig,
   TimeoutInfoListService,
+  VotingService,
 };

@@ -1,4 +1,4 @@
-import { minute } from "@services/timeout";
+import { minute } from "~/services/timeout";
 import { Effect, Equal, pipe } from "effect";
 
 import type {

@@ -1,11 +1,13 @@
-import { minute, getTimeoutInfo } from "@services/timeout";
+import { Effect, Equal, pipe } from "effect";
+import { ClientContext, EnvConfig } from "~/services";
+import { getTimeoutInfo, minute } from "~/services/timeout";
 import {
   addNewVoting,
   isUserVoting,
   removeVoting,
-} from "@services/voting_store";
-import { getCommandOptionString } from "@utils/command";
-import { findUserFromMembers, isAdmin } from "@utils/member";
+} from "~/services/voting_store";
+import { getCommandOptionString } from "~/utils/command";
+import { findUserFromMembers, isAdmin } from "~/utils/member";
 import {
   canNotFindUser,
   doNotBanAdmin,
@@ -15,12 +17,9 @@ import {
   memberTimeoutVotePassed,
   memberVoting,
   startMemberVote,
-} from "@utils/reply_msg";
-import { createVoting } from "@utils/vote_flow";
-import { Effect, Equal, pipe } from "effect";
-import { ClientContext, EnvConfig } from "@services";
+} from "~/utils/reply_msg";
+import { createVoting } from "~/utils/vote_flow";
 
-import type { TimeoutInfo } from "@services/timeout";
 import type {
   AwaitReactionsOptions,
   CommandInteraction,
@@ -28,6 +27,7 @@ import type {
   GuildMember,
   Message,
 } from "discord.js";
+import type { TimeoutInfo } from "~/services/timeout";
 
 const reactMsg =
   (emoji: EmojiIdentifierResolvable) => (msg: Message<boolean>) =>

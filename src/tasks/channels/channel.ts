@@ -1,19 +1,3 @@
-import { ClientContext } from "@services";
-import {
-  addChannel,
-  addChannels,
-  getChannelStore,
-  removeChannel,
-  removeChannels,
-} from "@services/channel_store";
-import {
-  getCategoryTextChannels,
-  getTextChannelInfo,
-  getTextChannelsInfo,
-  isCategoryChannel,
-  isTextChannel,
-} from "@utils/channel";
-import { getCommandOptionString } from "@utils/command";
 import {
   Effect,
   Equal,
@@ -22,6 +6,22 @@ import {
   flow,
   pipe,
 } from "effect";
+import { ClientContext } from "~/services";
+import {
+  addChannel,
+  addChannels,
+  getChannelStore,
+  removeChannel,
+  removeChannels,
+} from "~/services/channel_store";
+import {
+  getCategoryTextChannels,
+  getTextChannelInfo,
+  getTextChannelsInfo,
+  isCategoryChannel,
+  isTextChannel,
+} from "~/utils/channel";
+import { getCommandOptionString } from "~/utils/command";
 
 import type { Channel, CommandInteraction } from "discord.js";
 

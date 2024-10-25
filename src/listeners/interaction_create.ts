@@ -1,33 +1,21 @@
-import { CommandName } from "@slashCommand/main_command";
-import { MemeCommandName } from "@slashCommand/meme_command";
-import { StickyCommandName } from "@slashCommand/sticky_command";
+import { CommandName } from "~/slash_command/main_command";
+import { MemeCommandName } from "~/slash_command/meme_command";
+import { StickyCommandName } from "~/slash_command/sticky_command";
 import {
   addChannelFlow,
   banUser,
   createSticky,
   deleteSticky,
   getEmoJiJi,
-  getMyPartyGif,
-  getNoImageGif,
-  getPyPartyGif,
   listChannels,
   removeChannelFlow,
   showSticky,
   subscribe,
   unsubscribe,
-} from "@tasks";
+} from "~/tasks";
 
 import { Effect, pipe } from "effect";
 
-import {
-  type ChannelService,
-  type ClientContext,
-  EnvConfig,
-  type MainLive,
-  type TimeoutInfoListService,
-  type VotingService,
-} from "@services";
-import type { StickyService } from "@services/sticky_store";
 import type {
   Awaitable,
   CacheType,
@@ -37,7 +25,16 @@ import type {
   Message,
 } from "discord.js";
 import type { NoSuchElementException, UnknownException } from "effect/Cause";
+import {
+  type ChannelService,
+  type ClientContext,
+  EnvConfig,
+  type MainLive,
+  type TimeoutInfoListService,
+  type VotingService,
+} from "~/services";
 import type { Database } from "~/services/database";
+import type { StickyService } from "~/services/sticky_store";
 
 export const interactionCreateListener =
   (live: typeof MainLive) =>
@@ -101,12 +98,6 @@ function commandOperation(
       return showSticky(interaction);
 
     // meme commands
-    case MemeCommandName.pyParty:
-      return getPyPartyGif(interaction);
-    case MemeCommandName.myParty:
-      return getMyPartyGif(interaction);
-    case MemeCommandName.noImage:
-      return getNoImageGif(interaction);
     case MemeCommandName.emoJiji:
       return getEmoJiJi(interaction);
 

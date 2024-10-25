@@ -1,5 +1,5 @@
-import { findUserFromMembers } from "@utils/member";
 import { Effect, pipe } from "effect";
+import { findUserFromMembers } from "~/utils/member";
 
 import type {
   CommandInteraction,

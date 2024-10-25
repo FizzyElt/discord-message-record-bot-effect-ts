@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, SlashCommandStringOption } from "discord.js";
-import { choiceList } from "../services/timeout";
+import { choiceList } from "~/services/timeout";
 
 import type { APIApplicationCommandOptionChoice } from "discord.js";
 
@@ -16,8 +16,6 @@ export enum CommandName {
   timeout_info = "timeout_info",
   subscribe = "subscribe",
   unsubscribe = "unsubscribe",
-
-  chat_ai = "chat_ai",
 }
 
 export const commands = [
@@ -77,14 +75,4 @@ export const commands = [
   new SlashCommandBuilder()
     .setName(CommandName.unsubscribe)
     .setDescription("取消民主的一員"),
-
-  new SlashCommandBuilder()
-    .setName(CommandName.chat_ai)
-    .setDescription("cloudflare ai")
-    .addStringOption(
-      new SlashCommandStringOption()
-        .setName("content")
-        .setDescription("chat content")
-        .setRequired(true),
-    ),
 ];

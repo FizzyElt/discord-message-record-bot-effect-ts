@@ -1,4 +1,3 @@
-import { EnvConfig } from "@services/env";
 import {
   Context,
   Effect,
@@ -9,6 +8,7 @@ import {
   type Ref,
   pipe,
 } from "effect";
+import { EnvConfig } from "~/services/env";
 
 export type ChannelStore = MutableHashMap.MutableHashMap<string, string>;
 

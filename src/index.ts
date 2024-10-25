@@ -1,13 +1,13 @@
+import { Effect, Layer } from "effect";
 import {
+  interactionCreateListener,
   messageCreateListener,
   messageDeleteListener,
   messageUpdateListener,
-  interactionCreateListener,
   ready,
-} from "@listeners";
-import { ClientContext } from "@services/client";
-import { MainLive } from "@services";
-import { Effect, Layer } from "effect";
+} from "~/listeners";
+import { MainLive } from "~/services";
+import { ClientContext } from "~/services/client";
 
 const program = Effect.scoped(
   Layer.memoize(MainLive).pipe(
