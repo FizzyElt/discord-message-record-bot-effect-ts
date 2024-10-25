@@ -1,32 +1,69 @@
-import type { EnvConfig } from "@services/env";
-import { commands } from "@slashCommand/main_command";
-import { memeCommands } from "@slashCommand/meme_command";
-import { pushCommands } from "@slashCommand/push_commands";
 import {
-  type Sticky,
-  createStickyChoicesCommand,
+  SlashCommandBuilder,
+  SlashCommandStringOption,
+  SlashCommandSubcommandBuilder,
+} from "discord.js";
+import { Array, Context, Data, Effect, Equal, Layer, Ref, pipe } from "effect";
+
+import * as StickyModel from "~/model/sticky";
+import type { Sticky } from "~/model/sticky";
+import { commands } from "~/slash_command/main_command";
+import { memeCommands } from "~/slash_command/meme_command";
+import { pushCommands } from "~/slash_command/push_commands";
+import {
+  StickyCommandName,
   stickyCommands,
-} from "@slashCommand/sticky_command";
-import { Context, Effect, Layer, Ref, pipe, Array, Data, Equal } from "effect";
-import { readFile, writeFile } from "node:fs/promises";
+} from "~/slash_command/sticky_command";
 
-export type StickyStore = ReadonlyArray<Sticky>;
+const createStickyCommand = (data: Sticky[]) => {
+  const dataMap = data.reduce<Record<string, Sticky[]>>((acc, item) => {
+    if (item.group && acc[item.group]) {
+      acc[item.group].push(item);
+      return acc;
+    }
 
-export type StickyStoreRef = Ref.Ref<StickyStore>;
+    if (item.group) {
+      acc[item.group] = [item];
+      return acc;
+    }
 
-export const readStickyData = () => {
-  return Effect.tryPromise({
-    try: () => readFile("/dc_bot/sticky_data.json", "utf-8"),
-    catch: (err) => err,
-  }).pipe(Effect.map((res) => JSON.parse(res) as { data: StickyStore }));
+    return acc;
+  }, {});
+
+  const command = new SlashCommandBuilder()
+    .setName(StickyCommandName.sticky)
+    .setDescription("貼圖");
+
+  for (const [group, stickies] of Object.entries(dataMap)) {
+    command.addSubcommand(
+      new SlashCommandSubcommandBuilder()
+        .setName(group)
+        .setDescription(group)
+        .addStringOption(
+          new SlashCommandStringOption()
+            .setName("name")
+            .setDescription("name")
+            .setChoices(...stickies.map(({ name }) => ({ name, value: name }))),
+        ),
+    );
+  }
+  return command;
 };
 
-export const writeStickyData = (data: StickyStore) => {
-  return Effect.tryPromise({
-    try: () => writeFile("/dc_bot/sticky_data.json", JSON.stringify({ data })),
-    catch: (err) => err,
-  });
-};
+const syncData = () =>
+  pipe(
+    StickyModel.queryStickies(),
+    Effect.tap((stickies) =>
+      Equal.equals(stickies.length, 0)
+        ? pushCommands([...commands, ...memeCommands, ...stickyCommands])
+        : pushCommands([
+            ...commands,
+            ...memeCommands,
+            ...stickyCommands,
+            createStickyCommand(stickies),
+          ]),
+    ),
+  );
 
 export class UpdateStickyError extends Data.TaggedError("UpdateStickyError")<{
   message: unknown;
@@ -34,99 +71,49 @@ export class UpdateStickyError extends Data.TaggedError("UpdateStickyError")<{
 
 export class StickyService extends Context.Tag("StickyService")<
   StickyService,
-  {
-    getStickyStore: () => Effect.Effect<StickyStore>;
-    updateStickyData: (
-      data: StickyStore,
-    ) => Effect.Effect<void, UpdateStickyError, EnvConfig>;
-  }
+  Ref.Ref<Sticky[]>
 >() {}
 
 export const StickyStoreLive = Layer.effect(
   StickyService,
   Effect.gen(function* () {
-    const stickyStore = yield* pipe(
-      readStickyData(),
-      Effect.orElse(() => Effect.succeed({ data: [] })),
-      Effect.tap(Effect.log),
-      Effect.tap(({ data }) =>
-        pushCommands(
-          data.length > 0
-            ? [
-                ...commands,
-                ...memeCommands,
-                ...stickyCommands,
-                createStickyChoicesCommand(data),
-              ]
-            : [...commands, ...memeCommands, ...stickyCommands],
-        ),
-      ),
-      Effect.flatMap(({ data }) => Ref.make<StickyStore>(data)),
-    );
+    const stickies = yield* syncData();
 
-    const updateStickyData = (data: StickyStore) =>
-      pipe(
-        writeStickyData(data),
-        Effect.flatMap(() =>
-          pushCommands(
-            data.length > 0
-              ? [
-                  ...commands,
-                  ...memeCommands,
-                  ...stickyCommands,
-                  createStickyChoicesCommand(data),
-                ]
-              : [...commands, ...memeCommands, ...stickyCommands],
-          ),
-        ),
-        Effect.flatMap(() => Ref.update(stickyStore, () => data)),
-        Effect.mapError((err) => new UpdateStickyError({ message: err })),
-      );
+    const stickiesStore = yield* Ref.make<Sticky[]>(stickies);
 
-    const getStickyStore = () => Ref.get(stickyStore);
-
-    return { getStickyStore, updateStickyData };
+    return stickiesStore;
   }),
 );
-
-class DuplicateNameError extends Data.TaggedError("DuplicateStickyError") {}
-
-export const createNewSticky = (sticky: Sticky) =>
-  pipe(
-    StickyService,
-    Effect.flatMap(({ getStickyStore, updateStickyData }) =>
-      pipe(
-        getStickyStore(),
-        Effect.flatMap((data) =>
-          Array.some(data, ({ name }) => Equal.equals(name, sticky.name))
-            ? Effect.fail(new DuplicateNameError())
-            : Effect.succeed(data),
-        ),
-        Effect.flatMap((data) => updateStickyData([...data, sticky])),
-      ),
-    ),
-  );
-
-export const deleteSticky = (stickyName: string) =>
-  pipe(
-    StickyService,
-    Effect.flatMap(({ getStickyStore, updateStickyData }) =>
-      pipe(
-        getStickyStore(),
-        Effect.flatMap((data) =>
-          updateStickyData(
-            Array.filter(data, ({ name }) => !Equal.equals(name, stickyName)),
-          ),
-        ),
-      ),
-    ),
-  );
 
 export const getSticky = (name: string) =>
   pipe(
     StickyService,
-    Effect.flatMap(({ getStickyStore }) => getStickyStore()),
+    Effect.flatMap(Ref.get),
+    Effect.flatMap(
+      Array.findFirst((sticky) => Equal.equals(sticky.name, name)),
+    ),
+  );
+
+export const createNewSticky = (name: string, url: string, group: string) =>
+  pipe(
+    StickyModel.insertSticky(name, url, group),
+    Effect.flatMap(syncData),
     Effect.flatMap((stickies) =>
-      Array.findFirst(stickies, (sticky) => Equal.equals(name, sticky.name)),
+      Effect.gen(function* () {
+        const stickiesStore = yield* StickyService;
+        yield* Ref.set(stickiesStore, stickies);
+      }),
+    ),
+  );
+
+export const deleteSticky = (name: string) =>
+  pipe(
+    StickyModel.deleteSticky(name),
+    Effect.flatMap(syncData),
+    Effect.flatMap((stickies) =>
+      Effect.gen(function* () {
+        const stickiesStore = yield* StickyService;
+        yield* Ref.set(stickiesStore, stickies);
+      }),
     ),
   );

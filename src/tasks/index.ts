@@ -6,6 +6,4 @@ export * from "./member/ban_user";
 export * from "./meme/images";
 export * from "./messages/record_msg";
 export * from "./role/subscribe";
-export * from "./sticky/create_sticky";
-export * from "./sticky/show_sticky";
-export * from "./sticky/delete_sticky";
+export * from "./sticky";

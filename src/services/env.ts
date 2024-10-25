@@ -19,6 +19,7 @@ export interface Env {
   readonly EMOJI_KITCHEN_KEY: string;
   readonly CLOUDFLARE_ACCOUNT_ID: string;
   readonly CLOUDFLARE_AI_TOKEN: string;
+  readonly SUPABASE_URL_ADMIN: string;
 }
 
 export class EnvConfig extends Context.Tag("EnvConfig")<EnvConfig, Env>() {}
@@ -37,4 +38,5 @@ export const EnvLive = Layer.succeed(EnvConfig, {
   EMOJI_KITCHEN_KEY: process.env.EMOJI_KITCHEN_KEY || "",
   CLOUDFLARE_ACCOUNT_ID: process.env.CLOUDFLARE_ACCOUNT_ID || "",
   CLOUDFLARE_AI_TOKEN: process.env.CLOUDFLARE_AI_TOKEN || "",
+  SUPABASE_URL_ADMIN: process.env.SUPABASE_URL_ADMIN || "",
 });

@@ -10,14 +10,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "ts-node -r tsconfig-paths/register ./src/index.ts",
-    "start2": "ts-node -r tsconfig-paths/register ./src/index_with_layer.ts",
-    "jj": "ts-node -r tsconfig-paths/register ./src/writeData.ts",
-    "create-command": "ts-node ./src/slash_command/index.ts"
+    "create-command": "ts-node -r tsconfig-paths/register ./src/slash_command/index.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "drizzle-kit": "^0.26.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.6.3"
   },
@@ -28,7 +27,9 @@
     "date-fns-tz": "^3.2.0",
     "discord.js": "^14.16.3",
     "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.35.3",
     "effect": "^3.10.1",
+    "postgres": "^3.4.5",
     "ts-node": "^10.9.2"
   }
 }
