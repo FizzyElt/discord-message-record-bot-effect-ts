@@ -34,10 +34,12 @@ export const createSticky = (interaction: CommandInteraction) => {
 
   return pipe(
     StickyStore.createNewSticky(name, url, group),
-    Effect.match({
-      onSuccess: () => `新增 ${name} 到 ${group} 成功`,
-      onFailure: () => `新增 ${name} 到 ${group} 失敗`,
+    Effect.map(() => `新增 ${name} 到 ${group} 成功`),
+    Effect.catchTags({
+      StickyOptionLimitError: () => Effect.succeed("group 以達上限"),
+      GroupLimitError: () => Effect.succeed(`${group} 選項已達上限`),
     }),
+    Effect.catchAll(() => Effect.succeed(`新增 ${name} 到 ${group} 失敗`)),
     Effect.flatMap((msg) =>
       Effect.tryPromise(() =>
         interaction.reply({ content: msg, fetchReply: true }),

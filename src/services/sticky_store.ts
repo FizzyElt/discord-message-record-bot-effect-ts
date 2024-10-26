@@ -3,7 +3,17 @@ import {
   SlashCommandStringOption,
   SlashCommandSubcommandBuilder,
 } from "discord.js";
-import { Array, Context, Data, Effect, Equal, Layer, Ref, pipe } from "effect";
+import {
+  Array,
+  Context,
+  Data,
+  Effect,
+  Equal,
+  Layer,
+  Ref,
+  pipe,
+  Number,
+} from "effect";
 
 import type { Sticky } from "~/model/sticky";
 import * as StickyModel from "~/model/sticky";
@@ -65,8 +75,14 @@ const syncData = () =>
     ),
   );
 
-export class UpdateStickyError extends Data.TaggedError("UpdateStickyError")<{
-  message: unknown;
+class StickyOptionLimitError extends Data.TaggedError(
+  "StickyOptionLimitError",
+)<{
+  message: string;
+}> {}
+
+class GroupLimitError extends Data.TaggedError("GroupLimitError")<{
+  message: string;
 }> {}
 
 export class StickyService extends Context.Tag("StickyService")<
@@ -96,7 +112,22 @@ export const getSticky = (name: string) =>
 
 export const createNewSticky = (name: string, url: string, group: string) =>
   pipe(
-    StickyModel.insertSticky(name, url, group),
+    StickyModel.groupCount(),
+    Effect.filterOrFail(
+      Number.greaterThanOrEqualTo(25),
+      () => new GroupLimitError({ message: "group is reach limit" }),
+    ),
+
+    Effect.flatMap(() => StickyModel.stickyCountByGroup(group)),
+    Effect.filterOrFail(
+      Number.greaterThanOrEqualTo(25),
+      () =>
+        new StickyOptionLimitError({
+          message: `group ${group} options is reach limit`,
+        }),
+    ),
+
+    Effect.flatMap(() => StickyModel.insertSticky(name, url, group)),
     Effect.flatMap(syncData),
     Effect.flatMap((stickies) =>
       Effect.gen(function* () {
