@@ -1,5 +1,5 @@
 import { ApplicationCommandOptionType } from "discord.js";
-import { Equal, Option, pipe, Struct, Function, Number, String } from "effect";
+import { Equal, Function, Number, Option, String, Struct, pipe } from "effect";
 
 import type { CommandInteraction } from "discord.js";
 

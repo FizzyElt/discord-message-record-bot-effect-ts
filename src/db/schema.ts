@@ -1,4 +1,4 @@
-import { pgTable, integer, varchar, date } from "drizzle-orm/pg-core";
+import { date, integer, pgTable, varchar } from "drizzle-orm/pg-core";
 
 export const stickiesTable = pgTable("stickies", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),

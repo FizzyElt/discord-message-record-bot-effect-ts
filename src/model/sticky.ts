@@ -1,7 +1,7 @@
-import { Effect, pipe, Struct, Array, Option, Function } from "effect";
-import { Database, DatabaseError } from "~/services/database";
+import { countDistinct, eq } from "drizzle-orm";
+import { Array, Effect, Function, Option, Struct, pipe } from "effect";
 import { stickiesTable } from "~/db/schema";
-import { eq, countDistinct } from "drizzle-orm";
+import { Database, DatabaseError } from "~/services/database";
 
 export type Sticky = typeof stickiesTable.$inferSelect;
 

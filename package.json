@@ -4,13 +4,14 @@
   "description": "",
   "main": "index.js",
   "engines": {
-    "node": ">=18.0.0",
+    "node": ">=20.0.0",
     "pnpm": ">=8.0.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "tsx ./src/index.ts",
-    "create-command": "tsx ./src/slash_command/index.ts"
+    "db:push": "drizzle-kit push",
+    "command:clear": "tsx ./src/slash_command/clear.ts"
   },
   "keywords": [],
   "author": "",

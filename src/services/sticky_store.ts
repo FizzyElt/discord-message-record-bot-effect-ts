@@ -10,9 +10,9 @@ import {
   Effect,
   Equal,
   Layer,
+  Number,
   Ref,
   pipe,
-  Number,
 } from "effect";
 
 import type { Sticky } from "~/model/sticky";
