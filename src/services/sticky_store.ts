@@ -114,12 +114,12 @@ export const createNewSticky = (name: string, url: string, group: string) =>
   pipe(
     StickyModel.groupCount(),
     Effect.filterOrFail(
-      Number.lessThanOrEqualTo(25),
+      Number.lessThan(25),
       () => new GroupLimitError({ message: "group is reach limit" }),
     ),
     Effect.flatMap(() => StickyModel.stickyCountByGroup(group)),
     Effect.filterOrFail(
-      Number.lessThanOrEqualTo(25),
+      Number.lessThan(25),
       () =>
         new StickyOptionLimitError({
           message: `group ${group} options is reach limit`,
