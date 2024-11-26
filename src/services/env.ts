@@ -15,6 +15,7 @@ declare module "bun" {
     readonly CAT_API_KEY: string;
     readonly EMOJI_KITCHEN_KEY: string;
     readonly SUPABASE_URL_ADMIN: string;
+    readonly DATABASE_URL: string;
   }
 }
 
@@ -33,4 +34,5 @@ export const EnvLive = Layer.succeed(EnvConfig, {
   CAT_API_KEY: Bun.env.CAT_API_KEY,
   EMOJI_KITCHEN_KEY: Bun.env.EMOJI_KITCHEN_KEY,
   SUPABASE_URL_ADMIN: Bun.env.SUPABASE_URL_ADMIN,
+  DATABASE_URL: Bun.env.DATABASE_URL,
 });

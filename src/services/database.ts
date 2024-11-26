@@ -1,6 +1,6 @@
-import { type PostgresJsDatabase, drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
+import { type BunSQLiteDatabase, drizzle } from "drizzle-orm/bun-sqlite";
 
+import { Database as BunDatabase } from "bun:sqlite";
 import { Context, Data, Effect, Layer } from "effect";
 import * as schema from "~/db/schema";
 import { EnvConfig } from "./env";
@@ -11,16 +11,16 @@ export class DatabaseError extends Data.TaggedError("DatabaseError")<{
 
 export class Database extends Context.Tag("Database")<
   Database,
-  PostgresJsDatabase<typeof schema> & {
-    // biome-ignore lint/complexity/noBannedTypes: <explanation>
-    $client: postgres.Sql<{}>;
+  BunSQLiteDatabase<typeof schema> & {
+    $client: BunDatabase;
   }
 >() {}
 
 const make = () =>
   Effect.gen(function* () {
     const env = yield* EnvConfig;
-    const client = postgres(env.SUPABASE_URL_ADMIN, { prepare: false });
+
+    const client = new BunDatabase(env.DATABASE_URL);
     return drizzle({ client, schema });
   });
 
