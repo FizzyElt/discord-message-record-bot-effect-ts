@@ -12,42 +12,42 @@ importers:
         specifier: ^1.9.4
         version: 1.9.4
       '@types/node':
-        specifier: ^20.16.15
-        version: 20.16.15
+        specifier: ^22.10.2
+        version: 22.10.2
       date-fns:
-        specifier: ^3.6.0
-        version: 3.6.0
+        specifier: ^4.1.0
+        version: 4.1.0
       date-fns-tz:
         specifier: ^3.2.0
-        version: 3.2.0(date-fns@3.6.0)
+        version: 3.2.0(date-fns@4.1.0)
       discord.js:
         specifier: ^14.16.3
         version: 14.16.3
       dotenv:
-        specifier: ^16.4.5
-        version: 16.4.5
+        specifier: ^16.4.7
+        version: 16.4.7
       drizzle-orm:
-        specifier: ^0.35.3
-        version: 0.35.3(@libsql/client-wasm@0.14.0)(postgres@3.4.5)
+        specifier: ^0.38.2
+        version: 0.38.2(@libsql/client-wasm@0.14.0)(postgres@3.4.5)
       effect:
-        specifier: ^3.10.1
-        version: 3.10.1
+        specifier: ^3.11.9
+        version: 3.11.9
       postgres:
         specifier: ^3.4.5
         version: 3.4.5
     devDependencies:
       drizzle-kit:
-        specifier: ^0.26.2
-        version: 0.26.2
+        specifier: ^0.30.1
+        version: 0.30.1
       tsconfig-paths:
         specifier: ^4.2.0
         version: 4.2.0
       tsx:
-        specifier: ^4.19.1
-        version: 4.19.1
+        specifier: ^4.19.2
+        version: 4.19.2
       typescript:
-        specifier: ^5.6.3
-        version: 5.6.3
+        specifier: ^5.7.2
+        version: 5.7.2
 
 packages:
 
@@ -132,8 +132,8 @@ packages:
     resolution: {integrity: sha512-PZ+vLpxGCRtmr2RMkqh8Zp+BenUaJqlS6xhgWKEZcgC/vfHLEzpHtKkB0sl3nZWpwtcKk6YWy+pU3okL2I97FA==}
     engines: {node: '>=16.11.0'}
 
-  '@drizzle-team/brocli@0.10.1':
-    resolution: {integrity: sha512-AHy0vjc+n/4w/8Mif+w86qpppHuF3AyXbcWW+R/W7GNA3F5/p2nuhlkCJaTXSLZheB4l1rtHzOfr9A7NwoR/Zg==}
+  '@drizzle-team/brocli@0.10.2':
+    resolution: {integrity: sha512-z33Il7l5dKjUgGULTqBsQBQwckHh5AbIuxhdsIxDDiZAzBOrZO6q9ogcWC65kU382AfynTfgNumVcNIjuIua6w==}
 
   '@esbuild-kit/core-utils@3.3.2':
     resolution: {integrity: sha512-sPRAnw9CdSsRmEtnsl2WXWdyquogVpB3yZ3dgwJfe8zrOzTsV7cJvmwrKVa+0ma5BoiGJ+BoqkMvawbayKUsqQ==}
@@ -565,8 +565,8 @@ packages:
   '@libsql/core@0.14.0':
     resolution: {integrity: sha512-nhbuXf7GP3PSZgdCY2Ecj8vz187ptHlZQ0VRc751oB2C1W8jQUXKKklvt7t1LJiUTQBVJuadF628eUk+3cRi4Q==}
 
-  '@sapphire/async-queue@1.5.3':
-    resolution: {integrity: sha512-x7zadcfJGxFka1Q3f8gCts1F0xMwCKbZweM85xECGI0hBTeIZJGGCrHgLggihBoprlQ/hBmDR5LKfIPqnmHM3w==}
+  '@sapphire/async-queue@1.5.5':
+    resolution: {integrity: sha512-cvGzxbba6sav2zZkH8GPf2oGk9yYoD5qrNWdu9fRehifgnFZJMV+nuy2nON2roRO4yQQ+v7MK/Pktl/HgfsUXg==}
     engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
 
   '@sapphire/shapeshift@4.0.0':
@@ -577,11 +577,11 @@ packages:
     resolution: {integrity: sha512-jjmJywLAFoWeBi1W7994zZyiNWPIiqRRNAmSERxyg93xRGzNYvGjlZ0gR6x0F4gPRi2+0O6S71kOZYyr3cxaIQ==}
     engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
 
-  '@types/node@20.16.15':
-    resolution: {integrity: sha512-DV58qQz9dBMqVVn+qnKwGa51QzCD4YM/tQM16qLKxdf5tqz5W4QwtrMzjSTbabN1cFTSuyxVYBy+QWHjWW8X/g==}
+  '@types/node@22.10.2':
+    resolution: {integrity: sha512-Xxr6BBRCAOQixvonOye19wnzyDiUtTeqldOOmj3CkeblonbccA12PFwlufvRdrpjXxqnmUaeiU5EOA+7s5diUQ==}
 
-  '@types/ws@8.5.12':
-    resolution: {integrity: sha512-3tPRkv1EtkDpzlgyKyI8pGsGZAGPEaXeu0DOj5DI25Ja91bdAYddYHbADRYVrZMRbfW+1l5YwXVDKohDJNQxkQ==}
+  '@types/ws@8.5.13':
+    resolution: {integrity: sha512-osM/gWBTPKgHV8XkTunnegTRIsvF6owmf5w+JtAfOw472dptdm0dlGv4xCt6GwQRcC2XVOvvRE/0bAoQcL2QkA==}
 
   '@vladfrangu/async_event_emitter@2.4.6':
     resolution: {integrity: sha512-RaI5qZo6D2CVS6sTHFKg1v5Ohq/+Bo2LZ5gzUEwZ/WkHhwtGTCB/sVLw8ijOkAUxasZ+WshN/Rzj4ywsABJ5ZA==}
@@ -595,11 +595,11 @@ packages:
     peerDependencies:
       date-fns: ^3.0.0 || ^4.0.0
 
-  date-fns@3.6.0:
-    resolution: {integrity: sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==}
+  date-fns@4.1.0:
+    resolution: {integrity: sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==}
 
-  debug@4.3.7:
-    resolution: {integrity: sha512-Er2nc/H7RrMXZBFCEim6TCmMk02Z8vLC2Rbi1KEBggpo0fS6l0S1nnapwmIi3yW/+GOJap1Krg4w0Hg80oCqgQ==}
+  debug@4.4.0:
+    resolution: {integrity: sha512-6WTZ/IxCY/T6BALoZHaE4ctp9xm+Z5kY/pzYaCHRFeyVhojxlrm+46y68HA6hr0TcwEssoxNiDEUJQjfPZ/RYA==}
     engines: {node: '>=6.0'}
     peerDependencies:
       supports-color: '*'
@@ -620,23 +620,23 @@ packages:
     resolution: {integrity: sha512-EPCWE9OkA9DnFFNrO7Kl1WHHDYFXu3CNVFJg63bfU7hVtjZGyhShwZtSBImINQRWxWP2tgo2XI+QhdXx28r0aA==}
     engines: {node: '>=18'}
 
-  dotenv@16.4.5:
-    resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
+  dotenv@16.4.7:
+    resolution: {integrity: sha512-47qPchRCykZC03FhkYAhrvwU4xDBFIj1QPqaarj6mdM/hgUzfPHcpkHJOn3mJAufFeeAxAzeGsr5X0M4k6fLZQ==}
     engines: {node: '>=12'}
 
-  drizzle-kit@0.26.2:
-    resolution: {integrity: sha512-cMq8omEKywjIy5KcqUo6LvEFxkl8/zYHsgYjFVXjmPWWtuW4blcz+YW9+oIhoaALgs2ebRjzXwsJgN9i6P49Dw==}
+  drizzle-kit@0.30.1:
+    resolution: {integrity: sha512-HmA/NeewvHywhJ2ENXD3KvOuM/+K2dGLJfxVfIHsGwaqKICJnS+Ke2L6UcSrSrtMJLJaT0Im1Qv4TFXfaZShyw==}
     hasBin: true
 
-  drizzle-orm@0.35.3:
-    resolution: {integrity: sha512-Uv6N+b36x4BaZlxc96e+ag7RnMapBLGhc4SSi2F7RDwqYJipWjaU/P68RUp1FbW9r+mxoDp8nMz2Eece8PJxfA==}
+  drizzle-orm@0.38.2:
+    resolution: {integrity: sha512-eCE3yPRAskLo1WpM9OHpFaM70tBEDsWhwR/0M3CKyztAXKR9Qs3asZlcJOEliIcUSg8GuwrlY0dmYDgmm6y5GQ==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
-      '@cloudflare/workers-types': '>=3'
-      '@electric-sql/pglite': '>=0.1.1'
+      '@cloudflare/workers-types': '>=4'
+      '@electric-sql/pglite': '>=0.2.0'
       '@libsql/client': '>=0.10.0'
       '@libsql/client-wasm': '>=0.10.0'
-      '@neondatabase/serverless': '>=0.1'
+      '@neondatabase/serverless': '>=0.10.0'
       '@op-engineering/op-sqlite': '>=2'
       '@opentelemetry/api': ^1.4.1
       '@planetscale/database': '>=1'
@@ -650,7 +650,7 @@ packages:
       '@xata.io/client': '*'
       better-sqlite3: '>=7'
       bun-types: '*'
-      expo-sqlite: '>=13.2.0'
+      expo-sqlite: '>=14.0.0'
       knex: '*'
       kysely: '*'
       mysql2: '>=2'
@@ -668,6 +668,8 @@ packages:
       '@electric-sql/pglite':
         optional: true
       '@libsql/client':
+        optional: true
+      '@libsql/client-wasm':
         optional: true
       '@neondatabase/serverless':
         optional: true
@@ -718,8 +720,8 @@ packages:
       sqlite3:
         optional: true
 
-  effect@3.10.1:
-    resolution: {integrity: sha512-Ny0I3WvGykUnlgmQVkNVbkXHE/pPTWVwmnYfpVZYyLlpe53LVyWViY9+a/7iS/Rqml0xUwJoXx5HK6ksK09Y2Q==}
+  effect@3.11.9:
+    resolution: {integrity: sha512-BeEOFVpe+f7S9mTiA2CLIzi1ywxgF1fUbcAank4jwdd6P0ZHQhaW3XVPZ7vkCNDTqmJs2f/gN2uV+Yw0ZqfDng==}
 
   esbuild-register@3.6.0:
     resolution: {integrity: sha512-H2/S7Pm8a9CL1uhp9OvjwrBh5Pvx0H8qVOxNu8Wed9Y7qv56MPtq+GGM8RJpq6glYJn9Wspr8uw7l55uyinNeg==}
@@ -741,8 +743,8 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  fast-check@3.22.0:
-    resolution: {integrity: sha512-8HKz3qXqnHYp/VCNn2qfjHdAdcI8zcSqOyX64GOMukp7SL2bfzfeDKjSd+UyECtejccaZv3LcvZTm9YDD22iCQ==}
+  fast-check@3.23.2:
+    resolution: {integrity: sha512-h5+1OzzfCC3Ef7VbtKdcv7zsstUQwUDlYpUTvjeUsJAssPgLn7QzbboPtL5ro04Mq0rPOsMzl7q5hIbRs2wD1A==}
     engines: {node: '>=8.0.0'}
 
   fast-deep-equal@3.1.3:
@@ -807,21 +809,21 @@ packages:
     resolution: {integrity: sha512-NoZ4roiN7LnbKn9QqE1amc9DJfzvZXxF4xDavcOWt1BPkdx+m+0gJuPM+S0vCe7zTJMYUP0R8pO2XMr+Y8oLIg==}
     engines: {node: '>=6'}
 
-  tslib@2.8.0:
-    resolution: {integrity: sha512-jWVzBLplnCmoaTr13V9dYbiQ99wvZRd0vNWaDRg+aVYRcjDF3nDksxFDE/+fkXnKhpnUUkmx5pK/v8mCtLVqZA==}
+  tslib@2.8.1:
+    resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
 
-  tsx@4.19.1:
-    resolution: {integrity: sha512-0flMz1lh74BR4wOvBjuh9olbnwqCPc35OOlfyzHba0Dc+QNUeWX/Gq2YTbnwcWPO3BMd8fkzRVrHcsR+a7z7rA==}
+  tsx@4.19.2:
+    resolution: {integrity: sha512-pOUl6Vo2LUq/bSa8S5q7b91cgNSjctn9ugq/+Mvow99qW6x/UZYwzxy/3NmqoT66eHYfCVvFvACC58UBPFf28g==}
     engines: {node: '>=18.0.0'}
     hasBin: true
 
-  typescript@5.6.3:
-    resolution: {integrity: sha512-hjcS1mhfuyi4WW8IWtjP7brDrG2cuDZukyrYrSauoXGNgx0S7zceP07adYkJycEr56BOUTNPzbInooiN3fn1qw==}
+  typescript@5.7.2:
+    resolution: {integrity: sha512-i5t66RHxDvVN40HfDd1PsEThGNnlMCMT3jMUuoh9/0TaqWevNontacunWyN02LA9/fIbEWlcHZcgTKb9QoaLfg==}
     engines: {node: '>=14.17'}
     hasBin: true
 
-  undici-types@6.19.8:
-    resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
+  undici-types@6.20.0:
+    resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
 
   undici@6.19.8:
     resolution: {integrity: sha512-U8uCCl2x9TK3WANvmBavymRzxbfFYG+tAu+fgx3zxQy3qdagQqBLwJVrdyO1TBfUXvfKveMKJZhpvUYoOjM+4g==}
@@ -884,7 +886,7 @@ snapshots:
       discord-api-types: 0.37.97
       fast-deep-equal: 3.1.3
       ts-mixer: 6.0.4
-      tslib: 2.8.0
+      tslib: 2.8.1
 
   '@discordjs/collection@1.5.3': {}
 
@@ -898,12 +900,12 @@ snapshots:
     dependencies:
       '@discordjs/collection': 2.1.1
       '@discordjs/util': 1.1.1
-      '@sapphire/async-queue': 1.5.3
+      '@sapphire/async-queue': 1.5.5
       '@sapphire/snowflake': 3.5.3
       '@vladfrangu/async_event_emitter': 2.4.6
       discord-api-types: 0.37.97
       magic-bytes.js: 1.10.0
-      tslib: 2.8.0
+      tslib: 2.8.1
       undici: 6.19.8
 
   '@discordjs/util@1.1.1': {}
@@ -913,17 +915,17 @@ snapshots:
       '@discordjs/collection': 2.1.1
       '@discordjs/rest': 2.4.0
       '@discordjs/util': 1.1.1
-      '@sapphire/async-queue': 1.5.3
-      '@types/ws': 8.5.12
+      '@sapphire/async-queue': 1.5.5
+      '@types/ws': 8.5.13
       '@vladfrangu/async_event_emitter': 2.4.6
       discord-api-types: 0.37.83
-      tslib: 2.8.0
+      tslib: 2.8.1
       ws: 8.18.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@drizzle-team/brocli@0.10.1': {}
+  '@drizzle-team/brocli@0.10.2': {}
 
   '@esbuild-kit/core-utils@3.3.2':
     dependencies:
@@ -1146,12 +1148,14 @@ snapshots:
     dependencies:
       '@libsql/core': 0.14.0
       js-base64: 3.7.7
+    optional: true
 
   '@libsql/core@0.14.0':
     dependencies:
       js-base64: 3.7.7
+    optional: true
 
-  '@sapphire/async-queue@1.5.3': {}
+  '@sapphire/async-queue@1.5.5': {}
 
   '@sapphire/shapeshift@4.0.0':
     dependencies:
@@ -1160,25 +1164,25 @@ snapshots:
 
   '@sapphire/snowflake@3.5.3': {}
 
-  '@types/node@20.16.15':
+  '@types/node@22.10.2':
     dependencies:
-      undici-types: 6.19.8
+      undici-types: 6.20.0
 
-  '@types/ws@8.5.12':
+  '@types/ws@8.5.13':
     dependencies:
-      '@types/node': 20.16.15
+      '@types/node': 22.10.2
 
   '@vladfrangu/async_event_emitter@2.4.6': {}
 
   buffer-from@1.1.2: {}
 
-  date-fns-tz@3.2.0(date-fns@3.6.0):
+  date-fns-tz@3.2.0(date-fns@4.1.0):
     dependencies:
-      date-fns: 3.6.0
+      date-fns: 4.1.0
 
-  date-fns@3.6.0: {}
+  date-fns@4.1.0: {}
 
-  debug@4.3.7:
+  debug@4.4.0:
     dependencies:
       ms: 2.1.3
 
@@ -1200,36 +1204,35 @@ snapshots:
       discord-api-types: 0.37.100
       fast-deep-equal: 3.1.3
       lodash.snakecase: 4.1.1
-      tslib: 2.8.0
+      tslib: 2.8.1
       undici: 6.19.8
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  dotenv@16.4.5: {}
+  dotenv@16.4.7: {}
 
-  drizzle-kit@0.26.2:
+  drizzle-kit@0.30.1:
     dependencies:
-      '@drizzle-team/brocli': 0.10.1
+      '@drizzle-team/brocli': 0.10.2
       '@esbuild-kit/esm-loader': 2.6.5
       esbuild: 0.19.12
       esbuild-register: 3.6.0(esbuild@0.19.12)
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.35.3(@libsql/client-wasm@0.14.0)(postgres@3.4.5):
-    dependencies:
-      '@libsql/client-wasm': 0.14.0
+  drizzle-orm@0.38.2(@libsql/client-wasm@0.14.0)(postgres@3.4.5):
     optionalDependencies:
+      '@libsql/client-wasm': 0.14.0
       postgres: 3.4.5
 
-  effect@3.10.1:
+  effect@3.11.9:
     dependencies:
-      fast-check: 3.22.0
+      fast-check: 3.23.2
 
   esbuild-register@3.6.0(esbuild@0.19.12):
     dependencies:
-      debug: 4.3.7
+      debug: 4.4.0
       esbuild: 0.19.12
     transitivePeerDependencies:
       - supports-color
@@ -1312,7 +1315,7 @@ snapshots:
       '@esbuild/win32-ia32': 0.23.1
       '@esbuild/win32-x64': 0.23.1
 
-  fast-check@3.22.0:
+  fast-check@3.23.2:
     dependencies:
       pure-rand: 6.1.0
 
@@ -1325,7 +1328,8 @@ snapshots:
     dependencies:
       resolve-pkg-maps: 1.0.0
 
-  js-base64@3.7.7: {}
+  js-base64@3.7.7:
+    optional: true
 
   json5@2.2.3: {}
 
@@ -1362,18 +1366,18 @@ snapshots:
       minimist: 1.2.8
       strip-bom: 3.0.0
 
-  tslib@2.8.0: {}
+  tslib@2.8.1: {}
 
-  tsx@4.19.1:
+  tsx@4.19.2:
     dependencies:
       esbuild: 0.23.1
       get-tsconfig: 4.8.1
     optionalDependencies:
       fsevents: 2.3.3
 
-  typescript@5.6.3: {}
+  typescript@5.7.2: {}
 
-  undici-types@6.19.8: {}
+  undici-types@6.20.0: {}
 
   undici@6.19.8: {}
 
