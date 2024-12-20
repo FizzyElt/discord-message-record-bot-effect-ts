@@ -4,6 +4,7 @@ export enum StickyCommandName {
   sticky = "sticky",
   create_sticky = "create_sticky",
   delete_sticky = "delete_sticky",
+  backup_sticky = "backup_sticky",
 }
 
 export const stickyCommands = [
@@ -37,4 +38,7 @@ export const stickyCommands = [
         .setDescription("sticky name")
         .setRequired(true),
     ),
+  new SlashCommandBuilder()
+    .setName(StickyCommandName.backup_sticky)
+    .setDescription("備份貼圖"),
 ];

@@ -3,7 +3,7 @@ import type {
   ChatInputCommandInteraction,
   CommandInteraction,
 } from "discord.js";
-import { Effect, pipe } from "effect";
+import { Effect, pipe, Ref } from "effect";
 
 import * as StickyStore from "~/services/sticky_store";
 import { getCommandOptionString } from "~/utils/command";
@@ -62,5 +62,26 @@ export const deleteSticky = (interaction: CommandInteraction) => {
         interaction.reply({ content: msg, fetchReply: true }),
       ),
     ),
+  );
+};
+
+export const backupSticky = (interaction: CommandInteraction) => {
+  return pipe(
+    StickyStore.StickyService,
+    Effect.flatMap(Ref.get),
+    Effect.flatMap((stickies) => {
+      return Effect.tryPromise(() =>
+        interaction.reply({
+          content: "資料",
+          files: [
+            {
+              name: "stickies.json",
+              attachment: Buffer.from(JSON.stringify(stickies, null, 2)),
+            },
+          ],
+          fetchReply: true,
+        }),
+      );
+    }),
   );
 };

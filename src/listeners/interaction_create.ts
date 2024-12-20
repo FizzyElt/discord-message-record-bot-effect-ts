@@ -10,6 +10,7 @@ import {
   listChannels,
   removeChannelFlow,
   showSticky,
+  backupSticky,
   subscribe,
   unsubscribe,
 } from "~/tasks";
@@ -96,6 +97,8 @@ function commandOperation(
       return deleteSticky(interaction);
     case StickyCommandName.sticky:
       return showSticky(interaction);
+    case StickyCommandName.backup_sticky:
+      return backupSticky(interaction);
 
     // meme commands
     case MemeCommandName.emoJiji:
