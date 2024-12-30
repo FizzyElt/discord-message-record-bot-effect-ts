@@ -1,3 +1,4 @@
+import type { Channel, CommandInteraction } from "discord.js";
 import {
   Effect,
   Equal,
@@ -22,8 +23,6 @@ import {
   isTextChannel,
 } from "~/utils/channel";
 import { getCommandOptionString } from "~/utils/command";
-
-import type { Channel, CommandInteraction } from "discord.js";
 
 const excludeChannels = (channel: Channel) =>
   Effect.gen(function* () {
