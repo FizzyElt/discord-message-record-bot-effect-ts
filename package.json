@@ -11,6 +11,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "tsx ./src/index.ts",
     "db:push": "drizzle-kit push",
+    "format":"biome format --write",
+    "lint":"biome lint",
+    "check":"pnpm format && pnpm lint",
     "tsc": "tsc --noEmit",
     "command:clear": "tsx ./src/slash_command/clear.ts"
   },
