@@ -11,9 +11,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "tsx ./src/index.ts",
     "db:push": "drizzle-kit push",
-    "format":"biome format --write",
-    "lint":"biome lint",
-    "check":"pnpm format && pnpm lint",
+    "format": "biome format --write",
+    "lint": "biome lint",
+    "check": "pnpm format && pnpm lint",
     "tsc": "tsc --noEmit",
     "command:clear": "tsx ./src/slash_command/clear.ts"
   },
@@ -21,20 +21,20 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "drizzle-kit": "^0.30.1",
+    "drizzle-kit": "^0.30.2",
     "tsconfig-paths": "^4.2.0",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   },
   "dependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@types/node": "^22.10.2",
+    "@types/node": "^22.10.7",
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
-    "discord.js": "^14.16.3",
+    "discord.js": "^14.17.3",
     "dotenv": "^16.4.7",
-    "drizzle-orm": "^0.38.2",
-    "effect": "^3.11.9",
+    "drizzle-orm": "^0.38.4",
+    "effect": "^3.12.5",
     "postgres": "^3.4.5"
   }
 }
