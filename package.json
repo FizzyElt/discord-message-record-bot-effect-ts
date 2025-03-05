@@ -24,25 +24,17 @@
     "drizzle-kit": "^0.30.5",
     "tsconfig-paths": "^4.2.0",
     "tsx": "^4.19.3",
-    "typescript": "^5.7.3"
+    "typescript": "^5.8.2"
   },
   "dependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@types/node": "^22.13.5",
+    "@types/node": "^22.13.9",
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
     "discord.js": "^14.18.0",
     "dotenv": "^16.4.7",
-    "drizzle-orm": "^0.38.4",
-    "effect": "^3.13.2",
+    "drizzle-orm": "^0.40.0",
+    "effect": "^3.13.6",
     "postgres": "^3.4.5"
-  },
-  "pnpm": {
-    "ignoredBuiltDependencies": [
-      "esbuild"
-    ],
-    "onlyBuiltDependencies": [
-      "esbuild"
-    ]
   }
 }

@@ -1,13 +1,10 @@
-import { Effect, Equal, pipe } from "effect";
-import { ClientContext, EnvConfig } from "~/services";
-import { getTimeoutInfo, minute } from "~/services/timeout";
-import {
-  addNewVoting,
-  isUserVoting,
-  removeVoting,
-} from "~/services/voting_store";
-import { getCommandOptionString } from "~/utils/command";
-import { findUserFromMembers, isAdmin } from "~/utils/member";
+import { Effect, Equal, Option, pipe } from 'effect';
+import { ClientContext, EnvConfig } from '~/services';
+import { getTimeoutInfo, minute } from '~/services/timeout';
+import { addNewVoting, isUserVoting, removeVoting } from '~/services/voting_store';
+import type { VotingService } from '~/services/voting_store';
+import { getCommandOptionString } from '~/utils/command';
+import { findUserFromMembers, isAdmin } from '~/utils/member';
 import {
   canNotFindUser,
   doNotBanAdmin,
@@ -17,25 +14,25 @@ import {
   memberTimeoutVotePassed,
   memberVoting,
   startMemberVote,
-} from "~/utils/reply_msg";
-import { createVoting } from "~/utils/vote_flow";
+} from '~/utils/reply_msg';
+import { createVoting } from '~/utils/vote_flow';
 
 import type {
   AwaitReactionsOptions,
   CommandInteraction,
   EmojiIdentifierResolvable,
   GuildMember,
+  InteractionCallbackResponse,
   Message,
-} from "discord.js";
-import type { TimeoutInfo } from "~/services/timeout";
+} from 'discord.js';
+import type { NoSuchElementException, UnknownException } from 'effect/Cause';
+import type { TimeoutInfo } from '~/services/timeout';
 
-const reactMsg =
-  (emoji: EmojiIdentifierResolvable) => (msg: Message<boolean>) =>
-    Effect.tryPromise(() => msg.react(emoji));
+const reactMsg = (emoji: EmojiIdentifierResolvable) => (msg: InteractionCallbackResponse) =>
+  Effect.tryPromise(async () => msg.resource?.message?.react(emoji));
 
-const awaitReactions =
-  (options?: AwaitReactionsOptions) => (msg: Message<boolean>) =>
-    Effect.tryPromise(() => msg.awaitReactions(options));
+const awaitReactions = (options?: AwaitReactionsOptions) => (msg: Message<boolean>) =>
+  Effect.tryPromise(() => msg.awaitReactions(options));
 
 const timeoutMember = ({
   count,
@@ -45,16 +42,14 @@ const timeoutMember = ({
 }: {
   count: number;
   timeoutInfo: TimeoutInfo;
-  msg: Message<boolean>;
+  msg: Message<boolean> | undefined;
   member: GuildMember;
 }) =>
   pipe(
     Effect.tryPromise(() => member.timeout(timeoutInfo.time * 1000)),
     Effect.flatMap(() =>
-      Effect.tryPromise(() =>
-        msg.reply(memberTimeoutVotePassed(member, timeoutInfo, count)),
-      ),
-    ),
+      Effect.tryPromise(async () => msg?.reply(memberTimeoutVotePassed(member, timeoutInfo, count)))
+    )
   );
 
 const startVoting = ({
@@ -75,11 +70,11 @@ const startVoting = ({
       interaction.reply({
         allowedMentions: mentionRole ? { roles: [mentionRole] } : undefined,
         content: startMemberVote(member, timeoutInfo, mentionRole),
-        fetchReply: true,
-      }),
+        withResponse: true,
+      })
     ),
     Effect.tap(reactMsg(emoji)),
-    Effect.tap(() => addNewVoting(member.user.id)),
+    Effect.tap(() => addNewVoting(member.user.id))
   );
 
 const collectVote = ({
@@ -94,8 +89,7 @@ const collectVote = ({
   pipe(
     msg,
     awaitReactions({
-      filter: (reaction, user) =>
-        Equal.equals(reaction.emoji.name === emoji) && !user.bot,
+      filter: (reaction, user) => Equal.equals(reaction.emoji.name === emoji) && !user.bot,
       time: timeoutInfo.votingMinutes * minute * 1000,
     }),
     Effect.map((collected) => {
@@ -105,7 +99,7 @@ const collectVote = ({
         isPass: count >= timeoutInfo.voteThreshold,
         count,
       };
-    }),
+    })
   );
 
 const votingFlow = (params: {
@@ -117,6 +111,7 @@ const votingFlow = (params: {
 }) =>
   pipe(
     startVoting(params),
+    Effect.flatMap((replyMsg) => Option.fromNullable(replyMsg.resource?.message)),
     // collect and react result
     Effect.tap((replyMsg) => {
       const { member, timeoutInfo, emoji } = params;
@@ -124,22 +119,18 @@ const votingFlow = (params: {
         collectVote({ msg: replyMsg, emoji: emoji, timeoutInfo: timeoutInfo }),
         Effect.flatMap(({ isPass, count }) => {
           if (member.isCommunicationDisabled()) {
-            return Effect.tryPromise(() =>
-              replyMsg.reply({ content: memberDisableTime(member) }),
-            );
+            return Effect.tryPromise(() => replyMsg.reply({ content: memberDisableTime(member) }));
           }
 
           if (isPass) {
             return timeoutMember({ count, msg: replyMsg, timeoutInfo, member });
           }
 
-          return Effect.tryPromise(() =>
-            replyMsg.reply(memberFree(member, count)),
-          );
-        }),
+          return Effect.tryPromise(() => replyMsg.reply(memberFree(member, count)));
+        })
       );
     }),
-    Effect.tap(() => removeVoting(params.member.user.id)),
+    Effect.tap(() => removeVoting(params.member.user.id))
   );
 
 // new ban user function
@@ -162,18 +153,23 @@ const _banUserVote = (params: {
     time: timeoutInfo.votingMinutes,
   };
 
-  const resultFlow = (count: number, msg: Message<boolean>) => {
+  const resultFlow = (count: number, msg: InteractionCallbackResponse) => {
     if (member.isCommunicationDisabled()) {
-      return Effect.tryPromise(() =>
-        msg.reply({ content: memberDisableTime(member) }),
+      return Effect.tryPromise(async () =>
+        msg?.resource?.message?.reply({ content: memberDisableTime(member) })
       );
     }
 
     if (count >= timeoutInfo.voteThreshold) {
-      return timeoutMember({ count, msg, timeoutInfo, member });
+      return timeoutMember({
+        count,
+        msg: msg?.resource?.message || undefined,
+        timeoutInfo,
+        member,
+      });
     }
 
-    return Effect.tryPromise(() => msg.reply(memberFree(member, count)));
+    return Effect.tryPromise(async () => msg?.resource?.message?.reply(memberFree(member, count)));
   };
 
   return pipe(
@@ -181,22 +177,20 @@ const _banUserVote = (params: {
       started: () => addNewVoting(member.user.id),
       result: resultFlow,
     }),
-    Effect.tap(() => removeVoting(params.member.user.id)),
+    Effect.tap(() => removeVoting(params.member.user.id))
   );
 };
 
 export const banUser = (interaction: CommandInteraction) =>
   Effect.gen(function* () {
-    const timeoutInfo = yield* getTimeoutInfo(
-      getCommandOptionString("time")(interaction),
-    );
+    const timeoutInfo = yield* getTimeoutInfo(getCommandOptionString('time')(interaction));
     const client = yield* ClientContext;
     const env = yield* EnvConfig;
 
-    const userId = getCommandOptionString("mention_user")(interaction);
+    const userId = getCommandOptionString('mention_user')(interaction);
     const member = yield* pipe(
       Effect.fromNullable(interaction.guild),
-      Effect.flatMap((guild) => findUserFromMembers(userId)(guild.members)),
+      Effect.flatMap((guild) => findUserFromMembers(userId)(guild.members))
     );
 
     const userVoting = yield* isUserVoting(member.id);
@@ -212,19 +206,29 @@ export const banUser = (interaction: CommandInteraction) =>
     Effect.matchEffect({
       onFailure: () =>
         Effect.tryPromise(() =>
-          interaction.reply({ content: canNotFindUser(), fetchReply: true }),
+          interaction.reply({ content: canNotFindUser(), withResponse: true })
         ),
-      onSuccess: ({ member, timeoutInfo, userVoting, client, env }) => {
+      onSuccess: ({
+        member,
+        timeoutInfo,
+        userVoting,
+        client,
+        env,
+      }): Effect.Effect<
+        InteractionCallbackResponse | Message<boolean>,
+        UnknownException | NoSuchElementException,
+        VotingService
+      > => {
         if (isAdmin(member)) {
           return Effect.tryPromise(() =>
-            interaction.reply({ content: doNotBanAdmin(), fetchReply: true }),
+            interaction.reply({ content: doNotBanAdmin(), withResponse: true })
           );
         }
 
         // bot self
         if (Equal.equals(member.user.id, client.user.id)) {
           return Effect.tryPromise(() =>
-            interaction.reply({ content: doNotBanBot(), fetchReply: true }),
+            interaction.reply({ content: doNotBanBot(), withResponse: true })
           );
         }
 
@@ -233,8 +237,8 @@ export const banUser = (interaction: CommandInteraction) =>
           return Effect.tryPromise(() =>
             interaction.reply({
               content: memberDisableTime(member, env.TIMEZONE),
-              fetchReply: true,
-            }),
+              withResponse: true,
+            })
           );
         }
 
@@ -243,8 +247,8 @@ export const banUser = (interaction: CommandInteraction) =>
           return Effect.tryPromise(() =>
             interaction.reply({
               content: memberVoting(member),
-              fetchReply: true,
-            }),
+              withResponse: true,
+            })
           );
         }
 
@@ -253,8 +257,8 @@ export const banUser = (interaction: CommandInteraction) =>
           interaction,
           timeoutInfo,
           mentionRole: env.VOTE_ROLE_ID,
-          emoji: "✅",
+          emoji: '✅',
         });
       },
-    }),
+    })
   );

@@ -1,6 +1,6 @@
-import { CommandName } from "~/slash_command/main_command";
-import { MemeCommandName } from "~/slash_command/meme_command";
-import { StickyCommandName } from "~/slash_command/sticky_command";
+import { CommandName } from '~/slash_command/main_command';
+import { MemeCommandName } from '~/slash_command/meme_command';
+import { StickyCommandName } from '~/slash_command/sticky_command';
 import {
   addChannelFlow,
   banUser,
@@ -13,9 +13,9 @@ import {
   backupSticky,
   subscribe,
   unsubscribe,
-} from "~/tasks";
+} from '~/tasks';
 
-import { Effect, pipe } from "effect";
+import { Effect, pipe } from 'effect';
 
 import type {
   Awaitable,
@@ -24,8 +24,9 @@ import type {
   Interaction,
   InteractionResponse,
   Message,
-} from "discord.js";
-import type { NoSuchElementException, UnknownException } from "effect/Cause";
+  InteractionCallbackResponse,
+} from 'discord.js';
+import type { NoSuchElementException, UnknownException } from 'effect/Cause';
 import {
   type ChannelService,
   type ClientContext,
@@ -33,9 +34,9 @@ import {
   type MainLive,
   type TimeoutInfoListService,
   type VotingService,
-} from "~/services";
-import type { Database } from "~/services/database";
-import type { StickyService } from "~/services/sticky_store";
+} from '~/services';
+import type { Database } from '~/services/database';
+import type { StickyService } from '~/services/sticky_store';
 
 export const interactionCreateListener =
   (live: typeof MainLive) =>
@@ -46,16 +47,16 @@ export const interactionCreateListener =
 
     const program = pipe(
       commandOperation(interaction),
-      Effect.orElse(() => Effect.succeed("reply error")),
+      Effect.orElse(() => Effect.succeed('reply error'))
     );
 
     Effect.runPromise(program.pipe(Effect.provide(live)));
   };
 
 function commandOperation(
-  interaction: ChatInputCommandInteraction<CacheType>,
+  interaction: ChatInputCommandInteraction<CacheType>
 ): Effect.Effect<
-  Message<boolean> | InteractionResponse<boolean>,
+  Message<boolean> | InteractionResponse<boolean> | InteractionCallbackResponse,
   UnknownException | NoSuchElementException,
   | ClientContext
   | ChannelService
@@ -78,16 +79,12 @@ function commandOperation(
     case CommandName.subscribe:
       return pipe(
         EnvConfig,
-        Effect.flatMap(({ VOTE_ROLE_ID }) =>
-          subscribe(VOTE_ROLE_ID)(interaction),
-        ),
+        Effect.flatMap(({ VOTE_ROLE_ID }) => subscribe(VOTE_ROLE_ID)(interaction))
       );
     case CommandName.unsubscribe:
       return pipe(
         EnvConfig,
-        Effect.flatMap(({ VOTE_ROLE_ID }) =>
-          unsubscribe(VOTE_ROLE_ID)(interaction),
-        ),
+        Effect.flatMap(({ VOTE_ROLE_ID }) => unsubscribe(VOTE_ROLE_ID)(interaction))
       );
 
     // sticky commands
@@ -105,6 +102,6 @@ function commandOperation(
       return getEmoJiJi(interaction);
 
     default:
-      return Effect.tryPromise(() => interaction.reply("不支援的指令"));
+      return Effect.tryPromise(() => interaction.reply('不支援的指令'));
   }
 }
