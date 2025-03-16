@@ -1,19 +1,28 @@
-import { format } from 'date-fns';
-import { Effect, Array as ReadonlyArray, String, pipe } from 'effect';
-import { ClientContext, EnvConfig } from '~/services';
-import { getTextChannelByClient, isPublicThreadChannel, isTextChannel } from '~/utils/channel';
-import { bold, strikeThrough } from '~/utils/mark_string';
+import { format } from "date-fns";
+import { Effect, Array as ReadonlyArray, String, pipe } from "effect";
+import { ClientContext, EnvConfig } from "~/services";
+import {
+  getTextChannelByClient,
+  isPublicThreadChannel,
+  isTextChannel,
+} from "~/utils/channel";
+import { bold, strikeThrough } from "~/utils/mark_string";
 
-import type { Message, PartialMessage } from 'discord.js';
-import { MessageReferenceType } from 'discord.js';
+import {
+  type Message,
+  MessageReferenceType,
+  type PartialMessage,
+} from "discord.js";
 
 const getChannelNameByMsg = (msg: Message<boolean> | PartialMessage) =>
-  isTextChannel(msg.channel) || isPublicThreadChannel(msg.channel) ? msg.channel.name : 'Other';
+  isTextChannel(msg.channel) || isPublicThreadChannel(msg.channel)
+    ? msg.channel.name
+    : "Other";
 
 const getUserNameByMsg = (msg: Message<boolean> | PartialMessage) =>
   msg.member?.displayName
-    ? `${bold(msg.member.displayName)} (${msg.author?.username || ''})`
-    : bold(msg.author?.username || '');
+    ? `${bold(msg.member.displayName)} (${msg.author?.username || ""})`
+    : bold(msg.author?.username || "");
 
 const getSendChannel = () =>
   Effect.gen(function* () {
@@ -24,33 +33,37 @@ const getSendChannel = () =>
 
 // ======================================================
 
-const getCreatedMsgString = (msg: Message<boolean> | PartialMessage): string => {
+const getCreatedMsgString = (
+  msg: Message<boolean> | PartialMessage,
+): string => {
   const channelName = getChannelNameByMsg(msg);
   const userName = getUserNameByMsg(msg);
-  const timeString = bold(`[Created：${format(msg.createdAt, 'yyyy/MM/dd HH:mm')}]`);
+  const timeString = bold(
+    `[Created：${format(msg.createdAt, "yyyy/MM/dd HH:mm")}]`,
+  );
 
   return pipe(
     [
-      `${userName} ${bold('Create')}`,
+      `${userName} ${bold("Create")}`,
       `${channelName} ${timeString}：`,
-      String.isString(msg.content) ? msg.content : '',
-      '------------------------------------',
+      String.isString(msg.content) ? msg.content : "",
+      "------------------------------------",
     ],
-    ReadonlyArray.join('\n')
+    ReadonlyArray.join("\n"),
   );
 };
 
 export const recordCreatedMsg = (msg: Message<boolean>) =>
   pipe(
     Effect.Do,
-    Effect.bind('sendChannel', getSendChannel),
-    Effect.bind('sentMsg', ({ sendChannel }) =>
+    Effect.bind("sendChannel", getSendChannel),
+    Effect.bind("sentMsg", ({ sendChannel }) =>
       Effect.tryPromise(() =>
         sendChannel.send({
           content: getCreatedMsgString(msg),
           allowedMentions: { parse: [] },
-        })
-      )
+        }),
+      ),
     ),
     Effect.tap(({ sentMsg }) => {
       msg.reference = {
@@ -61,24 +74,28 @@ export const recordCreatedMsg = (msg: Message<boolean>) =>
       };
       return Effect.void;
     }),
-    Effect.map(({ sentMsg }) => sentMsg)
+    Effect.map(({ sentMsg }) => sentMsg),
   );
 
 // ======================================================
 
-const getDeletedMsgString = (msg: Message<boolean> | PartialMessage): string => {
+const getDeletedMsgString = (
+  msg: Message<boolean> | PartialMessage,
+): string => {
   const channelName = getChannelNameByMsg(msg);
   const userName = getUserNameByMsg(msg);
-  const timeString = bold(`[Deleted：${format(new Date(), 'yyyy/MM/dd HH:mm')}]`);
+  const timeString = bold(
+    `[Deleted：${format(new Date(), "yyyy/MM/dd HH:mm")}]`,
+  );
 
   return pipe(
     [
-      `${userName} ${bold('Delete')}`,
+      `${userName} ${bold("Delete")}`,
       `${channelName} ${timeString}：`,
-      String.isString(msg.content) ? msg.content : '',
-      '------------------------------------',
+      String.isString(msg.content) ? msg.content : "",
+      "------------------------------------",
     ],
-    ReadonlyArray.join('\n')
+    ReadonlyArray.join("\n"),
   );
 };
 
@@ -90,37 +107,39 @@ export const recordDeleteMsg = (msg: Message<boolean> | PartialMessage) =>
         sendChannel.send({
           content: getDeletedMsgString(msg),
           allowedMentions: { parse: [] },
-        })
-      )
-    )
+        }),
+      ),
+    ),
   );
 
 // ======================================================
 
 const getUpdatedMsgString = (
   oldMsg: Message<boolean> | PartialMessage,
-  msg: Message<boolean> | PartialMessage
+  msg: Message<boolean> | PartialMessage,
 ): string => {
   const channelName = getChannelNameByMsg(msg);
   const userName = getUserNameByMsg(msg);
-  const timeString = bold(`[Edited：${format(msg.editedAt || new Date(), 'yyyy/MM/dd HH:mm')}]`);
+  const timeString = bold(
+    `[Edited：${format(msg.editedAt || new Date(), "yyyy/MM/dd HH:mm")}]`,
+  );
 
   return pipe(
     [
-      `${userName} ${bold('Edit')}`,
+      `${userName} ${bold("Edit")}`,
       `${channelName} ${timeString}：`,
-      strikeThrough(oldMsg.content || ''),
-      '',
-      String.isString(msg.content) ? msg.content : '',
-      '------------------------------------',
+      strikeThrough(oldMsg.content || ""),
+      "",
+      String.isString(msg.content) ? msg.content : "",
+      "------------------------------------",
     ],
-    ReadonlyArray.join('\n')
+    ReadonlyArray.join("\n"),
   );
 };
 
 export const recordUpdateMsg = (
   oldMsg: Message<boolean> | PartialMessage,
-  msg: Message<boolean> | PartialMessage
+  msg: Message<boolean> | PartialMessage,
 ) =>
   pipe(
     getSendChannel(),
@@ -129,8 +148,8 @@ export const recordUpdateMsg = (
         sendChannel.send({
           content: getUpdatedMsgString(oldMsg, msg),
           allowedMentions: { parse: [] },
-          reply: { messageReference: oldMsg.reference?.messageId || '' },
-        })
-      )
-    )
+          reply: { messageReference: oldMsg.reference?.messageId || "" },
+        }),
+      ),
+    ),
   );

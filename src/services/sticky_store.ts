@@ -15,7 +15,6 @@ import {
   pipe,
 } from "effect";
 
-import type { Sticky } from "~/model/sticky";
 import * as StickyModel from "~/model/sticky";
 import { commands } from "~/slash_command/main_command";
 import { memeCommands } from "~/slash_command/meme_command";
@@ -25,20 +24,23 @@ import {
   stickyCommands,
 } from "~/slash_command/sticky_command";
 
-const createStickyCommand = (data: Sticky[]) => {
-  const dataMap = data.reduce<Record<string, Sticky[]>>((acc, item) => {
-    if (item.group && acc[item.group]) {
-      acc[item.group].push(item);
-      return acc;
-    }
+const createStickyCommand = (data: StickyModel.Sticky[]) => {
+  const dataMap = data.reduce<Record<string, StickyModel.Sticky[]>>(
+    (acc, item) => {
+      if (item.group && acc[item.group]) {
+        acc[item.group].push(item);
+        return acc;
+      }
 
-    if (item.group) {
-      acc[item.group] = [item];
-      return acc;
-    }
+      if (item.group) {
+        acc[item.group] = [item];
+        return acc;
+      }
 
-    return acc;
-  }, {});
+      return acc;
+    },
+    {},
+  );
 
   const command = new SlashCommandBuilder()
     .setName(StickyCommandName.sticky)
@@ -87,7 +89,7 @@ class GroupLimitError extends Data.TaggedError("GroupLimitError")<{
 
 export class StickyService extends Context.Tag("StickyService")<
   StickyService,
-  Ref.Ref<Sticky[]>
+  Ref.Ref<StickyModel.Sticky[]>
 >() {}
 
 export const StickyStoreLive = Layer.effect(
@@ -95,7 +97,7 @@ export const StickyStoreLive = Layer.effect(
   Effect.gen(function* () {
     const stickies = yield* syncData();
 
-    const stickiesStore = yield* Ref.make<Sticky[]>(stickies);
+    const stickiesStore = yield* Ref.make<StickyModel.Sticky[]>(stickies);
 
     return stickiesStore;
   }),

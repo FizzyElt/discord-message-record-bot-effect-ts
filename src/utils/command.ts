@@ -1,7 +1,8 @@
-import { ApplicationCommandOptionType } from "discord.js";
+import {
+  ApplicationCommandOptionType,
+  type CommandInteraction,
+} from "discord.js";
 import { Equal, Function, Number, Option, String, Struct, pipe } from "effect";
-
-import type { CommandInteraction } from "discord.js";
 
 export const getCommandOptionOfType =
   (type: ApplicationCommandOptionType, optionName: string) =>

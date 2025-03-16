@@ -1,11 +1,17 @@
-import type { CacheType, ChatInputCommandInteraction, CommandInteraction } from 'discord.js';
-import { Effect, pipe, Ref } from 'effect';
+import type {
+  CacheType,
+  ChatInputCommandInteraction,
+  CommandInteraction,
+} from "discord.js";
+import { Effect, pipe, Ref } from "effect";
 
-import * as StickyStore from '~/services/sticky_store';
-import { getCommandOptionString } from '~/utils/command';
+import * as StickyStore from "~/services/sticky_store";
+import { getCommandOptionString } from "~/utils/command";
 
-export const showSticky = (interaction: ChatInputCommandInteraction<CacheType>) => {
-  const name = interaction.options.getString('name') || '';
+export const showSticky = (
+  interaction: ChatInputCommandInteraction<CacheType>,
+) => {
+  const name = interaction.options.getString("name") || "";
 
   return pipe(
     StickyStore.getSticky(name),
@@ -14,32 +20,36 @@ export const showSticky = (interaction: ChatInputCommandInteraction<CacheType>) 
       onFailure: () => `找不到 ${name}`,
     }),
     Effect.flatMap((msg) =>
-      Effect.tryPromise(() => interaction.reply({ content: msg, withResponse: true }))
-    )
+      Effect.tryPromise(() =>
+        interaction.reply({ content: msg, withResponse: true }),
+      ),
+    ),
   );
 };
 
 export const createSticky = (interaction: CommandInteraction) => {
-  const name = getCommandOptionString('name')(interaction);
-  const url = getCommandOptionString('url')(interaction);
-  const group = getCommandOptionString('group')(interaction) || 'default';
+  const name = getCommandOptionString("name")(interaction);
+  const url = getCommandOptionString("url")(interaction);
+  const group = getCommandOptionString("group")(interaction) || "default";
 
   return pipe(
     StickyStore.createNewSticky(name, url, group),
     Effect.map(() => `新增 ${name} 到 ${group} 成功`),
     Effect.catchTags({
-      StickyOptionLimitError: () => Effect.succeed('group 以達上限'),
+      StickyOptionLimitError: () => Effect.succeed("group 以達上限"),
       GroupLimitError: () => Effect.succeed(`${group} 選項已達上限`),
     }),
     Effect.catchAll(() => Effect.succeed(`新增 ${name} 到 ${group} 失敗`)),
     Effect.flatMap((msg) =>
-      Effect.tryPromise(() => interaction.reply({ content: msg, withResponse: true }))
-    )
+      Effect.tryPromise(() =>
+        interaction.reply({ content: msg, withResponse: true }),
+      ),
+    ),
   );
 };
 
 export const deleteSticky = (interaction: CommandInteraction) => {
-  const name = getCommandOptionString('name')(interaction);
+  const name = getCommandOptionString("name")(interaction);
 
   return pipe(
     StickyStore.deleteSticky(name),
@@ -48,8 +58,10 @@ export const deleteSticky = (interaction: CommandInteraction) => {
       onFailure: () => `刪除 ${name} 失敗`,
     }),
     Effect.flatMap((msg) =>
-      Effect.tryPromise(() => interaction.reply({ content: msg, withResponse: true }))
-    )
+      Effect.tryPromise(() =>
+        interaction.reply({ content: msg, withResponse: true }),
+      ),
+    ),
   );
 };
 
@@ -60,16 +72,16 @@ export const backupSticky = (interaction: CommandInteraction) => {
     Effect.flatMap((stickies) => {
       return Effect.tryPromise(() =>
         interaction.reply({
-          content: '資料',
+          content: "資料",
           files: [
             {
-              name: 'stickies.json',
+              name: "stickies.json",
               attachment: Buffer.from(JSON.stringify(stickies, null, 2)),
             },
           ],
           withResponse: true,
-        })
+        }),
       );
-    })
+    }),
   );
 };
