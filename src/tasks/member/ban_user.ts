@@ -98,7 +98,7 @@ const collectVote = ({
     msg,
     awaitReactions({
       filter: (reaction, user) =>
-        Equal.equals(reaction.emoji.name === emoji) && !user.bot,
+        Equal.equals(reaction.emoji.name, emoji) && !user.bot,
       time: timeoutInfo.votingMinutes * minute * 1000,
     }),
     Effect.map((collected) => {
