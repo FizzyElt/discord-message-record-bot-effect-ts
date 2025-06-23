@@ -1,5 +1,10 @@
 import { format } from "date-fns";
-import { Effect, Array as ReadonlyArray, String, pipe } from "effect";
+import {
+  type Message,
+  MessageReferenceType,
+  type PartialMessage,
+} from "discord.js";
+import { Effect, pipe, Array as ReadonlyArray, String } from "effect";
 import { ClientContext, EnvConfig } from "~/services";
 import {
   getTextChannelByClient,
@@ -7,12 +12,6 @@ import {
   isTextChannel,
 } from "~/utils/channel";
 import { bold, strikeThrough } from "~/utils/mark_string";
-
-import {
-  type Message,
-  MessageReferenceType,
-  type PartialMessage,
-} from "discord.js";
 
 const getChannelNameByMsg = (msg: Message<boolean> | PartialMessage) =>
   isTextChannel(msg.channel) || isPublicThreadChannel(msg.channel)

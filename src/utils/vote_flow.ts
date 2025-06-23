@@ -1,13 +1,12 @@
-import { Effect, Equal, pipe } from "effect";
-import { minute } from "~/services/timeout";
-
 import type {
   AwaitReactionsOptions,
   CommandInteraction,
   EmojiIdentifierResolvable,
-  InteractionReplyOptions,
   InteractionCallbackResponse,
+  InteractionReplyOptions,
 } from "discord.js";
+import { Effect, Equal, pipe } from "effect";
+import { minute } from "~/services/timeout";
 
 const awaitReactions =
   (options?: AwaitReactionsOptions) => (msg: InteractionCallbackResponse) =>

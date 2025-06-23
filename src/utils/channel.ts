@@ -1,6 +1,3 @@
-import { ChannelType } from "discord.js";
-import { Equal, Option, Array as ReadonlyArray, pipe } from "effect";
-
 import type {
   CategoryChannel,
   Channel,
@@ -9,6 +6,8 @@ import type {
   PublicThreadChannel,
   TextChannel,
 } from "discord.js";
+import { ChannelType } from "discord.js";
+import { Equal, Option, pipe, Array as ReadonlyArray } from "effect";
 
 export const isTextChannel = (
   channel: Channel,

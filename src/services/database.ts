@@ -1,7 +1,6 @@
-import { type PostgresJsDatabase, drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
-
+import { drizzle, type PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { Context, Data, Effect, Layer } from "effect";
+import postgres from "postgres";
 import * as schema from "~/db/schema";
 import { EnvConfig } from "./env";
 
@@ -12,7 +11,7 @@ export class DatabaseError extends Data.TaggedError("DatabaseError")<{
 export class Database extends Context.Tag("Database")<
   Database,
   PostgresJsDatabase<typeof schema> & {
-    // biome-ignore lint/complexity/noBannedTypes: <explanation>
+    // biome-ignore lint/complexity/noBannedTypes: need empty object
     $client: postgres.Sql<{}>;
   }
 >() {}

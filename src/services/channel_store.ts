@@ -4,9 +4,9 @@ import {
   Equal,
   Layer,
   MutableHashMap,
+  pipe,
   Array as ReadonlyArray,
   type Ref,
-  pipe,
 } from "effect";
 import { EnvConfig } from "~/services/env";
 

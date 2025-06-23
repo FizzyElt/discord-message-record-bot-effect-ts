@@ -1,9 +1,8 @@
-import { Effect, String, pipe } from "effect";
+import type { CommandInteraction } from "discord.js";
+import { Effect, pipe, String } from "effect";
 import { fetchCatImage } from "~/utils/cat_image";
 import { getCommandOptionString } from "~/utils/command";
 import { fetchEmoji } from "~/utils/google_emoji";
-
-import type { CommandInteraction } from "discord.js";
 
 export const getEmoJiJi = (interaction: CommandInteraction) =>
   pipe(

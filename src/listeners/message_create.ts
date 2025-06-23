@@ -1,8 +1,7 @@
-import { Effect, pipe } from "effect";
-import { messageGuard } from "~/tasks";
-
 import type { Message } from "discord.js";
+import { Effect, pipe } from "effect";
 import type { MainLive } from "~/services";
+import { messageGuard } from "~/tasks";
 
 export const messageCreateListener =
   (live: typeof MainLive) => (msg: Message<boolean>) => {

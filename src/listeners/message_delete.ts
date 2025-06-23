@@ -1,8 +1,7 @@
-import { Effect, pipe } from "effect";
-import { messageGuard, recordDeleteMsg } from "~/tasks";
-
 import type { Awaitable, Message, PartialMessage } from "discord.js";
+import { Effect, pipe } from "effect";
 import type { MainLive } from "~/services";
+import { messageGuard, recordDeleteMsg } from "~/tasks";
 
 export const messageDeleteListener =
   (live: typeof MainLive) =>

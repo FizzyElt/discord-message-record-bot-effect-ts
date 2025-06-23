@@ -1,5 +1,4 @@
 import { Layer, pipe } from "effect";
-
 import { ChannelService, ChannelServiceLive } from "./channel_store";
 import { ClientContext, ClientLive } from "./client";
 import { DatabaseLive } from "./database";

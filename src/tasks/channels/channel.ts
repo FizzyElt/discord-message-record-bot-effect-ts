@@ -2,10 +2,10 @@ import type { Channel, CommandInteraction } from "discord.js";
 import {
   Effect,
   Equal,
-  Option,
-  Array as ReadonlyArray,
   flow,
+  Option,
   pipe,
+  Array as ReadonlyArray,
 } from "effect";
 import { ClientContext } from "~/services";
 import {

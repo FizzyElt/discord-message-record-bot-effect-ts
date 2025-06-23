@@ -1,7 +1,7 @@
 import {
+  type APIApplicationCommandOptionChoice,
   SlashCommandBuilder,
   SlashCommandStringOption,
-  type APIApplicationCommandOptionChoice,
 } from "discord.js";
 import { choiceList } from "~/services/timeout";
 

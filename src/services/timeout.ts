@@ -2,10 +2,10 @@ import {
   Context,
   Effect,
   Equal,
-  Layer,
-  Array as ReadonlyArray,
   identity,
+  Layer,
   pipe,
+  Array as ReadonlyArray,
 } from "effect";
 
 export type TimeoutInfo = {

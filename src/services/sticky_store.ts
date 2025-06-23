@@ -11,10 +11,9 @@ import {
   Equal,
   Layer,
   Number,
-  Ref,
   pipe,
+  Ref,
 } from "effect";
-
 import * as StickyModel from "~/model/sticky";
 import { commands } from "~/slash_command/main_command";
 import { memeCommands } from "~/slash_command/meme_command";

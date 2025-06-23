@@ -1,3 +1,24 @@
+import type {
+  Awaitable,
+  CacheType,
+  ChatInputCommandInteraction,
+  Interaction,
+  InteractionCallbackResponse,
+  InteractionResponse,
+  Message,
+} from "discord.js";
+import { Effect, pipe } from "effect";
+import type { NoSuchElementException, UnknownException } from "effect/Cause";
+import {
+  type ChannelService,
+  type ClientContext,
+  EnvConfig,
+  type MainLive,
+  type TimeoutInfoListService,
+  type VotingService,
+} from "~/services";
+import type { Database } from "~/services/database";
+import type { StickyService } from "~/services/sticky_store";
 import { CommandName } from "~/slash_command/main_command";
 import { MemeCommandName } from "~/slash_command/meme_command";
 import { StickyCommandName } from "~/slash_command/sticky_command";
@@ -14,29 +35,6 @@ import {
   subscribe,
   unsubscribe,
 } from "~/tasks";
-
-import { Effect, pipe } from "effect";
-
-import type {
-  Awaitable,
-  CacheType,
-  ChatInputCommandInteraction,
-  Interaction,
-  InteractionCallbackResponse,
-  InteractionResponse,
-  Message,
-} from "discord.js";
-import type { NoSuchElementException, UnknownException } from "effect/Cause";
-import {
-  type ChannelService,
-  type ClientContext,
-  EnvConfig,
-  type MainLive,
-  type TimeoutInfoListService,
-  type VotingService,
-} from "~/services";
-import type { Database } from "~/services/database";
-import type { StickyService } from "~/services/sticky_store";
 
 export const interactionCreateListener =
   (live: typeof MainLive) =>
