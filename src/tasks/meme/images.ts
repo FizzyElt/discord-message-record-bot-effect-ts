@@ -1,10 +1,10 @@
-import type { CommandInteraction } from "discord.js";
+import type { ChatInputCommandInteraction } from "discord.js";
 import { Effect, pipe, String } from "effect";
 import { fetchCatImage } from "~/utils/cat_image";
 import { getCommandOptionString } from "~/utils/command";
 import { fetchEmoji } from "~/utils/google_emoji";
 
-export const getEmoJiJi = (interaction: CommandInteraction) =>
+export const getEmoJiJi = (interaction: ChatInputCommandInteraction) =>
   pipe(
     Effect.tryPromise(() => interaction.deferReply()),
     Effect.flatMap(() =>
@@ -25,7 +25,7 @@ export const getEmoJiJi = (interaction: CommandInteraction) =>
     ),
   );
 
-export const getCatImage = (interaction: CommandInteraction) =>
+export const getCatImage = (interaction: ChatInputCommandInteraction) =>
   pipe(
     Effect.tryPromise(() => interaction.deferReply()),
     Effect.flatMap(() => fetchCatImage()),

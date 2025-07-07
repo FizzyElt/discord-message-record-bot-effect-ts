@@ -1,5 +1,6 @@
 import type {
   AwaitReactionsOptions,
+  ChatInputCommandInteraction,
   CommandInteraction,
   EmojiIdentifierResolvable,
   GuildMember,
@@ -197,7 +198,7 @@ const _banUserVote = (params: {
   );
 };
 
-export const banUser = (interaction: CommandInteraction) =>
+export const banUser = (interaction: ChatInputCommandInteraction) =>
   Effect.gen(function* () {
     const timeoutInfo = yield* getTimeoutInfo(
       getCommandOptionString("time")(interaction),

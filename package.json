@@ -13,7 +13,7 @@
     "db:push": "drizzle-kit push",
     "format": "biome format --write",
     "lint": "biome lint",
-    "check": "pnpm format && pnpm lint",
+    "check": "pnpm format && pnpm lint & tsc --noEmit",
     "tsc": "tsc",
     "command:clear": "tsx ./src/slash_command/clear.ts"
   },
@@ -21,20 +21,20 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "drizzle-kit": "^0.31.1",
+    "drizzle-kit": "^0.31.4",
     "tsconfig-paths": "^4.2.0",
-    "tsx": "^4.19.4",
+    "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@biomejs/biome": "^2.0.5",
-    "@types/node": "^22.15.21",
+    "@biomejs/biome": "^2.0.6",
+    "@types/node": "^22.16.0",
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
-    "discord.js": "^14.19.3",
-    "dotenv": "^16.5.0",
+    "discord.js": "^14.21.0",
+    "dotenv": "^16.6.1",
     "drizzle-orm": "^0.42.0",
-    "effect": "^3.15.2",
+    "effect": "^3.16.12",
     "postgres": "^3.4.7"
   },
   "pnpm": {

@@ -1,4 +1,8 @@
-import type { Channel, CommandInteraction } from "discord.js";
+import type {
+  Channel,
+  ChatInputCommandInteraction,
+  CommandInteraction,
+} from "discord.js";
 import {
   Effect,
   Equal,
@@ -45,7 +49,7 @@ const excludeChannels = (channel: Channel) =>
     return "不支援的頻道類型";
   });
 
-export const addChannelFlow = (interaction: CommandInteraction) =>
+export const addChannelFlow = (interaction: ChatInputCommandInteraction) =>
   Effect.gen(function* () {
     const client = yield* ClientContext;
 
@@ -83,7 +87,7 @@ const includeChannels = (channel: Channel) =>
     return "不支援的頻道類型";
   });
 
-export const removeChannelFlow = (interaction: CommandInteraction) =>
+export const removeChannelFlow = (interaction: ChatInputCommandInteraction) =>
   Effect.gen(function* () {
     const client = yield* ClientContext;
 

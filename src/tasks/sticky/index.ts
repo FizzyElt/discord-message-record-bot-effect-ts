@@ -26,7 +26,7 @@ export const showSticky = (
   );
 };
 
-export const createSticky = (interaction: CommandInteraction) => {
+export const createSticky = (interaction: ChatInputCommandInteraction) => {
   const name = getCommandOptionString("name")(interaction);
   const url = getCommandOptionString("url")(interaction);
   const group = getCommandOptionString("group")(interaction) || "default";
@@ -47,7 +47,7 @@ export const createSticky = (interaction: CommandInteraction) => {
   );
 };
 
-export const deleteSticky = (interaction: CommandInteraction) => {
+export const deleteSticky = (interaction: ChatInputCommandInteraction) => {
   const name = getCommandOptionString("name")(interaction);
 
   return pipe(
