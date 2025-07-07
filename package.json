@@ -32,7 +32,6 @@
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
     "discord.js": "^14.21.0",
-    "dotenv": "^16.6.1",
     "drizzle-orm": "^0.42.0",
     "effect": "^3.16.12",
     "postgres": "^3.4.7"

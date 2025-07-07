@@ -1,7 +1,4 @@
-import dotenv from "dotenv";
-import { Context, Layer } from "effect";
-
-dotenv.config();
+import { Config, Context, Layer } from "effect";
 
 // layer
 
@@ -22,17 +19,20 @@ export interface Env {
 
 export class EnvConfig extends Context.Tag("EnvConfig")<EnvConfig, Env>() {}
 
-export const EnvLive = Layer.succeed(EnvConfig, {
-  TOKEN: process.env.TOKEN || "",
-  BOT_SENDING_CHANNEL_ID: process.env.BOT_SENDING_CHANNEL_ID || "",
-  BOT_SENDING_CHANNEL_NAME: process.env.BOT_SENDING_CHANNEL_NAME || "",
-  LOG_CHANNEL_ID: process.env.LOG_CHANNEL_ID || "",
-  ADMIN_ROLE_ID: process.env.ADMIN_ROLE_ID || "",
-  CLIENT_ID: process.env.CLIENT_ID || "",
-  GUILD_ID: process.env.GUILD_ID || "",
-  VOTE_ROLE_ID: process.env.VOTE_ROLE_ID || "",
-  TIMEZONE: process.env.TIMEZONE || "",
-  CAT_API_KEY: process.env.CAT_API_KEY || "",
-  EMOJI_KITCHEN_KEY: process.env.EMOJI_KITCHEN_KEY || "",
-  SUPABASE_URL_ADMIN: process.env.SUPABASE_URL_ADMIN || "",
-});
+export const EnvLive = Layer.effect(
+  EnvConfig,
+  Config.all({
+    TOKEN: Config.string("TOKEN"),
+    BOT_SENDING_CHANNEL_ID: Config.string("BOT_SENDING_CHANNEL_ID"),
+    BOT_SENDING_CHANNEL_NAME: Config.string("BOT_SENDING_CHANNEL_NAME"),
+    LOG_CHANNEL_ID: Config.string("LOG_CHANNEL_ID"),
+    ADMIN_ROLE_ID: Config.string("ADMIN_ROLE_ID"),
+    CLIENT_ID: Config.string("CLIENT_ID"),
+    GUILD_ID: Config.string("GUILD_ID"),
+    VOTE_ROLE_ID: Config.string("VOTE_ROLE_ID"),
+    TIMEZONE: Config.string("TIMEZONE"),
+    CAT_API_KEY: Config.string("CAT_API_KEY"),
+    EMOJI_KITCHEN_KEY: Config.string("EMOJI_KITCHEN_KEY"),
+    SUPABASE_URL_ADMIN: Config.string("SUPABASE_URL_ADMIN"),
+  }),
+);
