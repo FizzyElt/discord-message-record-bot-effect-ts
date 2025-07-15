@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsx ./src/index.ts",
+    "start": "tsx --env-file=.env ./src/index.ts",
     "db:push": "drizzle-kit push",
     "format": "biome format --write",
     "lint": "biome lint",
@@ -27,13 +27,13 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
-    "@biomejs/biome": "^2.0.6",
-    "@types/node": "^22.16.0",
+    "@biomejs/biome": "^2.1.1",
+    "@types/node": "^22.16.4",
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
     "discord.js": "^14.21.0",
     "drizzle-orm": "^0.42.0",
-    "effect": "^3.16.12",
+    "effect": "^3.16.13",
     "postgres": "^3.4.7"
   },
   "pnpm": {

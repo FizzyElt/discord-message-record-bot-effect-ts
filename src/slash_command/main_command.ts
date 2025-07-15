@@ -8,7 +8,10 @@ import { choiceList } from "~/services/timeout";
 const createStringChoice = (
   name: string,
   value: string,
-): APIApplicationCommandOptionChoice<string> => ({ name: name, value: value });
+): APIApplicationCommandOptionChoice<string> => ({
+  name: name,
+  value: value,
+});
 
 export enum CommandName {
   add_channels = "add_channels",

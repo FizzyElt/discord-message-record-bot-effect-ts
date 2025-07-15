@@ -34,6 +34,7 @@ import {
   showSticky,
   subscribe,
   unsubscribe,
+  getCatImage,
 } from "~/tasks";
 
 export const interactionCreateListener =
@@ -102,6 +103,8 @@ function commandOperation(
     // meme commands
     case MemeCommandName.emoJiji:
       return getEmoJiJi(interaction);
+    case MemeCommandName.cat:
+      return getCatImage(interaction);
 
     default:
       return Effect.tryPromise(() => interaction.reply("不支援的指令"));

@@ -32,5 +32,4 @@ export const getCatImage = (interaction: ChatInputCommandInteraction) =>
     Effect.flatMap((catImageUrl) =>
       Effect.tryPromise(() => interaction.editReply(catImageUrl)),
     ),
-    Effect.mapError(console.log),
   );
