@@ -14,7 +14,8 @@ export interface Env {
   readonly TIMEZONE: string;
   readonly CAT_API_KEY: string;
   readonly EMOJI_KITCHEN_KEY: string;
-  readonly SUPABASE_URL_ADMIN: string;
+  readonly TURSO_DB_TOKEN: string;
+  readonly TURSO_DB_URL: string;
 }
 
 export class EnvConfig extends Context.Tag("EnvConfig")<EnvConfig, Env>() {}
@@ -33,6 +34,7 @@ export const EnvLive = Layer.effect(
     TIMEZONE: Config.string("TIMEZONE"),
     CAT_API_KEY: Config.string("CAT_API_KEY"),
     EMOJI_KITCHEN_KEY: Config.string("EMOJI_KITCHEN_KEY"),
-    SUPABASE_URL_ADMIN: Config.string("SUPABASE_URL_ADMIN"),
+    TURSO_DB_TOKEN: Config.string("TURSO_DB_TOKEN"),
+    TURSO_DB_URL: Config.string("TURSO_DB_URL"),
   }),
 );
