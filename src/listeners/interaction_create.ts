@@ -28,13 +28,13 @@ import {
   banUser,
   createSticky,
   deleteSticky,
+  getCatImage,
   getEmoJiJi,
   listChannels,
   removeChannelFlow,
   showSticky,
   subscribe,
   unsubscribe,
-  getCatImage,
 } from "~/tasks";
 
 export const interactionCreateListener =

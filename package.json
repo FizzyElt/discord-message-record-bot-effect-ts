@@ -24,18 +24,18 @@
   "devDependencies": {
     "drizzle-kit": "^0.31.4",
     "tsconfig-paths": "^4.2.0",
-    "tsx": "^4.20.3",
-    "typescript": "^5.8.3"
+    "tsx": "^4.20.4",
+    "typescript": "^5.9.2"
   },
   "dependencies": {
-    "@biomejs/biome": "^2.1.2",
+    "@biomejs/biome": "^2.1.4",
     "@libsql/client": "^0.15.10",
-    "@types/node": "^22.16.5",
+    "@types/node": "^22.17.1",
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
     "discord.js": "^14.21.0",
-    "drizzle-orm": "^0.44.3",
-    "effect": "^3.16.16"
+    "drizzle-orm": "^0.44.4",
+    "effect": "^3.17.7"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
