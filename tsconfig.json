@@ -1,15 +1,21 @@
 {
-  "compilerOptions": {
-    "target": "ESNext",
-    "module": "NodeNext",
-    "baseUrl": "./",
-    "paths": {
-      "~/*": ["./src/*"]
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "esnext",
+        "baseUrl": ".",
+        "paths": {
+            "~/*": ["./src/*"]
+        },
+        "esModuleInterop": true,
+        "moduleDetection": "force",
+        "moduleResolution": "bundler",
+        "resolveJsonModule": true,
+        "forceConsistentCasingInFileNames": true,
+        "allowImportingTsExtensions": true,
+        "noEmit": true,
+        "strict": true,
+        "skipLibCheck": true,
+        "allowJs": true
     },
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "skipLibCheck": true
-  },
-  "include": ["src/**/*.ts"]
+    "include": ["src", "*.config.ts", "*.config.js"]
 }

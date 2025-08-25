@@ -8,18 +8,18 @@ import { TimeoutInfoListLive, TimeoutInfoListService } from "./timeout";
 import { VotingService, VotingServiceLive } from "./voting_store";
 
 export const MainLive = pipe(
-  Layer.merge(ClientLive, ChannelServiceLive),
-  Layer.merge(StickyStoreLive),
-  Layer.provideMerge(DatabaseLive),
-  Layer.provideMerge(EnvLive),
-  Layer.merge(VotingServiceLive),
-  Layer.merge(TimeoutInfoListLive),
+    Layer.merge(ClientLive, ChannelServiceLive),
+    Layer.merge(StickyStoreLive),
+    Layer.provideMerge(DatabaseLive),
+    Layer.provideMerge(EnvLive),
+    Layer.merge(VotingServiceLive),
+    Layer.merge(TimeoutInfoListLive)
 );
 
 export {
-  ChannelService,
-  ClientContext,
-  EnvConfig,
-  TimeoutInfoListService,
-  VotingService,
+    ChannelService,
+    ClientContext,
+    EnvConfig,
+    TimeoutInfoListService,
+    VotingService,
 };

@@ -5,24 +5,24 @@ import * as schema from "~/db/schema";
 import { EnvConfig } from "./env";
 
 export class DatabaseError extends Data.TaggedError("DatabaseError")<{
-  message: unknown;
+    message: unknown;
 }> {}
 
 export class Database extends Context.Tag("Database")<
-  Database,
-  LibSQLDatabase<typeof schema> & {
-    $client: Client;
-  }
+    Database,
+    LibSQLDatabase<typeof schema> & {
+        $client: Client;
+    }
 >() {}
 
 const make = () =>
-  Effect.gen(function* () {
-    const env = yield* EnvConfig;
-    const client = createClient({
-      url: env.TURSO_DB_URL,
-      authToken: env.TURSO_DB_TOKEN,
+    Effect.gen(function* () {
+        const env = yield* EnvConfig;
+        const client = createClient({
+            url: env.TURSO_DB_URL,
+            authToken: env.TURSO_DB_TOKEN,
+        });
+        return drizzle({ client, schema });
     });
-    return drizzle({ client, schema });
-  });
 
 export const DatabaseLive = Layer.effect(Database, make());
