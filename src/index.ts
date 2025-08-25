@@ -1,10 +1,10 @@
 import { Effect, Layer } from "effect";
 import {
+    clientReady,
     interactionCreateListener,
     messageCreateListener,
     messageDeleteListener,
     messageUpdateListener,
-    ready,
 } from "~/listeners";
 import { MainLive } from "~/services";
 import { ClientContext } from "~/services/client";
@@ -16,17 +16,17 @@ const program = Effect.scoped(
                 const client = yield* ClientContext;
 
                 client
-                    .on("ready", ready)
+                    .on("clientReady", clientReady)
                     .on("messageCreate", messageCreateListener(mainLive))
                     .on("messageDelete", messageDeleteListener(mainLive))
                     .on("messageUpdate", messageUpdateListener(mainLive))
                     .on(
                         "interactionCreate",
-                        interactionCreateListener(mainLive)
+                        interactionCreateListener(mainLive),
                     );
-            }).pipe(Effect.provide(mainLive))
-        )
-    )
+            }).pipe(Effect.provide(mainLive)),
+        ),
+    ),
 );
 
 Effect.runPromise(program).catch((err) => console.log(err));

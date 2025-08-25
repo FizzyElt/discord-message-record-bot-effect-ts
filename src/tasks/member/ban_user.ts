@@ -7,10 +7,10 @@ import type {
     InteractionCallbackResponse,
     Message,
 } from "discord.js";
-import type { NoSuchElementException, UnknownException } from "effect/Cause";
 import { Effect, Equal, Option, pipe } from "effect";
-import type { TimeoutInfo } from "~/services/timeout";
+import type { NoSuchElementException, UnknownException } from "effect/Cause";
 import { ClientContext, EnvConfig } from "~/services";
+import type { TimeoutInfo } from "~/services/timeout";
 import { getTimeoutInfo, minute } from "~/services/timeout";
 import {
     addNewVoting,
@@ -55,9 +55,9 @@ const timeoutMember = ({
         Effect.tryPromise(() => member.timeout(timeoutInfo.time * 1000)),
         Effect.flatMap(() =>
             Effect.tryPromise(async () =>
-                msg?.reply(memberTimeoutVotePassed(member, timeoutInfo, count))
-            )
-        )
+                msg?.reply(memberTimeoutVotePassed(member, timeoutInfo, count)),
+            ),
+        ),
     );
 
 const startVoting = ({
@@ -81,10 +81,10 @@ const startVoting = ({
                     : undefined,
                 content: startMemberVote(member, timeoutInfo, mentionRole),
                 withResponse: true,
-            })
+            }),
         ),
         Effect.tap(reactMsg(emoji)),
-        Effect.tap(() => addNewVoting(member.user.id))
+        Effect.tap(() => addNewVoting(member.user.id)),
     );
 
 const collectVote = ({
@@ -110,7 +110,7 @@ const collectVote = ({
                 isPass: count >= timeoutInfo.voteThreshold,
                 count,
             };
-        })
+        }),
     );
 
 const votingFlow = (params: {
@@ -123,7 +123,7 @@ const votingFlow = (params: {
     pipe(
         startVoting(params),
         Effect.flatMap((replyMsg) =>
-            Option.fromNullable(replyMsg.resource?.message)
+            Option.fromNullable(replyMsg.resource?.message),
         ),
         // collect and react result
         Effect.tap((replyMsg) => {
@@ -139,7 +139,7 @@ const votingFlow = (params: {
                         return Effect.tryPromise(() =>
                             replyMsg.reply({
                                 content: memberDisableTime(member),
-                            })
+                            }),
                         );
                     }
 
@@ -153,12 +153,12 @@ const votingFlow = (params: {
                     }
 
                     return Effect.tryPromise(() =>
-                        replyMsg.reply(memberFree(member, count))
+                        replyMsg.reply(memberFree(member, count)),
                     );
-                })
+                }),
             );
         }),
-        Effect.tap(() => removeVoting(params.member.user.id))
+        Effect.tap(() => removeVoting(params.member.user.id)),
     );
 
 // new ban user function
@@ -186,7 +186,7 @@ const _banUserVote = (params: {
             return Effect.tryPromise(async () =>
                 msg?.resource?.message?.reply({
                     content: memberDisableTime(member),
-                })
+                }),
             );
         }
 
@@ -200,7 +200,7 @@ const _banUserVote = (params: {
         }
 
         return Effect.tryPromise(async () =>
-            msg?.resource?.message?.reply(memberFree(member, count))
+            msg?.resource?.message?.reply(memberFree(member, count)),
         );
     };
 
@@ -209,14 +209,14 @@ const _banUserVote = (params: {
             started: () => addNewVoting(member.user.id),
             result: resultFlow,
         }),
-        Effect.tap(() => removeVoting(params.member.user.id))
+        Effect.tap(() => removeVoting(params.member.user.id)),
     );
 };
 
 export const banUser = (interaction: ChatInputCommandInteraction) =>
     Effect.gen(function* () {
         const timeoutInfo = yield* getTimeoutInfo(
-            getCommandOptionString("time")(interaction)
+            getCommandOptionString("time")(interaction),
         );
         const client = yield* ClientContext;
         const env = yield* EnvConfig;
@@ -225,8 +225,8 @@ export const banUser = (interaction: ChatInputCommandInteraction) =>
         const member = yield* pipe(
             Effect.fromNullable(interaction.guild),
             Effect.flatMap((guild) =>
-                findUserFromMembers(userId)(guild.members)
-            )
+                findUserFromMembers(userId)(guild.members),
+            ),
         );
 
         const userVoting = yield* isUserVoting(member.id);
@@ -245,7 +245,7 @@ export const banUser = (interaction: ChatInputCommandInteraction) =>
                     interaction.reply({
                         content: canNotFindUser(),
                         withResponse: true,
-                    })
+                    }),
                 ),
             onSuccess: ({
                 member,
@@ -263,7 +263,7 @@ export const banUser = (interaction: ChatInputCommandInteraction) =>
                         interaction.reply({
                             content: doNotBanAdmin(),
                             withResponse: true,
-                        })
+                        }),
                     );
                 }
 
@@ -273,7 +273,7 @@ export const banUser = (interaction: ChatInputCommandInteraction) =>
                         interaction.reply({
                             content: doNotBanBot(),
                             withResponse: true,
-                        })
+                        }),
                     );
                 }
 
@@ -283,7 +283,7 @@ export const banUser = (interaction: ChatInputCommandInteraction) =>
                         interaction.reply({
                             content: memberDisableTime(member, env.TIMEZONE),
                             withResponse: true,
-                        })
+                        }),
                     );
                 }
 
@@ -293,7 +293,7 @@ export const banUser = (interaction: ChatInputCommandInteraction) =>
                         interaction.reply({
                             content: memberVoting(member),
                             withResponse: true,
-                        })
+                        }),
                     );
                 }
 
@@ -305,5 +305,5 @@ export const banUser = (interaction: ChatInputCommandInteraction) =>
                     emoji: "✅",
                 });
             },
-        })
+        }),
     );

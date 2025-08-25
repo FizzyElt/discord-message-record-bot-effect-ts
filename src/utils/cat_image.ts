@@ -11,12 +11,12 @@ export const fetchCatImage = () =>
                         headers: {
                             "x-api-key": CAT_API_KEY,
                         },
-                    })
-                ).then((res) => res.json())
-            )
+                    }),
+                ).then((res) => res.json()),
+            ),
         ),
         Effect.flatMap((data) =>
-            Option.fromNullable(data?.at(0)?.url as string | undefined)
+            Option.fromNullable(data?.at(0)?.url as string | undefined),
         ),
-        Effect.orElse(() => Effect.succeed("貓貓躲起來了，請重新引誘"))
+        Effect.orElse(() => Effect.succeed("貓貓躲起來了，請重新引誘")),
     );

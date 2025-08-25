@@ -14,23 +14,23 @@ export const getEmoJiJi = (interaction: ChatInputCommandInteraction) =>
                     pipe(
                         interaction,
                         getCommandOptionString("left"),
-                        String.trim
-                    )
+                        String.trim,
+                    ),
                 ),
                 Effect.let("right", () =>
                     pipe(
                         interaction,
                         getCommandOptionString("right"),
-                        String.trim
-                    )
+                        String.trim,
+                    ),
                 ),
                 Effect.flatMap(({ left, right }) => fetchEmoji(left, right)),
-                Effect.orElse(() => Effect.succeed("emoji kitchen 找不到組合"))
-            )
+                Effect.orElse(() => Effect.succeed("emoji kitchen 找不到組合")),
+            ),
         ),
         Effect.flatMap((emojijiMsg) =>
-            Effect.tryPromise(() => interaction.editReply(emojijiMsg))
-        )
+            Effect.tryPromise(() => interaction.editReply(emojijiMsg)),
+        ),
     );
 
 export const getCatImage = (interaction: ChatInputCommandInteraction) =>
@@ -38,6 +38,6 @@ export const getCatImage = (interaction: ChatInputCommandInteraction) =>
         Effect.tryPromise(() => interaction.deferReply()),
         Effect.flatMap(() => fetchCatImage()),
         Effect.flatMap((catImageUrl) =>
-            Effect.tryPromise(() => interaction.editReply(catImageUrl))
-        )
+            Effect.tryPromise(() => interaction.editReply(catImageUrl)),
+        ),
     );

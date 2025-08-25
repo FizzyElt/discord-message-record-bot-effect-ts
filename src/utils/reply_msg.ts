@@ -1,6 +1,6 @@
-import type { GuildMember } from "discord.js";
 import { formatDistanceToNow } from "date-fns";
 import { formatInTimeZone } from "date-fns-tz";
+import type { GuildMember } from "discord.js";
 import type { TimeoutInfo } from "~/services/timeout";
 
 export const canNotFindUser = (): string => "找不到使用者";
@@ -19,16 +19,16 @@ export const memberDisableTime = (
         communicationDisabledUntilTimestamp: number;
         readonly communicationDisabledUntil: Date;
     },
-    timezone = "Asia/Taipei"
+    timezone = "Asia/Taipei",
 ): string =>
     `**${
         member.nickname || member.user.username
     }** 還在服刑\n剩餘時間 ${formatDistanceToNow(
-        member.communicationDisabledUntil
+        member.communicationDisabledUntil,
     )}\n出獄時間 ${formatInTimeZone(
         member.communicationDisabledUntil,
         timezone || "Asia/Taipei",
-        "yyyy-MM-dd HH:mm"
+        "yyyy-MM-dd HH:mm",
     )}`;
 
 export const memberFree = (member: GuildMember, count: number): string =>
@@ -37,7 +37,7 @@ export const memberFree = (member: GuildMember, count: number): string =>
 export const memberTimeoutVotePassed = (
     member: GuildMember,
     timeoutInfo: TimeoutInfo,
-    count: number
+    count: number,
 ): string =>
     `恭喜獲得 **${count} / ${timeoutInfo.voteThreshold}** 票 **${
         member.nickname || member.user.username
@@ -46,7 +46,7 @@ export const memberTimeoutVotePassed = (
 export const startMemberVote = (
     member: GuildMember,
     timeoutInfo: TimeoutInfo,
-    roleId?: string
+    roleId?: string,
 ): string => {
     const baseMsg = `是否禁言 **${member.nickname || member.user.username} ** ${
         timeoutInfo.name

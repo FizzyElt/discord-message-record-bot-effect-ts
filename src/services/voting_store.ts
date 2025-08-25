@@ -37,29 +37,29 @@ export const VotingServiceLive = Layer.effect(
             addNewVoting,
             removeVoting,
         };
-    })
+    }),
 );
 
 export const getVotingStore = () =>
     pipe(
         VotingService,
-        Effect.flatMap((service) => service.getVotingStore())
+        Effect.flatMap((service) => service.getVotingStore()),
     );
 
 export const removeVoting = (userId: string) =>
     pipe(
         VotingService,
-        Effect.flatMap((service) => service.removeVoting(userId))
+        Effect.flatMap((service) => service.removeVoting(userId)),
     );
 
 export const isUserVoting = (userId: string) =>
     pipe(
         VotingService,
-        Effect.flatMap((service) => service.isUserVoting(userId))
+        Effect.flatMap((service) => service.isUserVoting(userId)),
     );
 
 export const addNewVoting = (userId: string) =>
     pipe(
         VotingService,
-        Effect.flatMap((service) => service.addNewVoting(userId))
+        Effect.flatMap((service) => service.addNewVoting(userId)),
     );

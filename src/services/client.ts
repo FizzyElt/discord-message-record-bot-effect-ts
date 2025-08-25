@@ -29,5 +29,5 @@ export const ClientLive = Layer.effect(
         yield* Effect.tryPromise(() => client.login(env.TOKEN));
 
         return client;
-    })
+    }),
 );

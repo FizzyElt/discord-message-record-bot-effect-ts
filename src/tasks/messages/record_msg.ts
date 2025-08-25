@@ -28,19 +28,19 @@ const getSendChannel = () =>
         const client = yield* ClientContext;
         const env = yield* EnvConfig;
         return yield* getTextChannelByClient(env.BOT_SENDING_CHANNEL_ID)(
-            client
+            client,
         );
     });
 
 // ======================================================
 
 const getCreatedMsgString = (
-    msg: Message<boolean> | PartialMessage
+    msg: Message<boolean> | PartialMessage,
 ): string => {
     const channelName = getChannelNameByMsg(msg);
     const userName = getUserNameByMsg(msg);
     const timeString = bold(
-        `[Created：${format(msg.createdAt, "yyyy/MM/dd HH:mm")}]`
+        `[Created：${format(msg.createdAt, "yyyy/MM/dd HH:mm")}]`,
     );
 
     return pipe(
@@ -50,7 +50,7 @@ const getCreatedMsgString = (
             String.isString(msg.content) ? msg.content : "",
             "------------------------------------",
         ],
-        ReadonlyArray.join("\n")
+        ReadonlyArray.join("\n"),
     );
 };
 
@@ -63,8 +63,8 @@ export const recordCreatedMsg = (msg: Message<boolean>) =>
                 sendChannel.send({
                     content: getCreatedMsgString(msg),
                     allowedMentions: { parse: [] },
-                })
-            )
+                }),
+            ),
         ),
         Effect.tap(({ sentMsg }) => {
             msg.reference = {
@@ -75,18 +75,18 @@ export const recordCreatedMsg = (msg: Message<boolean>) =>
             };
             return Effect.void;
         }),
-        Effect.map(({ sentMsg }) => sentMsg)
+        Effect.map(({ sentMsg }) => sentMsg),
     );
 
 // ======================================================
 
 const getDeletedMsgString = (
-    msg: Message<boolean> | PartialMessage
+    msg: Message<boolean> | PartialMessage,
 ): string => {
     const channelName = getChannelNameByMsg(msg);
     const userName = getUserNameByMsg(msg);
     const timeString = bold(
-        `[Deleted：${format(new Date(), "yyyy/MM/dd HH:mm")}]`
+        `[Deleted：${format(new Date(), "yyyy/MM/dd HH:mm")}]`,
     );
 
     return pipe(
@@ -96,7 +96,7 @@ const getDeletedMsgString = (
             String.isString(msg.content) ? msg.content : "",
             "------------------------------------",
         ],
-        ReadonlyArray.join("\n")
+        ReadonlyArray.join("\n"),
     );
 };
 
@@ -108,21 +108,21 @@ export const recordDeleteMsg = (msg: Message<boolean> | PartialMessage) =>
                 sendChannel.send({
                     content: getDeletedMsgString(msg),
                     allowedMentions: { parse: [] },
-                })
-            )
-        )
+                }),
+            ),
+        ),
     );
 
 // ======================================================
 
 const getUpdatedMsgString = (
     oldMsg: Message<boolean> | PartialMessage,
-    msg: Message<boolean> | PartialMessage
+    msg: Message<boolean> | PartialMessage,
 ): string => {
     const channelName = getChannelNameByMsg(msg);
     const userName = getUserNameByMsg(msg);
     const timeString = bold(
-        `[Edited：${format(msg.editedAt || new Date(), "yyyy/MM/dd HH:mm")}]`
+        `[Edited：${format(msg.editedAt || new Date(), "yyyy/MM/dd HH:mm")}]`,
     );
 
     return pipe(
@@ -134,13 +134,13 @@ const getUpdatedMsgString = (
             String.isString(msg.content) ? msg.content : "",
             "------------------------------------",
         ],
-        ReadonlyArray.join("\n")
+        ReadonlyArray.join("\n"),
     );
 };
 
 export const recordUpdateMsg = (
     oldMsg: Message<boolean> | PartialMessage,
-    msg: Message<boolean> | PartialMessage
+    msg: Message<boolean> | PartialMessage,
 ) =>
     pipe(
         getSendChannel(),
@@ -152,7 +152,7 @@ export const recordUpdateMsg = (
                     reply: {
                         messageReference: oldMsg.reference?.messageId || "",
                     },
-                })
-            )
-        )
+                }),
+            ),
+        ),
     );

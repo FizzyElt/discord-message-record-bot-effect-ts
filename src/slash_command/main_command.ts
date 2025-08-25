@@ -7,7 +7,7 @@ import { choiceList } from "~/services/timeout";
 
 const createStringChoice = (
     name: string,
-    value: string
+    value: string,
 ): APIApplicationCommandOptionChoice<string> => ({
     name: name,
     value: value,
@@ -32,7 +32,7 @@ export const commands = [
                 .setName("id")
                 .setDescription("channel_id or category_id")
                 .setMaxLength(150)
-                .setRequired(true)
+                .setRequired(true),
         ),
 
     new SlashCommandBuilder()
@@ -43,7 +43,7 @@ export const commands = [
                 .setName("id")
                 .setDescription("channel_id or category_id")
                 .setMaxLength(150)
-                .setRequired(true)
+                .setRequired(true),
         ),
 
     new SlashCommandBuilder()
@@ -58,7 +58,7 @@ export const commands = [
                 .setName("mention_user")
                 .setDescription("mention user")
                 .setMaxLength(150)
-                .setRequired(true)
+                .setRequired(true),
         )
         .addStringOption(
             new SlashCommandStringOption()
@@ -66,10 +66,10 @@ export const commands = [
                 .setDescription("time")
                 .setChoices(
                     ...choiceList.map((info) =>
-                        createStringChoice(info.name, info.key)
-                    )
+                        createStringChoice(info.name, info.key),
+                    ),
                 )
-                .setRequired(true)
+                .setRequired(true),
         ),
 
     new SlashCommandBuilder()

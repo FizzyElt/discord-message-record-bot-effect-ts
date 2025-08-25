@@ -7,10 +7,8 @@ import type {
     InteractionResponse,
     Message,
 } from "discord.js";
-import type { NoSuchElementException, UnknownException } from "effect/Cause";
 import { Effect, pipe } from "effect";
-import type { Database } from "~/services/database";
-import type { StickyService } from "~/services/sticky_store";
+import type { NoSuchElementException, UnknownException } from "effect/Cause";
 import {
     type ChannelService,
     type ClientContext,
@@ -19,6 +17,8 @@ import {
     type TimeoutInfoListService,
     type VotingService,
 } from "~/services";
+import type { Database } from "~/services/database";
+import type { StickyService } from "~/services/sticky_store";
 import { CommandName } from "~/slash_command/main_command";
 import { MemeCommandName } from "~/slash_command/meme_command";
 import { StickyCommandName } from "~/slash_command/sticky_command";
@@ -46,14 +46,14 @@ export const interactionCreateListener =
 
         const program = pipe(
             commandOperation(interaction),
-            Effect.orElse(() => Effect.succeed("reply error"))
+            Effect.orElse(() => Effect.succeed("reply error")),
         );
 
         Effect.runPromise(program.pipe(Effect.provide(live)));
     };
 
 function commandOperation(
-    interaction: ChatInputCommandInteraction<CacheType>
+    interaction: ChatInputCommandInteraction<CacheType>,
 ): Effect.Effect<
     | Message<boolean>
     | InteractionResponse<boolean>
@@ -81,15 +81,15 @@ function commandOperation(
             return pipe(
                 EnvConfig,
                 Effect.flatMap(({ VOTE_ROLE_ID }) =>
-                    subscribe(VOTE_ROLE_ID)(interaction)
-                )
+                    subscribe(VOTE_ROLE_ID)(interaction),
+                ),
             );
         case CommandName.unsubscribe:
             return pipe(
                 EnvConfig,
                 Effect.flatMap(({ VOTE_ROLE_ID }) =>
-                    unsubscribe(VOTE_ROLE_ID)(interaction)
-                )
+                    unsubscribe(VOTE_ROLE_ID)(interaction),
+                ),
             );
 
         // sticky commands

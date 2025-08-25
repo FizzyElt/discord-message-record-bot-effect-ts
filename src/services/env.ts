@@ -36,5 +36,5 @@ export const EnvLive = Layer.effect(
         EMOJI_KITCHEN_KEY: Config.string("EMOJI_KITCHEN_KEY"),
         TURSO_DB_TOKEN: Config.string("TURSO_DB_TOKEN"),
         TURSO_DB_URL: Config.string("TURSO_DB_URL"),
-    })
+    }),
 );

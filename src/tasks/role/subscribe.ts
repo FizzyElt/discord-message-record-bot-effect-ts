@@ -23,20 +23,20 @@ export const subscribe =
                 pipe(
                     guild.members,
                     findUserFromMembers(userId),
-                    Effect.flatMap(addRoleToMember(roleId))
-                )
+                    Effect.flatMap(addRoleToMember(roleId)),
+                ),
             ),
             Effect.flatMap((guild) =>
-                Effect.tryPromise(() => guild.roles.fetch(roleId))
+                Effect.tryPromise(() => guild.roles.fetch(roleId)),
             ),
             Effect.flatMap((roleInfo) =>
                 Effect.tryPromise(() =>
                     interaction.reply({
                         content: `您已成為 **${roleInfo?.name || roleInfo?.id || ""}** 的一員`,
                         withResponse: true,
-                    })
-                )
-            )
+                    }),
+                ),
+            ),
         );
     };
 
@@ -50,19 +50,19 @@ export const unsubscribe =
                 pipe(
                     guild.members,
                     findUserFromMembers(userId),
-                    Effect.flatMap(removeRoleFromMember(roleId))
-                )
+                    Effect.flatMap(removeRoleFromMember(roleId)),
+                ),
             ),
             Effect.flatMap((guild) =>
-                Effect.tryPromise(() => guild.roles.fetch(roleId))
+                Effect.tryPromise(() => guild.roles.fetch(roleId)),
             ),
             Effect.flatMap((roleInfo) =>
                 Effect.tryPromise(() =>
                     interaction.reply({
                         content: `您已退出 **${roleInfo?.name || roleInfo?.id || ""}**`,
                         withResponse: true,
-                    })
-                )
-            )
+                    }),
+                ),
+            ),
         );
     };

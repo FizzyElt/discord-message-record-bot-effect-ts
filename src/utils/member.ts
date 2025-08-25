@@ -11,7 +11,7 @@ export const findUserFromMembers =
         if (MessageMentions.UsersPattern.test(idOrMention)) {
             return pipe(
                 MessageMentions.UsersPattern.exec(idOrMention)?.at(1) || "",
-                (id) => Effect.tryPromise(() => members.fetch(id))
+                (id) => Effect.tryPromise(() => members.fetch(id)),
             );
         }
 

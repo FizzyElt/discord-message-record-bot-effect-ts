@@ -15,19 +15,19 @@ export const stickyCommands = [
             new SlashCommandStringOption()
                 .setName("name")
                 .setDescription("sticky name")
-                .setRequired(true)
+                .setRequired(true),
         )
         .addStringOption(
             new SlashCommandStringOption()
                 .setName("url")
                 .setDescription("sticky url")
-                .setRequired(true)
+                .setRequired(true),
         )
         .addStringOption(
             new SlashCommandStringOption()
                 .setName("group")
                 .setDescription("sticky group 預設 default")
-                .setRequired(false)
+                .setRequired(false),
         ),
     new SlashCommandBuilder()
         .setName(StickyCommandName.delete_sticky)
@@ -36,7 +36,7 @@ export const stickyCommands = [
             new SlashCommandStringOption()
                 .setName("name")
                 .setDescription("sticky name")
-                .setRequired(true)
+                .setRequired(true),
         ),
     new SlashCommandBuilder()
         .setName(StickyCommandName.backup_sticky)

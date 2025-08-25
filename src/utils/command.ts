@@ -9,10 +9,10 @@ export const getCommandOptionOfType =
     (interaction: ChatInputCommandInteraction) =>
         pipe(
             interaction.options.data.find(({ name }) =>
-                Equal.equals(name, optionName)
+                Equal.equals(name, optionName),
             ),
             Option.fromNullable,
-            Option.filter((option) => Equal.equals(option.type, type))
+            Option.filter((option) => Equal.equals(option.type, type)),
         );
 
 export const getCommandOptionString =
@@ -21,11 +21,11 @@ export const getCommandOptionString =
             interaction,
             getCommandOptionOfType(
                 ApplicationCommandOptionType.String,
-                optionName
+                optionName,
             ),
             Option.map(Struct.get("value")),
             Option.filter(String.isString),
-            Option.getOrElse(Function.constant(""))
+            Option.getOrElse(Function.constant("")),
         );
 
 export const getCommandOptionInteger =
@@ -34,9 +34,9 @@ export const getCommandOptionInteger =
             interaction,
             getCommandOptionOfType(
                 ApplicationCommandOptionType.Integer,
-                optionName
+                optionName,
             ),
             Option.map(Struct.get("value")),
             Option.filter(Number.isNumber),
-            Option.getOrElse(Function.constant(0))
+            Option.getOrElse(Function.constant(0)),
         );

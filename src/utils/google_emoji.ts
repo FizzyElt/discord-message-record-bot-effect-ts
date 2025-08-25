@@ -11,18 +11,18 @@ const createEmojiRequest = (left: string, right: string) => {
 
     return new Request(
         `https://tenor.googleapis.com/v2/featured?${new URLSearchParams(
-            searchParams
-        ).toString()}`
+            searchParams,
+        ).toString()}`,
     );
 };
 
 export const fetchEmoji = (left: string, right: string) =>
     pipe(
         Effect.tryPromise(() =>
-            fetch(createEmojiRequest(left, right)).then((res) => res.json())
+            fetch(createEmojiRequest(left, right)).then((res) => res.json()),
         ),
         Effect.map(
             (data) =>
-                `${left} x ${right}\n${data?.results?.at(0)?.url || "找不到組合"}`
-        )
+                `${left} x ${right}\n${data?.results?.at(0)?.url || "找不到組合"}`,
+        ),
     );

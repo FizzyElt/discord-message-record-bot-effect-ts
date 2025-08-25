@@ -34,7 +34,7 @@ const excludeChannels = (channel: Channel) =>
             return yield* pipe(
                 getTextChannelsInfo(channel),
                 addChannels,
-                Effect.map(() => `已排除 **${channel.name}** 下的所有文字頻道`)
+                Effect.map(() => `已排除 **${channel.name}** 下的所有文字頻道`),
             );
         }
 
@@ -42,7 +42,7 @@ const excludeChannels = (channel: Channel) =>
             return yield* pipe(
                 getTextChannelInfo(channel),
                 addChannel,
-                Effect.map(() => `已排除 **${channel.name}**`)
+                Effect.map(() => `已排除 **${channel.name}**`),
             );
         }
 
@@ -64,8 +64,8 @@ export const addChannelFlow = (interaction: ChatInputCommandInteraction) =>
                 onFailure: () => Effect.succeed("找不到頻道"),
             }),
             Effect.flatMap((msg) =>
-                Effect.tryPromise(() => interaction.reply(msg))
-            )
+                Effect.tryPromise(() => interaction.reply(msg)),
+            ),
         );
     });
 
@@ -76,14 +76,14 @@ const includeChannels = (channel: Channel) =>
                 getCategoryTextChannels(channel),
                 ReadonlyArray.map((channel) => channel.id),
                 removeChannels,
-                Effect.map(() => `已監聽 **${channel.name}** 下的所有文字頻道`)
+                Effect.map(() => `已監聽 **${channel.name}** 下的所有文字頻道`),
             );
         }
 
         if (isTextChannel(channel)) {
             return yield* pipe(
                 removeChannel(channel.id),
-                Effect.map(() => `已監聽 **${channel.name}**`)
+                Effect.map(() => `已監聽 **${channel.name}**`),
             );
         }
 
@@ -100,16 +100,16 @@ export const removeChannelFlow = (interaction: ChatInputCommandInteraction) =>
             (idOrName) =>
                 Option.fromNullable(
                     client.channels.cache.find((channel) =>
-                        Equal.equals(channel.id, idOrName)
-                    )
+                        Equal.equals(channel.id, idOrName),
+                    ),
                 ),
             Option.match({
                 onSome: includeChannels,
                 onNone: () => Effect.succeed("找不到頻道"),
             }),
             Effect.flatMap((msg) =>
-                Effect.tryPromise(() => interaction.reply(msg))
-            )
+                Effect.tryPromise(() => interaction.reply(msg)),
+            ),
         );
     });
 
@@ -120,8 +120,10 @@ export const listChannels = (interaction: CommandInteraction) =>
             flow(
                 ReadonlyArray.fromIterable,
                 ReadonlyArray.map(([id, name]) => `(${id}) ${name}`),
-                ReadonlyArray.join("\n")
-            )
+                ReadonlyArray.join("\n"),
+            ),
         ),
-        Effect.flatMap((msg) => Effect.tryPromise(() => interaction.reply(msg)))
+        Effect.flatMap((msg) =>
+            Effect.tryPromise(() => interaction.reply(msg)),
+        ),
     );

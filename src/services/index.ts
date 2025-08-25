@@ -13,7 +13,7 @@ export const MainLive = pipe(
     Layer.provideMerge(DatabaseLive),
     Layer.provideMerge(EnvLive),
     Layer.merge(VotingServiceLive),
-    Layer.merge(TimeoutInfoListLive)
+    Layer.merge(TimeoutInfoListLive),
 );
 
 export {

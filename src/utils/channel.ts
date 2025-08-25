@@ -10,17 +10,17 @@ import { ChannelType } from "discord.js";
 import { Equal, Option, pipe, Array as ReadonlyArray } from "effect";
 
 export const isTextChannel = (
-    channel: Channel
+    channel: Channel,
 ): channel is GuildTextBasedChannel =>
     Equal.equals(channel.type, ChannelType.GuildText);
 
 export const isPublicThreadChannel = (
-    channel: Channel
+    channel: Channel,
 ): channel is PublicThreadChannel =>
     Equal.equals(channel.type, ChannelType.PublicThread);
 
 export const isCategoryChannel = (
-    channel: Channel
+    channel: Channel,
 ): channel is CategoryChannel =>
     Equal.equals(channel.type, ChannelType.GuildCategory);
 
@@ -38,11 +38,11 @@ export const getCategoryTextChannels = (channel: CategoryChannel) =>
 export const getTextChannelsInfo = (channel: CategoryChannel) =>
     pipe(
         getCategoryTextChannels(channel),
-        ReadonlyArray.map(getTextChannelInfo)
+        ReadonlyArray.map(getTextChannelInfo),
     );
 
 export const getTextChannelInfo = (
-    channel: TextChannel | GuildTextBasedChannel
+    channel: TextChannel | GuildTextBasedChannel,
 ) => ({
     id: channel.id,
     name: channel.name || "",

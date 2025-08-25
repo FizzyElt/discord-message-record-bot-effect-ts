@@ -8,7 +8,7 @@ import * as StickyStore from "~/services/sticky_store";
 import { getCommandOptionString } from "~/utils/command";
 
 export const showSticky = (
-    interaction: ChatInputCommandInteraction<CacheType>
+    interaction: ChatInputCommandInteraction<CacheType>,
 ) => {
     const name = interaction.options.getString("name") || "";
 
@@ -20,9 +20,9 @@ export const showSticky = (
         }),
         Effect.flatMap((msg) =>
             Effect.tryPromise(() =>
-                interaction.reply({ content: msg, withResponse: true })
-            )
-        )
+                interaction.reply({ content: msg, withResponse: true }),
+            ),
+        ),
     );
 };
 
@@ -41,9 +41,9 @@ export const createSticky = (interaction: ChatInputCommandInteraction) => {
         Effect.catchAll(() => Effect.succeed(`新增 ${name} 到 ${group} 失敗`)),
         Effect.flatMap((msg) =>
             Effect.tryPromise(() =>
-                interaction.reply({ content: msg, withResponse: true })
-            )
-        )
+                interaction.reply({ content: msg, withResponse: true }),
+            ),
+        ),
     );
 };
 
@@ -58,9 +58,9 @@ export const deleteSticky = (interaction: ChatInputCommandInteraction) => {
         }),
         Effect.flatMap((msg) =>
             Effect.tryPromise(() =>
-                interaction.reply({ content: msg, withResponse: true })
-            )
-        )
+                interaction.reply({ content: msg, withResponse: true }),
+            ),
+        ),
     );
 };
 
@@ -76,13 +76,13 @@ export const backupSticky = (interaction: CommandInteraction) => {
                         {
                             name: "stickies.json",
                             attachment: Buffer.from(
-                                JSON.stringify(stickies, null, 2)
+                                JSON.stringify(stickies, null, 2),
                             ),
                         },
                     ],
                     withResponse: true,
-                })
+                }),
             );
-        })
+        }),
     );
 };

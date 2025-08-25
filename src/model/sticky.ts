@@ -13,8 +13,8 @@ export const stickyCountByGroup = (group: string) =>
                 try: () =>
                     db.$count(stickiesTable, eq(stickiesTable.group, group)),
                 catch: (err) => new DatabaseError({ message: err }),
-            })
-        )
+            }),
+        ),
     );
 
 export const groupCount = () =>
@@ -27,16 +27,16 @@ export const groupCount = () =>
                         .select({ count: countDistinct(stickiesTable.group) })
                         .from(stickiesTable),
                 catch: (err) => new DatabaseError({ message: err }),
-            })
+            }),
         ),
         Effect.map((content) =>
             pipe(
                 content,
                 Array.head,
                 Option.map(Struct.get("count")),
-                Option.getOrElse(Function.constant(0))
-            )
-        )
+                Option.getOrElse(Function.constant(0)),
+            ),
+        ),
     );
 
 export const queryStickies = () =>
@@ -46,8 +46,8 @@ export const queryStickies = () =>
             Effect.tryPromise({
                 try: () => db.query.stickiesTable.findMany(),
                 catch: (err) => new DatabaseError({ message: err }),
-            })
-        )
+            }),
+        ),
     );
 
 export const insertSticky = (name: string, imageUrl: string, group: string) =>
@@ -58,9 +58,9 @@ export const insertSticky = (name: string, imageUrl: string, group: string) =>
                 try: () =>
                     db.insert(stickiesTable).values({ name, imageUrl, group }),
                 catch: (err) => new DatabaseError({ message: err }),
-            })
+            }),
         ),
-        Effect.flatMap(() => Effect.void)
+        Effect.flatMap(() => Effect.void),
     );
 
 export const deleteSticky = (name: string) =>
@@ -73,7 +73,7 @@ export const deleteSticky = (name: string) =>
                         .delete(stickiesTable)
                         .where(eq(stickiesTable.name, name)),
                 catch: (err) => new DatabaseError({ message: err }),
-            })
+            }),
         ),
-        Effect.flatMap(() => Effect.void)
+        Effect.flatMap(() => Effect.void),
     );

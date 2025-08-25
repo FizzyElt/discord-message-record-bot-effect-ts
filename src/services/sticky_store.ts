@@ -38,7 +38,7 @@ const createStickyCommand = (data: StickyModel.Sticky[]) => {
 
             return acc;
         },
-        {}
+        {},
     );
 
     const command = new SlashCommandBuilder()
@@ -58,9 +58,9 @@ const createStickyCommand = (data: StickyModel.Sticky[]) => {
                             ...stickies.map(({ name }) => ({
                                 name,
                                 value: name,
-                            }))
-                        )
-                )
+                            })),
+                        ),
+                ),
         );
     }
     return command;
@@ -81,12 +81,12 @@ const syncData = () =>
                       ...memeCommands,
                       ...stickyCommands,
                       createStickyCommand(stickies),
-                  ])
-        )
+                  ]),
+        ),
     );
 
 class StickyOptionLimitError extends Data.TaggedError(
-    "StickyOptionLimitError"
+    "StickyOptionLimitError",
 )<{
     message: string;
 }> {}
@@ -108,7 +108,7 @@ export const StickyStoreLive = Layer.effect(
         const stickiesStore = yield* Ref.make<StickyModel.Sticky[]>(stickies);
 
         return stickiesStore;
-    })
+    }),
 );
 
 export const getSticky = (name: string) =>
@@ -116,8 +116,8 @@ export const getSticky = (name: string) =>
         StickyService,
         Effect.flatMap(Ref.get),
         Effect.flatMap(
-            Array.findFirst((sticky) => Equal.equals(sticky.name, name))
-        )
+            Array.findFirst((sticky) => Equal.equals(sticky.name, name)),
+        ),
     );
 
 export const createNewSticky = (name: string, url: string, group: string) =>
@@ -125,7 +125,7 @@ export const createNewSticky = (name: string, url: string, group: string) =>
         StickyModel.groupCount(),
         Effect.filterOrFail(
             Number.lessThan(25),
-            () => new GroupLimitError({ message: "group is reach limit" })
+            () => new GroupLimitError({ message: "group is reach limit" }),
         ),
         Effect.flatMap(() => StickyModel.stickyCountByGroup(group)),
         Effect.filterOrFail(
@@ -133,7 +133,7 @@ export const createNewSticky = (name: string, url: string, group: string) =>
             () =>
                 new StickyOptionLimitError({
                     message: `group ${group} options is reach limit`,
-                })
+                }),
         ),
 
         Effect.flatMap(() => StickyModel.insertSticky(name, url, group)),
@@ -142,8 +142,8 @@ export const createNewSticky = (name: string, url: string, group: string) =>
             Effect.gen(function* () {
                 const stickiesStore = yield* StickyService;
                 yield* Ref.set(stickiesStore, stickies);
-            })
-        )
+            }),
+        ),
     );
 
 export const deleteSticky = (name: string) =>
@@ -154,6 +154,6 @@ export const deleteSticky = (name: string) =>
             Effect.gen(function* () {
                 const stickiesStore = yield* StickyService;
                 yield* Ref.set(stickiesStore, stickies);
-            })
-        )
+            }),
+        ),
     );

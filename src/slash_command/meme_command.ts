@@ -17,12 +17,12 @@ export const memeCommands = [
             new SlashCommandStringOption()
                 .setName("left")
                 .setDescription("left emoji")
-                .setRequired(true)
+                .setRequired(true),
         )
         .addStringOption(
             new SlashCommandStringOption()
                 .setName("right")
                 .setDescription("right emoji")
-                .setRequired(true)
+                .setRequired(true),
         ),
 ];
