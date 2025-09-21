@@ -1,9 +1,6 @@
 import { format } from "date-fns";
-import {
-    type Message,
-    MessageReferenceType,
-    type PartialMessage,
-} from "discord.js";
+import type { Message, PartialMessage } from "discord.js";
+import { MessageReferenceType } from "discord-api-types/v10";
 import { Effect, pipe, Array as ReadonlyArray, String } from "effect";
 import { ClientContext, EnvConfig } from "~/services";
 import {
@@ -59,17 +56,18 @@ export const recordCreatedMsg = (msg: Message<boolean>) =>
         Effect.Do,
         Effect.bind("sendChannel", getSendChannel),
         Effect.bind("sentMsg", ({ sendChannel }) =>
-            Effect.tryPromise(() =>
-                sendChannel.send({
-                    content: getCreatedMsgString(msg),
-                    allowedMentions: { parse: [] },
-                }),
+            Effect.tryPromise(
+                () =>
+                    sendChannel.send({
+                        content: getCreatedMsgString(msg),
+                        allowedMentions: { parse: [] },
+                    }) as Promise<Message<boolean>>,
             ),
         ),
         Effect.tap(({ sentMsg }) => {
             msg.reference = {
                 channelId: sentMsg.channelId,
-                guildId: sentMsg.guildId,
+                guildId: sentMsg.guildId || undefined,
                 messageId: sentMsg.id,
                 type: MessageReferenceType.Default,
             };
@@ -104,11 +102,12 @@ export const recordDeleteMsg = (msg: Message<boolean> | PartialMessage) =>
     pipe(
         getSendChannel(),
         Effect.flatMap((sendChannel) =>
-            Effect.tryPromise(() =>
-                sendChannel.send({
-                    content: getDeletedMsgString(msg),
-                    allowedMentions: { parse: [] },
-                }),
+            Effect.tryPromise(
+                () =>
+                    sendChannel.send({
+                        content: getDeletedMsgString(msg),
+                        allowedMentions: { parse: [] },
+                    }) as Promise<Message<boolean>>,
             ),
         ),
     );
@@ -145,14 +144,15 @@ export const recordUpdateMsg = (
     pipe(
         getSendChannel(),
         Effect.flatMap((sendChannel) =>
-            Effect.tryPromise(() =>
-                sendChannel.send({
-                    content: getUpdatedMsgString(oldMsg, msg),
-                    allowedMentions: { parse: [] },
-                    reply: {
-                        messageReference: oldMsg.reference?.messageId || "",
-                    },
-                }),
+            Effect.tryPromise(
+                () =>
+                    sendChannel.send({
+                        content: getUpdatedMsgString(oldMsg, msg),
+                        allowedMentions: { parse: [] },
+                        reply: {
+                            messageReference: oldMsg.reference?.messageId || "",
+                        },
+                    }) as Promise<Message<boolean>>,
             ),
         ),
     );
