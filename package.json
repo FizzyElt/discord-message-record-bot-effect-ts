@@ -2,41 +2,42 @@
     "name": "discord-message-record-bot-effect-ts",
     "version": "1.0.0",
     "description": "",
-    "main": "index.js",
+    "keywords": [],
+    "license": "ISC",
+    "author": "",
     "type": "module",
-    "engines": {
-        "node": ">=22.0.0",
-        "pnpm": ">=8.0.0"
-    },
+    "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "tsx ./src/index.ts",
         "dev": "tsx --env-file=.env ./src/index.ts",
         "db:push": "drizzle-kit push",
-        "lint": "biome check --fix",
-        "check": "pnpm lint & tsc --noEmit",
+        "lint": "oxfmt & oxlint",
+        "check": "tsc --noEmit & pnpm lint",
         "tsc": "tsc",
         "command:clear": "tsx ./src/slash_command/clear.ts"
     },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "devDependencies": {
-        "@biomejs/biome": "^2.3.4",
-        "drizzle-kit": "^0.31.6",
-        "prettier": "^3.6.2",
-        "tsx": "^4.20.6",
-        "typescript": "^5.9.3"
-    },
     "dependencies": {
         "@libsql/client": "^0.15.15",
-        "@types/node": "^22.19.0",
+        "@types/node": "^22.19.3",
         "date-fns": "^4.1.0",
         "date-fns-tz": "^3.2.0",
-        "discord-api-types": "^0.38.32",
-        "discord.js": "^14.24.2",
-        "drizzle-orm": "^0.44.7",
-        "effect": "^3.19.2"
+        "discord-api-types": "^0.38.37",
+        "discord.js": "^14.25.1",
+        "drizzle-orm": "^0.45.1",
+        "effect": "^3.19.13"
+    },
+    "devDependencies": {
+        "drizzle-kit": "^0.31.8",
+        "oxfmt": "^0.20.0",
+        "oxlint": "^1.35.0",
+        "prettier": "^3.7.4",
+        "tsx": "^4.21.0",
+        "typescript": "^5.9.3"
+    },
+    "engines": {
+        "node": ">=22.0.0",
+        "pnpm": ">=8.0.0"
     },
     "pnpm": {
         "onlyBuiltDependencies": [

@@ -9,15 +9,15 @@
 ## functions
 
 - record message
-  - [X] new message
-  - [X] update message
-  - [X] delete message
+    - [x] new message
+    - [x] update message
+    - [x] delete message
 - discord slash command operations
-  - [X] add channels
-  - [X] remove channels
-  - [X] list channels
-  - [X] ban user
-    - [X] voting flow
-    - [X] timeout member
-- [X] discord invite link guard
-- [X] subscribe/unsubscribe role
+    - [x] add channels
+    - [x] remove channels
+    - [x] list channels
+    - [x] ban user
+        - [x] voting flow
+        - [x] timeout member
+- [x] discord invite link guard
+- [x] subscribe/unsubscribe role
