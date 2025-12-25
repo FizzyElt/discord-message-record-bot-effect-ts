@@ -19,7 +19,6 @@
     },
     "dependencies": {
         "@libsql/client": "^0.15.15",
-        "@types/node": "^22.19.3",
         "date-fns": "^4.1.0",
         "date-fns-tz": "^3.2.0",
         "discord-api-types": "^0.38.37",
@@ -28,6 +27,7 @@
         "effect": "^3.19.13"
     },
     "devDependencies": {
+        "@types/node": "^24.10.3",
         "drizzle-kit": "^0.31.8",
         "oxfmt": "^0.20.0",
         "oxlint": "^1.35.0",
