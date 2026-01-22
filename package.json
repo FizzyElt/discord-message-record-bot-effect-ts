@@ -29,8 +29,8 @@
     "devDependencies": {
         "@types/node": "^24.10.3",
         "drizzle-kit": "^0.31.8",
-        "oxfmt": "^0.20.0",
-        "oxlint": "^1.35.0",
+        "oxfmt": "^0.26.0",
+        "oxlint": "^1.41.0",
         "prettier": "^3.7.4",
         "tsx": "^4.21.0",
         "typescript": "^5.9.3"
