@@ -1,6 +1,8 @@
 import type { Message, PartialMessage } from "discord.js";
 import { Boolean, Effect, Equal, pipe } from "effect";
+
 import { ChannelService, ClientContext } from "~/services";
+
 import { inviteLinkGuard } from "./invite_link_guard";
 
 export const messageGuard = (msg: Message<boolean> | PartialMessage) =>

@@ -9,6 +9,7 @@ import type {
 } from "discord.js";
 import { Effect, Equal, Option, pipe } from "effect";
 import type { NoSuchElementException, UnknownException } from "effect/Cause";
+
 import { ClientContext, EnvConfig } from "~/services";
 import type { TimeoutInfo } from "~/services/timeout";
 import { getTimeoutInfo, minute } from "~/services/timeout";

@@ -1,5 +1,6 @@
 import type { ChatInputCommandInteraction } from "discord.js";
 import { Effect, pipe, String } from "effect";
+
 import { fetchCatImage } from "~/utils/cat_image";
 import { getCommandOptionString } from "~/utils/command";
 import { fetchEmoji } from "~/utils/google_emoji";

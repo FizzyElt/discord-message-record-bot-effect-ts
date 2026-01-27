@@ -18,7 +18,7 @@
         "command:clear": "tsx ./src/slash_command/clear.ts"
     },
     "dependencies": {
-        "@libsql/client": "^0.15.15",
+        "@libsql/client": "^0.17.0",
         "date-fns": "^4.1.0",
         "date-fns-tz": "^3.2.0",
         "discord-api-types": "^0.38.37",
@@ -29,7 +29,7 @@
     "devDependencies": {
         "@types/node": "^24.10.3",
         "drizzle-kit": "^0.31.8",
-        "oxfmt": "^0.26.0",
+        "oxfmt": "^0.27.0",
         "oxlint": "^1.41.0",
         "prettier": "^3.7.4",
         "tsx": "^4.21.0",

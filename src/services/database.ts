@@ -1,7 +1,9 @@
 import { type Client, createClient } from "@libsql/client";
 import { drizzle, type LibSQLDatabase } from "drizzle-orm/libsql";
 import { Context, Data, Effect, Layer } from "effect";
+
 import * as schema from "~/db/schema";
+
 import { EnvConfig } from "./env";
 
 export class DatabaseError extends Data.TaggedError("DatabaseError")<{

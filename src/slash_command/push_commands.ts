@@ -4,6 +4,7 @@ import type {
 } from "discord.js";
 import { REST, Routes } from "discord.js";
 import { Console, Effect, pipe } from "effect";
+
 import { EnvConfig } from "~/services/env";
 
 export const pushCommands = (

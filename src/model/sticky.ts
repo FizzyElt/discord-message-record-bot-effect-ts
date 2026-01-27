@@ -1,5 +1,6 @@
 import { countDistinct, eq } from "drizzle-orm";
 import { Array, Effect, Function, Option, pipe, Struct } from "effect";
+
 import { stickiesTable } from "~/db/schema";
 import { Database, DatabaseError } from "~/services/database";
 

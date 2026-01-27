@@ -1,7 +1,8 @@
 import { format } from "date-fns";
-import type { Message, PartialMessage } from "discord.js";
 import { MessageReferenceType } from "discord-api-types/v10";
+import type { Message, PartialMessage } from "discord.js";
 import { Effect, pipe, Array as ReadonlyArray, String } from "effect";
+
 import { ClientContext, EnvConfig } from "~/services";
 import {
     getTextChannelByClient,

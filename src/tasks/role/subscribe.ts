@@ -4,6 +4,7 @@ import type {
     RoleResolvable,
 } from "discord.js";
 import { Effect, pipe } from "effect";
+
 import { findUserFromMembers } from "~/utils/member";
 
 const addRoleToMember = (roleId: string) => (member: GuildMember) =>

@@ -4,6 +4,7 @@ import type {
     CommandInteraction,
 } from "discord.js";
 import { Effect, pipe, Ref } from "effect";
+
 import * as StickyStore from "~/services/sticky_store";
 import { getCommandOptionString } from "~/utils/command";
 

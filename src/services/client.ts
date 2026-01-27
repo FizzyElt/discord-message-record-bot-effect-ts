@@ -1,5 +1,6 @@
 import { Client, GatewayIntentBits } from "discord.js";
 import { Context, Effect, Layer } from "effect";
+
 import { EnvConfig } from "./env";
 
 // layer

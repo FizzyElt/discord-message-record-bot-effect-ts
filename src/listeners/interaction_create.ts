@@ -9,6 +9,7 @@ import type {
 } from "discord.js";
 import { Effect, pipe } from "effect";
 import type { NoSuchElementException, UnknownException } from "effect/Cause";
+
 import {
     type ChannelService,
     type ClientContext,
