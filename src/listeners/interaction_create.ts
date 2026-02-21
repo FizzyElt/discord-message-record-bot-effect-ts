@@ -8,7 +8,7 @@ import type {
     Message,
 } from "discord.js";
 import { Effect, pipe } from "effect";
-import type { NoSuchElementException, UnknownException } from "effect/Cause";
+import type { NoSuchElementError, UnknownError } from "effect/Cause";
 
 import {
     type ChannelService,
@@ -47,7 +47,7 @@ export const interactionCreateListener =
 
         const program = pipe(
             commandOperation(interaction),
-            Effect.orElse(() => Effect.succeed("reply error")),
+            Effect.orElseSucceed(() => "reply error"),
         );
 
         Effect.runPromise(program.pipe(Effect.provide(live)));
@@ -59,7 +59,7 @@ function commandOperation(
     | Message<boolean>
     | InteractionResponse<boolean>
     | InteractionCallbackResponse,
-    UnknownException | NoSuchElementException,
+    NoSuchElementError | UnknownError,
     | ClientContext
     | ChannelService
     | EnvConfig
@@ -80,14 +80,14 @@ function commandOperation(
 
         case CommandName.subscribe:
             return pipe(
-                EnvConfig,
+                Effect.service(EnvConfig),
                 Effect.flatMap(({ VOTE_ROLE_ID }) =>
                     subscribe(VOTE_ROLE_ID)(interaction),
                 ),
             );
         case CommandName.unsubscribe:
             return pipe(
-                EnvConfig,
+                Effect.service(EnvConfig),
                 Effect.flatMap(({ VOTE_ROLE_ID }) =>
                     unsubscribe(VOTE_ROLE_ID)(interaction),
                 ),

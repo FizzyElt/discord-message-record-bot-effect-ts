@@ -1,11 +1,11 @@
-import { Context, Effect, Layer, MutableHashSet, pipe, Ref } from "effect";
+import { Effect, Layer, MutableHashSet, pipe, Ref, ServiceMap } from "effect";
 
 export type VotingStore = MutableHashSet.MutableHashSet<string>;
 
 export type VotingStoreRef = Ref.Ref<VotingStore>;
 
 // layer
-export class VotingService extends Context.Tag("VotingService")<
+export class VotingService extends ServiceMap.Service<
     VotingService,
     {
         isUserVoting: (userId: string) => Effect.Effect<boolean>;
@@ -13,7 +13,7 @@ export class VotingService extends Context.Tag("VotingService")<
         removeVoting: (userId: string) => Effect.Effect<void>;
         getVotingStore: () => Effect.Effect<VotingStore>;
     }
->() {}
+>()("VotingService") {}
 
 export const VotingServiceLive = Layer.effect(
     VotingService,
@@ -42,24 +42,24 @@ export const VotingServiceLive = Layer.effect(
 
 export const getVotingStore = () =>
     pipe(
-        VotingService,
+        Effect.service(VotingService),
         Effect.flatMap((service) => service.getVotingStore()),
     );
 
 export const removeVoting = (userId: string) =>
     pipe(
-        VotingService,
+        Effect.service(VotingService),
         Effect.flatMap((service) => service.removeVoting(userId)),
     );
 
 export const isUserVoting = (userId: string) =>
     pipe(
-        VotingService,
+        Effect.service(VotingService),
         Effect.flatMap((service) => service.isUserVoting(userId)),
     );
 
 export const addNewVoting = (userId: string) =>
     pipe(
-        VotingService,
+        Effect.service(VotingService),
         Effect.flatMap((service) => service.addNewVoting(userId)),
     );

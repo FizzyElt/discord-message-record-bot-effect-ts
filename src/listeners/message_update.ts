@@ -17,7 +17,7 @@ export const messageUpdateListener =
         const program = pipe(
             messageGuard(newMsg),
             Effect.flatMap((msg) => recordUpdateMsg(oldMsg, msg)),
-            Effect.orElse(() => Effect.succeed(newMsg)),
+            Effect.orElseSucceed(() => newMsg),
         );
 
         Effect.runPromise(program.pipe(Effect.provide(live)));

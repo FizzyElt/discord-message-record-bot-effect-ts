@@ -53,29 +53,26 @@ const getCreatedMsgString = (
 };
 
 export const recordCreatedMsg = (msg: Message<boolean>) =>
-    pipe(
-        Effect.Do,
-        Effect.bind("sendChannel", getSendChannel),
-        Effect.bind("sentMsg", ({ sendChannel }) =>
-            Effect.tryPromise(
-                () =>
-                    sendChannel.send({
-                        content: getCreatedMsgString(msg),
-                        allowedMentions: { parse: [] },
-                    }) as Promise<Message<boolean>>,
-            ),
-        ),
-        Effect.tap(({ sentMsg }) => {
-            msg.reference = {
-                channelId: sentMsg.channelId,
-                guildId: sentMsg.guildId || undefined,
-                messageId: sentMsg.id,
-                type: MessageReferenceType.Default,
-            };
-            return Effect.void;
-        }),
-        Effect.map(({ sentMsg }) => sentMsg),
-    );
+    Effect.gen(function* () {
+        const sendChannel = yield* getSendChannel();
+
+        const sentMsg = yield* Effect.tryPromise(
+            () =>
+                sendChannel.send({
+                    content: getCreatedMsgString(msg),
+                    allowedMentions: { parse: [] },
+                }) as Promise<Message<boolean>>,
+        );
+
+        msg.reference = {
+            channelId: sentMsg.channelId,
+            guildId: sentMsg.guildId || undefined,
+            messageId: sentMsg.id,
+            type: MessageReferenceType.Default,
+        };
+
+        return sentMsg;
+    });
 
 // ======================================================
 

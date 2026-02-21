@@ -14,7 +14,7 @@ export const pushCommands = (
 ) => {
     const rest = new REST({ version: "10" });
     return pipe(
-        EnvConfig,
+        Effect.service(EnvConfig),
         Effect.flatMap((env) => {
             rest.setToken(env.TOKEN);
             return Effect.tryPromise(() =>

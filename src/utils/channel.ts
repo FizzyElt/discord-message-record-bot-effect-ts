@@ -26,7 +26,7 @@ export const isCategoryChannel = (
     Equal.equals(channel.type, ChannelType.GuildCategory);
 
 export const getChannelByClient = (id: string) => (client: Client<true>) =>
-    Option.fromNullable(client.channels.cache.get(id));
+    Option.fromNullishOr(client.channels.cache.get(id));
 
 export const getTextChannelByClient = (id: string) => (client: Client<true>) =>
     pipe(

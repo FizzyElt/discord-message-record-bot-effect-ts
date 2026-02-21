@@ -1,6 +1,6 @@
 import { type Client, createClient } from "@libsql/client";
 import { drizzle, type LibSQLDatabase } from "drizzle-orm/libsql";
-import { Context, Data, Effect, Layer } from "effect";
+import { Data, Effect, Layer, ServiceMap } from "effect";
 
 import * as schema from "~/db/schema";
 
@@ -10,12 +10,12 @@ export class DatabaseError extends Data.TaggedError("DatabaseError")<{
     message: unknown;
 }> {}
 
-export class Database extends Context.Tag("Database")<
+export class Database extends ServiceMap.Service<
     Database,
     LibSQLDatabase<typeof schema> & {
         $client: Client;
     }
->() {}
+>()("Database") {}
 
 const make = () =>
     Effect.gen(function* () {

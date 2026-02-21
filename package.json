@@ -24,7 +24,7 @@
         "discord-api-types": "^0.38.37",
         "discord.js": "^14.25.1",
         "drizzle-orm": "^0.45.1",
-        "effect": "^3.19.13"
+        "effect": "4.0.0-beta.0"
     },
     "devDependencies": {
         "@types/node": "^24.10.3",

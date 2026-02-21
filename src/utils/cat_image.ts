@@ -1,10 +1,10 @@
-import { Effect, Option, pipe } from "effect";
+import { Effect, pipe } from "effect";
 
 import { EnvConfig } from "~/services/env";
 
 export const fetchCatImage = () =>
     pipe(
-        EnvConfig,
+        Effect.service(EnvConfig),
         Effect.flatMap(({ CAT_API_KEY }) =>
             Effect.tryPromise(() =>
                 fetch(
@@ -17,7 +17,7 @@ export const fetchCatImage = () =>
             ),
         ),
         Effect.flatMap((data) =>
-            Option.fromNullable(data?.at(0)?.url as string | undefined),
+            Effect.fromNullishOr(data?.at(0)?.url as string | undefined),
         ),
-        Effect.orElse(() => Effect.succeed("貓貓躲起來了，請重新引誘")),
+        Effect.orElseSucceed(() => "貓貓躲起來了，請重新引誘"),
     );

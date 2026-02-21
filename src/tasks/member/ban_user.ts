@@ -7,8 +7,8 @@ import type {
     InteractionCallbackResponse,
     Message,
 } from "discord.js";
-import { Effect, Equal, Option, pipe } from "effect";
-import type { NoSuchElementException, UnknownException } from "effect/Cause";
+import { Effect, Equal, pipe } from "effect";
+import type { NoSuchElementError, UnknownError } from "effect/Cause";
 
 import { ClientContext, EnvConfig } from "~/services";
 import type { TimeoutInfo } from "~/services/timeout";
@@ -124,7 +124,7 @@ const votingFlow = (params: {
     pipe(
         startVoting(params),
         Effect.flatMap((replyMsg) =>
-            Option.fromNullable(replyMsg.resource?.message),
+            Effect.fromNullishOr(replyMsg.resource?.message),
         ),
         // collect and react result
         Effect.tap((replyMsg) => {
@@ -224,7 +224,7 @@ export const banUser = (interaction: ChatInputCommandInteraction) =>
 
         const userId = getCommandOptionString("mention_user")(interaction);
         const member = yield* pipe(
-            Effect.fromNullable(interaction.guild),
+            Effect.fromNullishOr(interaction.guild),
             Effect.flatMap((guild) =>
                 findUserFromMembers(userId)(guild.members),
             ),
@@ -256,7 +256,7 @@ export const banUser = (interaction: ChatInputCommandInteraction) =>
                 env,
             }): Effect.Effect<
                 InteractionCallbackResponse | Message<boolean>,
-                UnknownException | NoSuchElementException,
+                NoSuchElementError | UnknownError,
                 VotingService
             > => {
                 if (isAdmin(member)) {

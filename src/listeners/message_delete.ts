@@ -17,7 +17,7 @@ export const messageDeleteListener =
         const program = pipe(
             messageGuard(msg),
             Effect.flatMap(recordDeleteMsg),
-            Effect.orElse(() => Effect.succeed(msg)),
+            Effect.orElseSucceed(() => msg),
         );
 
         Effect.runPromise(program.pipe(Effect.provide(live)));

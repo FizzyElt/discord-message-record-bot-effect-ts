@@ -9,7 +9,7 @@ export const messageCreateListener =
     (msg: OmitPartialGroupDMChannel<Message<boolean>>) => {
         const program = pipe(
             messageGuard(msg),
-            Effect.orElse(() => Effect.succeed(msg)),
+            Effect.orElseSucceed(() => msg),
         );
 
         Effect.runPromise(program.pipe(Effect.provide(live)));

@@ -1,4 +1,4 @@
-import { Config, Context, Layer } from "effect";
+import { Config, ConfigProvider, Effect, Layer, ServiceMap } from "effect";
 
 // layer
 
@@ -18,23 +18,31 @@ export interface Env {
     readonly TURSO_DB_URL: string;
 }
 
-export class EnvConfig extends Context.Tag("EnvConfig")<EnvConfig, Env>() {}
+const config = Config.all({
+    TOKEN: Config.string("TOKEN"),
+    BOT_SENDING_CHANNEL_ID: Config.string("BOT_SENDING_CHANNEL_ID"),
+    BOT_SENDING_CHANNEL_NAME: Config.string("BOT_SENDING_CHANNEL_NAME"),
+    LOG_CHANNEL_ID: Config.string("LOG_CHANNEL_ID"),
+    ADMIN_ROLE_ID: Config.string("ADMIN_ROLE_ID"),
+    CLIENT_ID: Config.string("CLIENT_ID"),
+    GUILD_ID: Config.string("GUILD_ID"),
+    VOTE_ROLE_ID: Config.string("VOTE_ROLE_ID"),
+    TIMEZONE: Config.string("TIMEZONE"),
+    CAT_API_KEY: Config.string("CAT_API_KEY"),
+    EMOJI_KITCHEN_KEY: Config.string("EMOJI_KITCHEN_KEY"),
+    TURSO_DB_TOKEN: Config.string("TURSO_DB_TOKEN"),
+    TURSO_DB_URL: Config.string("TURSO_DB_URL"),
+});
+
+export class EnvConfig extends ServiceMap.Service<EnvConfig, Env>()(
+    "EnvConfig",
+) {}
 
 export const EnvLive = Layer.effect(
     EnvConfig,
-    Config.all({
-        TOKEN: Config.string("TOKEN"),
-        BOT_SENDING_CHANNEL_ID: Config.string("BOT_SENDING_CHANNEL_ID"),
-        BOT_SENDING_CHANNEL_NAME: Config.string("BOT_SENDING_CHANNEL_NAME"),
-        LOG_CHANNEL_ID: Config.string("LOG_CHANNEL_ID"),
-        ADMIN_ROLE_ID: Config.string("ADMIN_ROLE_ID"),
-        CLIENT_ID: Config.string("CLIENT_ID"),
-        GUILD_ID: Config.string("GUILD_ID"),
-        VOTE_ROLE_ID: Config.string("VOTE_ROLE_ID"),
-        TIMEZONE: Config.string("TIMEZONE"),
-        CAT_API_KEY: Config.string("CAT_API_KEY"),
-        EMOJI_KITCHEN_KEY: Config.string("EMOJI_KITCHEN_KEY"),
-        TURSO_DB_TOKEN: Config.string("TURSO_DB_TOKEN"),
-        TURSO_DB_URL: Config.string("TURSO_DB_URL"),
+    Effect.gen(function* () {
+        const provider = yield* ConfigProvider.fromDotEnv();
+
+        return yield* config.parse(provider);
     }),
 );

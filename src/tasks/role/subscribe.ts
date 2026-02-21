@@ -19,7 +19,7 @@ export const subscribe =
         const userId = interaction.user.id;
 
         return pipe(
-            Effect.fromNullable(interaction.guild),
+            Effect.fromNullishOr(interaction.guild),
             Effect.tap((guild) =>
                 pipe(
                     guild.members,
@@ -46,7 +46,7 @@ export const unsubscribe =
         const userId = interaction.user.id;
 
         return pipe(
-            Effect.fromNullable(interaction.guild),
+            Effect.fromNullishOr(interaction.guild),
             Effect.tap((guild) =>
                 pipe(
                     guild.members,

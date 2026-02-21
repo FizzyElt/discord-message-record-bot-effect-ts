@@ -8,7 +8,7 @@ export type Sticky = typeof stickiesTable.$inferSelect;
 
 export const stickyCountByGroup = (group: string) =>
     pipe(
-        Database,
+        Effect.service(Database),
         Effect.flatMap((db) =>
             Effect.tryPromise({
                 try: () =>
@@ -20,7 +20,7 @@ export const stickyCountByGroup = (group: string) =>
 
 export const groupCount = () =>
     pipe(
-        Database,
+        Effect.service(Database),
         Effect.flatMap((db) =>
             Effect.tryPromise({
                 try: () =>
@@ -42,7 +42,7 @@ export const groupCount = () =>
 
 export const queryStickies = () =>
     pipe(
-        Database,
+        Effect.service(Database),
         Effect.flatMap((db) =>
             Effect.tryPromise({
                 try: () => db.query.stickiesTable.findMany(),
@@ -53,7 +53,7 @@ export const queryStickies = () =>
 
 export const insertSticky = (name: string, imageUrl: string, group: string) =>
     pipe(
-        Database,
+        Effect.service(Database),
         Effect.flatMap((db) =>
             Effect.tryPromise({
                 try: () =>
@@ -66,7 +66,7 @@ export const insertSticky = (name: string, imageUrl: string, group: string) =>
 
 export const deleteSticky = (name: string) =>
     pipe(
-        Database,
+        Effect.service(Database),
         Effect.flatMap((db) =>
             Effect.tryPromise({
                 try: () =>

@@ -11,7 +11,7 @@ export const getCommandOptionOfType =
             interaction.options.data.find(({ name }) =>
                 Equal.equals(name, optionName),
             ),
-            Option.fromNullable,
+            Option.fromNullishOr,
             Option.filter((option) => Equal.equals(option.type, type)),
         );
 

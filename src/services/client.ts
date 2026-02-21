@@ -1,13 +1,13 @@
 import { Client, GatewayIntentBits } from "discord.js";
-import { Context, Effect, Layer } from "effect";
+import { Effect, Layer, ServiceMap } from "effect";
 
 import { EnvConfig } from "./env";
 
 // layer
-export class ClientContext extends Context.Tag("ClientContext")<
+export class ClientContext extends ServiceMap.Service<
     ClientContext,
     Client<true>
->() {}
+>()("ClientContext") {}
 
 export const ClientLive = Layer.effect(
     ClientContext,

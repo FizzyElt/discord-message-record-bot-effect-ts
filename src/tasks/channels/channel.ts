@@ -54,15 +54,17 @@ export const addChannelFlow = (interaction: ChatInputCommandInteraction) =>
     Effect.gen(function* () {
         const client = yield* ClientContext;
 
+        const idOrName = pipe(interaction, getCommandOptionString("id"));
+
+        const channel = yield* Effect.tryPromise(() =>
+            client.channels.fetch(idOrName),
+        );
+
         return yield* pipe(
-            interaction,
-            getCommandOptionString("id"),
-            (idOrName) =>
-                Effect.tryPromise(() => client.channels.fetch(idOrName)),
-            Effect.flatMap((channel) => pipe(channel, Option.fromNullable)),
-            Effect.matchEffect({
-                onSuccess: excludeChannels,
-                onFailure: () => Effect.succeed("找不到頻道"),
+            Option.fromNullOr(channel),
+            Option.match({
+                onNone: () => Effect.succeed("找不到頻道"),
+                onSome: excludeChannels,
             }),
             Effect.flatMap((msg) =>
                 Effect.tryPromise(() => interaction.reply(msg)),
@@ -99,7 +101,7 @@ export const removeChannelFlow = (interaction: ChatInputCommandInteraction) =>
             interaction,
             getCommandOptionString("id"),
             (idOrName) =>
-                Option.fromNullable(
+                Option.fromNullishOr(
                     client.channels.cache.find((channel) =>
                         Equal.equals(channel.id, idOrName),
                     ),

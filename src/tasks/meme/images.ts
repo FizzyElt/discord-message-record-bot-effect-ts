@@ -9,25 +9,21 @@ export const getEmoJiJi = (interaction: ChatInputCommandInteraction) =>
     pipe(
         Effect.tryPromise(() => interaction.deferReply()),
         Effect.flatMap(() =>
-            pipe(
-                Effect.Do,
-                Effect.let("left", () =>
-                    pipe(
-                        interaction,
-                        getCommandOptionString("left"),
-                        String.trim,
-                    ),
-                ),
-                Effect.let("right", () =>
-                    pipe(
-                        interaction,
-                        getCommandOptionString("right"),
-                        String.trim,
-                    ),
-                ),
-                Effect.flatMap(({ left, right }) => fetchEmoji(left, right)),
-                Effect.orElse(() => Effect.succeed("emoji kitchen 找不到組合")),
-            ),
+            Effect.gen(function* () {
+                const left = pipe(
+                    interaction,
+                    getCommandOptionString("left"),
+                    String.trim,
+                );
+                const right = pipe(
+                    interaction,
+                    getCommandOptionString("right"),
+                    String.trim,
+                );
+                return yield fetchEmoji(left, right).pipe(
+                    Effect.orElseSucceed(() => "emoji kitchen 找不到組合"),
+                );
+            }),
         ),
         Effect.flatMap((emojijiMsg) =>
             Effect.tryPromise(() => interaction.editReply(emojijiMsg)),

@@ -5,7 +5,6 @@ import {
 } from "discord.js";
 import {
     Array,
-    Context,
     Data,
     Effect,
     Equal,
@@ -13,6 +12,7 @@ import {
     Number,
     pipe,
     Ref,
+    ServiceMap,
 } from "effect";
 
 import * as StickyModel from "~/model/sticky";
@@ -96,10 +96,10 @@ class GroupLimitError extends Data.TaggedError("GroupLimitError")<{
     message: string;
 }> {}
 
-export class StickyService extends Context.Tag("StickyService")<
+export class StickyService extends ServiceMap.Service<
     StickyService,
     Ref.Ref<StickyModel.Sticky[]>
->() {}
+>()("StickyService") {}
 
 export const StickyStoreLive = Layer.effect(
     StickyService,
@@ -114,9 +114,9 @@ export const StickyStoreLive = Layer.effect(
 
 export const getSticky = (name: string) =>
     pipe(
-        StickyService,
+        Effect.service(StickyService),
         Effect.flatMap(Ref.get),
-        Effect.flatMap(
+        Effect.map(
             Array.findFirst((sticky) => Equal.equals(sticky.name, name)),
         ),
     );
@@ -125,12 +125,12 @@ export const createNewSticky = (name: string, url: string, group: string) =>
     pipe(
         StickyModel.groupCount(),
         Effect.filterOrFail(
-            Number.lessThan(25),
+            Number.isLessThan(25),
             () => new GroupLimitError({ message: "group is reach limit" }),
         ),
         Effect.flatMap(() => StickyModel.stickyCountByGroup(group)),
         Effect.filterOrFail(
-            Number.lessThan(25),
+            Number.isLessThan(25),
             () =>
                 new StickyOptionLimitError({
                     message: `group ${group} options is reach limit`,

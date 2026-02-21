@@ -1,11 +1,11 @@
 import {
-    Context,
     Effect,
     Equal,
     Layer,
     MutableHashMap,
     pipe,
     Array as ReadonlyArray,
+    ServiceMap,
     type Ref,
 } from "effect";
 
@@ -15,7 +15,7 @@ export type ChannelStore = MutableHashMap.MutableHashMap<string, string>;
 
 export type ChannelStoreRef = Ref.Ref<ChannelStore>;
 
-export class ChannelService extends Context.Tag("ChannelService")<
+export class ChannelService extends ServiceMap.Service<
     ChannelService,
     {
         getChannelStore: () => ChannelStore;
@@ -30,7 +30,7 @@ export class ChannelService extends Context.Tag("ChannelService")<
         removeChannel: (id: string) => Effect.Effect<void>;
         removeChannels: (ids: Array<string>) => Effect.Effect<void>;
     }
->() {}
+>()("ChannelService") {}
 
 export const ChannelServiceLive = Layer.effect(
     ChannelService,
@@ -96,36 +96,36 @@ export const ChannelServiceLive = Layer.effect(
 
 export const removeChannels = (ids: Array<string>) =>
     pipe(
-        ChannelService,
+        Effect.service(ChannelService),
         Effect.flatMap((service) => service.removeChannels(ids)),
     );
 
 export const removeChannel = (id: string) =>
     pipe(
-        ChannelService,
+        Effect.service(ChannelService),
         Effect.flatMap((service) => service.removeChannel(id)),
     );
 
 export const addChannel = (channelInfo: { id: string; name: string }) =>
     pipe(
-        ChannelService,
+        Effect.service(ChannelService),
         Effect.flatMap((service) => service.addChannel(channelInfo)),
     );
 
 export const addChannels = (list: Array<{ id: string; name: string }>) =>
     pipe(
-        ChannelService,
+        Effect.service(ChannelService),
         Effect.flatMap((service) => service.addChannels(list)),
     );
 
 export const getChannelStore = () =>
     pipe(
-        ChannelService,
+        Effect.service(ChannelService),
         Effect.map((service) => service.getChannelStore()),
     );
 
 export const hasChannel = (channelId: string) =>
     pipe(
-        ChannelService,
+        Effect.service(ChannelService),
         Effect.flatMap((service) => service.hasChannel(channelId)),
     );

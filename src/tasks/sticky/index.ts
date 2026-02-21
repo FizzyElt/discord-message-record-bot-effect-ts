@@ -15,6 +15,7 @@ export const showSticky = (
 
     return pipe(
         StickyStore.getSticky(name),
+        Effect.flatMap(Effect.fromOption),
         Effect.match({
             onSuccess: ({ imageUrl }) => imageUrl,
             onFailure: () => `找不到 ${name}`,
@@ -39,7 +40,7 @@ export const createSticky = (interaction: ChatInputCommandInteraction) => {
             StickyOptionLimitError: () => Effect.succeed("group 以達上限"),
             GroupLimitError: () => Effect.succeed(`${group} 選項已達上限`),
         }),
-        Effect.catchAll(() => Effect.succeed(`新增 ${name} 到 ${group} 失敗`)),
+        Effect.catch(() => Effect.succeed(`新增 ${name} 到 ${group} 失敗`)),
         Effect.flatMap((msg) =>
             Effect.tryPromise(() =>
                 interaction.reply({ content: msg, withResponse: true }),
@@ -67,7 +68,7 @@ export const deleteSticky = (interaction: ChatInputCommandInteraction) => {
 
 export const backupSticky = (interaction: CommandInteraction) => {
     return pipe(
-        StickyStore.StickyService,
+        Effect.service(StickyStore.StickyService),
         Effect.flatMap(Ref.get),
         Effect.flatMap((stickies) => {
             return Effect.tryPromise(() =>
