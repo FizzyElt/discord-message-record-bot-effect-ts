@@ -1,3 +1,4 @@
+import { NodeFileSystem } from "@effect/platform-node";
 import { Layer, pipe } from "effect";
 
 import { ChannelService, ChannelServiceLive } from "./channel_store";
@@ -15,6 +16,7 @@ export const MainLive = pipe(
     Layer.provideMerge(EnvLive),
     Layer.merge(VotingServiceLive),
     Layer.merge(TimeoutInfoListLive),
+    Layer.provide(NodeFileSystem.layer),
 );
 
 export {

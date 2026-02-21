@@ -1,4 +1,4 @@
-import { Effect, Layer } from "effect";
+import { Effect } from "effect";
 
 import {
     clientReady,
@@ -11,23 +11,16 @@ import { MainLive } from "~/services";
 import { ClientContext } from "~/services/client";
 
 const program = Effect.scoped(
-    Layer.memoize(MainLive).pipe(
-        Effect.flatMap((mainLive) =>
-            Effect.gen(function* () {
-                const client = yield* ClientContext;
+    Effect.gen(function* () {
+        const client = yield* ClientContext;
 
-                client
-                    .on("clientReady", clientReady)
-                    .on("messageCreate", messageCreateListener(mainLive))
-                    .on("messageDelete", messageDeleteListener(mainLive))
-                    .on("messageUpdate", messageUpdateListener(mainLive))
-                    .on(
-                        "interactionCreate",
-                        interactionCreateListener(mainLive),
-                    );
-            }).pipe(Effect.provide(mainLive)),
-        ),
-    ),
+        client
+            .on("clientReady", clientReady)
+            .on("messageCreate", messageCreateListener(MainLive))
+            .on("messageDelete", messageDeleteListener(MainLive))
+            .on("messageUpdate", messageUpdateListener(MainLive))
+            .on("interactionCreate", interactionCreateListener(MainLive));
+    }).pipe(Effect.provide(MainLive)),
 );
 
 Effect.runPromise(program).catch((err) => console.log(err));

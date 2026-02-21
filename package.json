@@ -18,6 +18,7 @@
         "command:clear": "tsx ./src/slash_command/clear.ts"
     },
     "dependencies": {
+        "@effect/platform-node": "4.0.0-beta.9",
         "@libsql/client": "^0.17.0",
         "date-fns": "^4.1.0",
         "date-fns-tz": "^3.2.0",
