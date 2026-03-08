@@ -7,6 +7,7 @@ import {
     pipe,
     Array as ReadonlyArray,
 } from "effect";
+import { NoSuchElementException } from "effect/Cause";
 
 export type TimeoutInfo = {
     key: string;
@@ -75,7 +76,9 @@ export const TimeoutInfoListLive = Layer.succeed(
     choiceList,
 );
 
-export const getTimeoutInfo = (key: string) =>
+export const getTimeoutInfo = (
+    key: string,
+): Effect.Effect<TimeoutInfo, NoSuchElementException, TimeoutInfoListService> =>
     pipe(
         TimeoutInfoListService,
         Effect.map(

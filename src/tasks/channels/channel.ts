@@ -2,6 +2,7 @@ import type {
     Channel,
     ChatInputCommandInteraction,
     CommandInteraction,
+    InteractionResponse,
 } from "discord.js";
 import {
     Effect,
@@ -11,11 +12,13 @@ import {
     pipe,
     Array as ReadonlyArray,
 } from "effect";
+import { UnknownException } from "effect/Cause";
 
 import { ClientContext } from "~/services";
 import {
     addChannel,
     addChannels,
+    ChannelService,
     getChannelStore,
     removeChannel,
     removeChannels,
@@ -50,7 +53,13 @@ const excludeChannels = (channel: Channel) =>
         return "不支援的頻道類型";
     });
 
-export const addChannelFlow = (interaction: ChatInputCommandInteraction) =>
+export const addChannelFlow = (
+    interaction: ChatInputCommandInteraction,
+): Effect.Effect<
+    InteractionResponse<boolean>,
+    UnknownException,
+    ClientContext | ChannelService
+> =>
     Effect.gen(function* () {
         const client = yield* ClientContext;
 
@@ -91,7 +100,13 @@ const includeChannels = (channel: Channel) =>
         return "不支援的頻道類型";
     });
 
-export const removeChannelFlow = (interaction: ChatInputCommandInteraction) =>
+export const removeChannelFlow = (
+    interaction: ChatInputCommandInteraction,
+): Effect.Effect<
+    InteractionResponse<boolean>,
+    UnknownException,
+    ChannelService | ClientContext
+> =>
     Effect.gen(function* () {
         const client = yield* ClientContext;
 
@@ -114,7 +129,13 @@ export const removeChannelFlow = (interaction: ChatInputCommandInteraction) =>
         );
     });
 
-export const listChannels = (interaction: CommandInteraction) =>
+export const listChannels = (
+    interaction: CommandInteraction,
+): Effect.Effect<
+    InteractionResponse<boolean>,
+    UnknownException,
+    ChannelService
+> =>
     pipe(
         getChannelStore(),
         Effect.map(

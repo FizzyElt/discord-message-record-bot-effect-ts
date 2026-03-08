@@ -38,21 +38,6 @@ import {
     unsubscribe,
 } from "~/tasks";
 
-export const interactionCreateListener =
-    (live: typeof MainLive) =>
-    (interaction: Interaction<CacheType>): Awaitable<void> => {
-        if (!interaction.isChatInputCommand()) {
-            return;
-        }
-
-        const program = pipe(
-            commandOperation(interaction),
-            Effect.orElse(() => Effect.succeed("reply error")),
-        );
-
-        Effect.runPromise(program.pipe(Effect.provide(live)));
-    };
-
 function commandOperation(
     interaction: ChatInputCommandInteraction<CacheType>,
 ): Effect.Effect<
@@ -113,3 +98,18 @@ function commandOperation(
             return Effect.tryPromise(() => interaction.reply("不支援的指令"));
     }
 }
+
+export const interactionCreateListener =
+    (live: typeof MainLive) =>
+    (interaction: Interaction<CacheType>): Awaitable<void> => {
+        if (!interaction.isChatInputCommand()) {
+            return;
+        }
+
+        const program = pipe(
+            commandOperation(interaction),
+            Effect.orElse(() => Effect.succeed("reply error")),
+        );
+
+        Effect.runPromise(program.pipe(Effect.provide(live)));
+    };

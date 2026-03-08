@@ -1,11 +1,15 @@
-import type { ChatInputCommandInteraction } from "discord.js";
+import type { ChatInputCommandInteraction, Message } from "discord.js";
 import { Effect, pipe, String } from "effect";
+import { UnknownException } from "effect/Cause";
 
+import { EnvConfig } from "~/services";
 import { fetchCatImage } from "~/utils/cat_image";
 import { getCommandOptionString } from "~/utils/command";
 import { fetchEmoji } from "~/utils/google_emoji";
 
-export const getEmoJiJi = (interaction: ChatInputCommandInteraction) =>
+export const getEmoJiJi = (
+    interaction: ChatInputCommandInteraction,
+): Effect.Effect<Message<boolean>, UnknownException, never> =>
     pipe(
         Effect.tryPromise(() => interaction.deferReply()),
         Effect.flatMap(() =>
@@ -34,7 +38,9 @@ export const getEmoJiJi = (interaction: ChatInputCommandInteraction) =>
         ),
     );
 
-export const getCatImage = (interaction: ChatInputCommandInteraction) =>
+export const getCatImage = (
+    interaction: ChatInputCommandInteraction,
+): Effect.Effect<Message<boolean>, UnknownException, EnvConfig> =>
     pipe(
         Effect.tryPromise(() => interaction.deferReply()),
         Effect.flatMap(() => fetchCatImage()),

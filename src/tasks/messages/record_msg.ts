@@ -2,6 +2,7 @@ import { format } from "date-fns";
 import { MessageReferenceType } from "discord-api-types/v10";
 import type { Message, PartialMessage } from "discord.js";
 import { Effect, pipe, Array as ReadonlyArray, String } from "effect";
+import { NoSuchElementException, UnknownException } from "effect/Cause";
 
 import { ClientContext, EnvConfig } from "~/services";
 import {
@@ -52,7 +53,13 @@ const getCreatedMsgString = (
     );
 };
 
-export const recordCreatedMsg = (msg: Message<boolean>) =>
+export const recordCreatedMsg = (
+    msg: Message<boolean>,
+): Effect.Effect<
+    Message<boolean>,
+    UnknownException | NoSuchElementException,
+    EnvConfig | ClientContext
+> =>
     pipe(
         Effect.Do,
         Effect.bind("sendChannel", getSendChannel),
@@ -99,7 +106,13 @@ const getDeletedMsgString = (
     );
 };
 
-export const recordDeleteMsg = (msg: Message<boolean> | PartialMessage) =>
+export const recordDeleteMsg = (
+    msg: Message<boolean> | PartialMessage,
+): Effect.Effect<
+    Message<boolean>,
+    UnknownException | NoSuchElementException,
+    ClientContext | EnvConfig
+> =>
     pipe(
         getSendChannel(),
         Effect.flatMap((sendChannel) =>
@@ -141,7 +154,11 @@ const getUpdatedMsgString = (
 export const recordUpdateMsg = (
     oldMsg: Message<boolean> | PartialMessage,
     msg: Message<boolean> | PartialMessage,
-) =>
+): Effect.Effect<
+    Message<boolean>,
+    UnknownException | NoSuchElementException,
+    EnvConfig | ClientContext
+> =>
     pipe(
         getSendChannel(),
         Effect.flatMap((sendChannel) =>

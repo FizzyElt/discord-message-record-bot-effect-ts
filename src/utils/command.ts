@@ -1,12 +1,16 @@
 import {
     ApplicationCommandOptionType,
+    CacheType,
+    CommandInteractionOption,
     type ChatInputCommandInteraction,
 } from "discord.js";
 import { Equal, Function, Number, Option, pipe, String, Struct } from "effect";
 
 export const getCommandOptionOfType =
     (type: ApplicationCommandOptionType, optionName: string) =>
-    (interaction: ChatInputCommandInteraction) =>
+    (
+        interaction: ChatInputCommandInteraction,
+    ): Option.Option<CommandInteractionOption<CacheType>> =>
         pipe(
             interaction.options.data.find(({ name }) =>
                 Equal.equals(name, optionName),
@@ -16,7 +20,8 @@ export const getCommandOptionOfType =
         );
 
 export const getCommandOptionString =
-    (optionName: string) => (interaction: ChatInputCommandInteraction) =>
+    (optionName: string) =>
+    (interaction: ChatInputCommandInteraction): string =>
         pipe(
             interaction,
             getCommandOptionOfType(
@@ -29,7 +34,8 @@ export const getCommandOptionString =
         );
 
 export const getCommandOptionInteger =
-    (optionName: string) => (interaction: ChatInputCommandInteraction) =>
+    (optionName: string) =>
+    (interaction: ChatInputCommandInteraction): number =>
         pipe(
             interaction,
             getCommandOptionOfType(

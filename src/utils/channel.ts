@@ -5,6 +5,7 @@ import type {
     Client,
     GuildTextBasedChannel,
     PublicThreadChannel,
+    SendableChannels,
     TextChannel,
 } from "discord.js";
 import { Equal, Option, pipe, Array as ReadonlyArray } from "effect";
@@ -25,29 +26,40 @@ export const isCategoryChannel = (
 ): channel is CategoryChannel =>
     Equal.equals(channel.type, ChannelType.GuildCategory);
 
-export const getChannelByClient = (id: string) => (client: Client<true>) =>
-    Option.fromNullable(client.channels.cache.get(id));
+export const getTextChannelInfo = (
+    channel: TextChannel | GuildTextBasedChannel,
+): { id: string; name: string } => ({
+    id: channel.id,
+    name: channel.name || "",
+});
 
-export const getTextChannelByClient = (id: string) => (client: Client<true>) =>
-    pipe(
-        getChannelByClient(id)(client),
-        Option.filter((channel) => channel.isSendable()),
-    );
+export const getChannelByClient =
+    (id: string) =>
+    (client: Client<true>): Option.Option<Channel> =>
+        Option.fromNullable(client.channels.cache.get(id));
 
-export const getCategoryTextChannels = (channel: CategoryChannel) =>
+export const getTextChannelByClient =
+    (id: string) =>
+    (client: Client<true>): Option.Option<SendableChannels> =>
+        pipe(
+            getChannelByClient(id)(client),
+            Option.filter((channel) => channel.isSendable()),
+        );
+
+export const getCategoryTextChannels = (
+    channel: CategoryChannel,
+): TextChannel[] =>
     channel.children.cache
         .filter(isTextChannel)
         .map((channel) => channel as TextChannel);
 
-export const getTextChannelsInfo = (channel: CategoryChannel) =>
+export const getTextChannelsInfo = (
+    channel: CategoryChannel,
+): {
+    id: string;
+    name: string;
+}[] =>
     pipe(
         getCategoryTextChannels(channel),
         ReadonlyArray.map(getTextChannelInfo),
     );
-
-export const getTextChannelInfo = (
-    channel: TextChannel | GuildTextBasedChannel,
-) => ({
-    id: channel.id,
-    name: channel.name || "",
-});

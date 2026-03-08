@@ -1,4 +1,5 @@
 import { Effect, pipe } from "effect";
+import { UnknownException } from "effect/Cause";
 
 const createEmojiRequest = (left: string, right: string) => {
     const searchParams = {
@@ -16,7 +17,10 @@ const createEmojiRequest = (left: string, right: string) => {
     );
 };
 
-export const fetchEmoji = (left: string, right: string) =>
+export const fetchEmoji = (
+    left: string,
+    right: string,
+): Effect.Effect<string, UnknownException, never> =>
     pipe(
         Effect.tryPromise(() =>
             fetch(createEmojiRequest(left, right)).then((res) => res.json()),

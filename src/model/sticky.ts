@@ -6,7 +6,9 @@ import { Database, DatabaseError } from "~/services/database";
 
 export type Sticky = typeof stickiesTable.$inferSelect;
 
-export const stickyCountByGroup = (group: string) =>
+export const stickyCountByGroup = (
+    group: string,
+): Effect.Effect<number, DatabaseError, Database> =>
     pipe(
         Database,
         Effect.flatMap((db) =>
@@ -18,7 +20,7 @@ export const stickyCountByGroup = (group: string) =>
         ),
     );
 
-export const groupCount = () =>
+export const groupCount = (): Effect.Effect<number, DatabaseError, Database> =>
     pipe(
         Database,
         Effect.flatMap((db) =>
@@ -40,7 +42,11 @@ export const groupCount = () =>
         ),
     );
 
-export const queryStickies = () =>
+export const queryStickies = (): Effect.Effect<
+    Sticky[],
+    DatabaseError,
+    Database
+> =>
     pipe(
         Database,
         Effect.flatMap((db) =>
@@ -51,7 +57,11 @@ export const queryStickies = () =>
         ),
     );
 
-export const insertSticky = (name: string, imageUrl: string, group: string) =>
+export const insertSticky = (
+    name: string,
+    imageUrl: string,
+    group: string,
+): Effect.Effect<void, DatabaseError, Database> =>
     pipe(
         Database,
         Effect.flatMap((db) =>
@@ -64,7 +74,9 @@ export const insertSticky = (name: string, imageUrl: string, group: string) =>
         Effect.flatMap(() => Effect.void),
     );
 
-export const deleteSticky = (name: string) =>
+export const deleteSticky = (
+    name: string,
+): Effect.Effect<void, DatabaseError, Database> =>
     pipe(
         Database,
         Effect.flatMap((db) =>

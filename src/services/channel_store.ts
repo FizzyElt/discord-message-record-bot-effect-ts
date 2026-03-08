@@ -94,37 +94,52 @@ export const ChannelServiceLive = Layer.effect(
     }),
 );
 
-export const removeChannels = (ids: Array<string>) =>
+export const removeChannels = (
+    ids: Array<string>,
+): Effect.Effect<void, never, ChannelService> =>
     pipe(
         ChannelService,
         Effect.flatMap((service) => service.removeChannels(ids)),
     );
 
-export const removeChannel = (id: string) =>
+export const removeChannel = (
+    id: string,
+): Effect.Effect<void, never, ChannelService> =>
     pipe(
         ChannelService,
         Effect.flatMap((service) => service.removeChannel(id)),
     );
 
-export const addChannel = (channelInfo: { id: string; name: string }) =>
+export const addChannel = (channelInfo: {
+    id: string;
+    name: string;
+}): Effect.Effect<void, never, ChannelService> =>
     pipe(
         ChannelService,
         Effect.flatMap((service) => service.addChannel(channelInfo)),
     );
 
-export const addChannels = (list: Array<{ id: string; name: string }>) =>
+export const addChannels = (
+    list: Array<{ id: string; name: string }>,
+): Effect.Effect<void, never, ChannelService> =>
     pipe(
         ChannelService,
         Effect.flatMap((service) => service.addChannels(list)),
     );
 
-export const getChannelStore = () =>
+export const getChannelStore = (): Effect.Effect<
+    ChannelStore,
+    never,
+    ChannelService
+> =>
     pipe(
         ChannelService,
         Effect.map((service) => service.getChannelStore()),
     );
 
-export const hasChannel = (channelId: string) =>
+export const hasChannel = (
+    channelId: string,
+): Effect.Effect<boolean, never, ChannelService> =>
     pipe(
         ChannelService,
         Effect.flatMap((service) => service.hasChannel(channelId)),

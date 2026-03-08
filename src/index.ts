@@ -30,4 +30,5 @@ const program = Effect.scoped(
     ),
 );
 
+// oxlint-disable-next-line no-console
 Effect.runPromise(program).catch((err) => console.log(err));
