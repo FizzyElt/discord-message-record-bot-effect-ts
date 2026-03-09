@@ -6,7 +6,7 @@ import { messageGuard } from "~/tasks";
 
 export const messageCreateListener =
     (live: typeof MainLive) =>
-    (msg: OmitPartialGroupDMChannel<Message<boolean>>) => {
+    (msg: OmitPartialGroupDMChannel<Message<boolean>>): void => {
         const program = pipe(
             messageGuard(msg),
             Effect.orElseSucceed(() => msg),

@@ -2,6 +2,7 @@ import { format } from "date-fns";
 import { MessageReferenceType } from "discord-api-types/v10";
 import type { Message, PartialMessage } from "discord.js";
 import { Effect, pipe, Array as ReadonlyArray, String } from "effect";
+import { NoSuchElementError, UnknownError } from "effect/Cause";
 
 import { ClientContext, EnvConfig } from "~/services";
 import {
@@ -52,27 +53,36 @@ const getCreatedMsgString = (
     );
 };
 
-export const recordCreatedMsg = (msg: Message<boolean>) =>
-    Effect.gen(function* () {
-        const sendChannel = yield* getSendChannel();
-
-        const sentMsg = yield* Effect.tryPromise(
-            () =>
-                sendChannel.send({
-                    content: getCreatedMsgString(msg),
-                    allowedMentions: { parse: [] },
-                }) as Promise<Message<boolean>>,
-        );
-
-        msg.reference = {
-            channelId: sentMsg.channelId,
-            guildId: sentMsg.guildId || undefined,
-            messageId: sentMsg.id,
-            type: MessageReferenceType.Default,
-        };
-
-        return sentMsg;
-    });
+export const recordCreatedMsg = (
+    msg: Message<boolean>,
+): Effect.Effect<
+    Message<boolean>,
+    NoSuchElementError | UnknownError,
+    ClientContext | EnvConfig
+> =>
+    pipe(
+        Effect.Do,
+        Effect.bind("sendChannel", getSendChannel),
+        Effect.bind("sentMsg", ({ sendChannel }) =>
+            Effect.tryPromise(
+                () =>
+                    sendChannel.send({
+                        content: getCreatedMsgString(msg),
+                        allowedMentions: { parse: [] },
+                    }) as Promise<Message<boolean>>,
+            ),
+        ),
+        Effect.tap(({ sentMsg }) => {
+            msg.reference = {
+                channelId: sentMsg.channelId,
+                guildId: sentMsg.guildId || undefined,
+                messageId: sentMsg.id,
+                type: MessageReferenceType.Default,
+            };
+            return Effect.void;
+        }),
+        Effect.map(({ sentMsg }) => sentMsg),
+    );
 
 // ======================================================
 
@@ -96,7 +106,13 @@ const getDeletedMsgString = (
     );
 };
 
-export const recordDeleteMsg = (msg: Message<boolean> | PartialMessage) =>
+export const recordDeleteMsg = (
+    msg: Message<boolean> | PartialMessage,
+): Effect.Effect<
+    Message<boolean>,
+    NoSuchElementError | UnknownError,
+    ClientContext | EnvConfig
+> =>
     pipe(
         getSendChannel(),
         Effect.flatMap((sendChannel) =>
@@ -138,7 +154,11 @@ const getUpdatedMsgString = (
 export const recordUpdateMsg = (
     oldMsg: Message<boolean> | PartialMessage,
     msg: Message<boolean> | PartialMessage,
-) =>
+): Effect.Effect<
+    Message<boolean>,
+    NoSuchElementError | UnknownError,
+    EnvConfig | ClientContext
+> =>
     pipe(
         getSendChannel(),
         Effect.flatMap((sendChannel) =>

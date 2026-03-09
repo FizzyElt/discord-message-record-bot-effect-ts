@@ -5,7 +5,13 @@ import { ChannelService, ClientContext } from "~/services";
 
 import { inviteLinkGuard } from "./invite_link_guard";
 
-export const messageGuard = (msg: Message<boolean> | PartialMessage) =>
+export const messageGuard = (
+    msg: Message<boolean> | PartialMessage,
+): Effect.Effect<
+    Message<boolean> | PartialMessage<boolean>,
+    string,
+    ClientContext | ChannelService
+> =>
     Effect.gen(function* () {
         const client = yield* ClientContext;
         const { hasChannel } = yield* ChannelService;

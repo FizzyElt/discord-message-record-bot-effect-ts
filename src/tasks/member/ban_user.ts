@@ -11,7 +11,7 @@ import { Effect, Equal, pipe } from "effect";
 import type { NoSuchElementError, UnknownError } from "effect/Cause";
 
 import { ClientContext, EnvConfig } from "~/services";
-import type { TimeoutInfo } from "~/services/timeout";
+import type { TimeoutInfo, TimeoutInfoListService } from "~/services/timeout";
 import { getTimeoutInfo, minute } from "~/services/timeout";
 import {
     addNewVoting,
@@ -214,7 +214,13 @@ const _banUserVote = (params: {
     );
 };
 
-export const banUser = (interaction: ChatInputCommandInteraction) =>
+export const banUser = (
+    interaction: ChatInputCommandInteraction,
+): Effect.Effect<
+    Message<boolean> | InteractionCallbackResponse<boolean>,
+    UnknownError | NoSuchElementError,
+    ClientContext | EnvConfig | TimeoutInfoListService | VotingService
+> =>
     Effect.gen(function* () {
         const timeoutInfo = yield* getTimeoutInfo(
             getCommandOptionString("time")(interaction),

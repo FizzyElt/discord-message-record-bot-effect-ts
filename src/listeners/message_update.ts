@@ -13,7 +13,7 @@ export const messageUpdateListener =
     (
         oldMsg: OmitPartialGroupDMChannel<Message<boolean> | PartialMessage>,
         newMsg: OmitPartialGroupDMChannel<Message<boolean>>,
-    ) => {
+    ): void => {
         const program = pipe(
             messageGuard(newMsg),
             Effect.flatMap((msg) => recordUpdateMsg(oldMsg, msg)),

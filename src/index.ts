@@ -23,4 +23,5 @@ const program = Effect.scoped(
     }).pipe(Effect.provide(MainLive)),
 );
 
+// oxlint-disable-next-line no-console
 Effect.runPromise(program).catch((err) => console.log(err));

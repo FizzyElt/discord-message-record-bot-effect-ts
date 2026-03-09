@@ -5,9 +5,13 @@ import {
     PermissionFlagsBits,
 } from "discord.js";
 import { Effect, pipe } from "effect";
+import { UnknownError } from "effect/Cause";
 
 export const findUserFromMembers =
-    (idOrMention: string) => (members: GuildMemberManager) => {
+    (idOrMention: string) =>
+    (
+        members: GuildMemberManager,
+    ): Effect.Effect<GuildMember, UnknownError, never> => {
         if (MessageMentions.UsersPattern.test(idOrMention)) {
             return pipe(
                 MessageMentions.UsersPattern.exec(idOrMention)?.at(1) || "",
@@ -18,5 +22,5 @@ export const findUserFromMembers =
         return Effect.tryPromise(() => members.fetch(idOrMention));
     };
 
-export const isAdmin = (member: GuildMember) =>
+export const isAdmin = (member: GuildMember): boolean =>
     member.permissions.has(PermissionFlagsBits.Administrator);

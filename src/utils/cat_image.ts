@@ -2,7 +2,7 @@ import { Effect, pipe } from "effect";
 
 import { EnvConfig } from "~/services/env";
 
-export const fetchCatImage = () =>
+export const fetchCatImage = (): Effect.Effect<string, never, EnvConfig> =>
     pipe(
         Effect.service(EnvConfig),
         Effect.flatMap(({ CAT_API_KEY }) =>

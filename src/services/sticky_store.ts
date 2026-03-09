@@ -14,6 +14,7 @@ import {
     Ref,
     ServiceMap,
 } from "effect";
+import type { NoSuchElementError } from "effect/Cause";
 
 import * as StickyModel from "~/model/sticky";
 import { commands } from "~/slash_command/main_command";
@@ -24,23 +25,11 @@ import {
     stickyCommands,
 } from "~/slash_command/sticky_command";
 
+import { Database, DatabaseError } from "./database";
+import { EnvConfig } from "./env";
+
 const createStickyCommand = (data: StickyModel.Sticky[]) => {
-    const dataMap = data.reduce<Record<string, StickyModel.Sticky[]>>(
-        (acc, item) => {
-            if (item.group && acc[item.group]) {
-                acc[item.group].push(item);
-                return acc;
-            }
-
-            if (item.group) {
-                acc[item.group] = [item];
-                return acc;
-            }
-
-            return acc;
-        },
-        {},
-    );
+    const dataMap = Array.groupBy(data, (item) => item.group);
 
     const command = new SlashCommandBuilder()
         .setName(StickyCommandName.sticky)
@@ -112,16 +101,28 @@ export const StickyStoreLive = Layer.effect(
     }),
 );
 
-export const getSticky = (name: string) =>
+export const getSticky = (
+    name: string,
+): Effect.Effect<StickyModel.Sticky, NoSuchElementError, StickyService> =>
     pipe(
         Effect.service(StickyService),
         Effect.flatMap(Ref.get),
-        Effect.map(
-            Array.findFirst((sticky) => Equal.equals(sticky.name, name)),
+        Effect.flatMap((stickies) =>
+            Array.findFirst(stickies, (sticky) =>
+                Equal.equals(sticky.name, name),
+            ).asEffect(),
         ),
     );
 
-export const createNewSticky = (name: string, url: string, group: string) =>
+export const createNewSticky = (
+    name: string,
+    url: string,
+    group: string,
+): Effect.Effect<
+    void,
+    DatabaseError | GroupLimitError | StickyOptionLimitError,
+    Database | EnvConfig | StickyService
+> =>
     pipe(
         StickyModel.groupCount(),
         Effect.filterOrFail(
@@ -147,7 +148,9 @@ export const createNewSticky = (name: string, url: string, group: string) =>
         ),
     );
 
-export const deleteSticky = (name: string) =>
+export const deleteSticky = (
+    name: string,
+): Effect.Effect<void, DatabaseError, Database | EnvConfig | StickyService> =>
     pipe(
         StickyModel.deleteSticky(name),
         Effect.flatMap(syncData),

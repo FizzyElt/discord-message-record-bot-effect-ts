@@ -2,20 +2,27 @@ import type {
     CacheType,
     ChatInputCommandInteraction,
     CommandInteraction,
+    InteractionCallbackResponse,
 } from "discord.js";
 import { Effect, pipe, Ref } from "effect";
+import { UnknownError } from "effect/Cause";
 
+import { EnvConfig } from "~/services";
+import { Database } from "~/services/database";
 import * as StickyStore from "~/services/sticky_store";
 import { getCommandOptionString } from "~/utils/command";
 
 export const showSticky = (
     interaction: ChatInputCommandInteraction<CacheType>,
-) => {
+): Effect.Effect<
+    InteractionCallbackResponse<boolean>,
+    UnknownError,
+    StickyStore.StickyService
+> => {
     const name = interaction.options.getString("name") || "";
 
     return pipe(
         StickyStore.getSticky(name),
-        Effect.flatMap(Effect.fromOption),
         Effect.match({
             onSuccess: ({ imageUrl }) => imageUrl,
             onFailure: () => `找不到 ${name}`,
@@ -28,7 +35,13 @@ export const showSticky = (
     );
 };
 
-export const createSticky = (interaction: ChatInputCommandInteraction) => {
+export const createSticky = (
+    interaction: ChatInputCommandInteraction,
+): Effect.Effect<
+    InteractionCallbackResponse<boolean>,
+    UnknownError,
+    StickyStore.StickyService | Database | EnvConfig
+> => {
     const name = getCommandOptionString("name")(interaction);
     const url = getCommandOptionString("url")(interaction);
     const group = getCommandOptionString("group")(interaction) || "default";
@@ -49,7 +62,13 @@ export const createSticky = (interaction: ChatInputCommandInteraction) => {
     );
 };
 
-export const deleteSticky = (interaction: ChatInputCommandInteraction) => {
+export const deleteSticky = (
+    interaction: ChatInputCommandInteraction,
+): Effect.Effect<
+    InteractionCallbackResponse<boolean>,
+    UnknownError,
+    StickyStore.StickyService | Database | EnvConfig
+> => {
     const name = getCommandOptionString("name")(interaction);
 
     return pipe(
@@ -66,7 +85,13 @@ export const deleteSticky = (interaction: ChatInputCommandInteraction) => {
     );
 };
 
-export const backupSticky = (interaction: CommandInteraction) => {
+export const backupSticky = (
+    interaction: CommandInteraction,
+): Effect.Effect<
+    InteractionCallbackResponse<boolean>,
+    UnknownError,
+    StickyStore.StickyService
+> => {
     return pipe(
         Effect.service(StickyStore.StickyService),
         Effect.flatMap(Ref.get),

@@ -11,7 +11,7 @@ export const pushCommands = (
     commands: Array<
         SlashCommandSubcommandsOnlyBuilder | SlashCommandOptionsOnlyBuilder
     >,
-) => {
+): Effect.Effect<void, never, EnvConfig> => {
     const rest = new REST({ version: "10" });
     return pipe(
         Effect.service(EnvConfig),

@@ -1,9 +1,11 @@
 import type {
     CommandInteraction,
     GuildMember,
+    InteractionCallbackResponse,
     RoleResolvable,
 } from "discord.js";
 import { Effect, pipe } from "effect";
+import { NoSuchElementError, UnknownError } from "effect/Cause";
 
 import { findUserFromMembers } from "~/utils/member";
 
@@ -15,7 +17,14 @@ const removeRoleFromMember =
         Effect.tryPromise(() => member.roles.remove(roleId));
 
 export const subscribe =
-    (roleId: string) => (interaction: CommandInteraction) => {
+    (roleId: string) =>
+    (
+        interaction: CommandInteraction,
+    ): Effect.Effect<
+        InteractionCallbackResponse<boolean>,
+        UnknownError | NoSuchElementError,
+        never
+    > => {
         const userId = interaction.user.id;
 
         return pipe(
@@ -42,7 +51,14 @@ export const subscribe =
     };
 
 export const unsubscribe =
-    (roleId: string) => (interaction: CommandInteraction) => {
+    (roleId: string) =>
+    (
+        interaction: CommandInteraction,
+    ): Effect.Effect<
+        InteractionCallbackResponse<boolean>,
+        NoSuchElementError | UnknownError,
+        never
+    > => {
         const userId = interaction.user.id;
 
         return pipe(

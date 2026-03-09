@@ -6,6 +6,7 @@ import type {
     InteractionReplyOptions,
 } from "discord.js";
 import { Effect, Equal, pipe } from "effect";
+import { UnknownError } from "effect/Cause";
 
 import { minute } from "~/services/timeout";
 
@@ -61,7 +62,11 @@ export const createVoting = <A, E, R, A1, E1, R1>(
             msg: InteractionCallbackResponse,
         ) => Effect.Effect<A1, E1, R1>;
     },
-) =>
+): Effect.Effect<
+    InteractionCallbackResponse<boolean>,
+    UnknownError | E | E1,
+    R | R1
+> =>
     pipe(
         startVoting(interaction, votingContent, votingOptions.emoji),
         Effect.tap(callback.started),
