@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@effect/platform-node':
-        specifier: 4.0.0-beta.11
-        version: 4.0.0-beta.11(effect@4.0.0-beta.11)(ioredis@5.9.3)
+        specifier: 4.0.0-beta.29
+        version: 4.0.0-beta.29(effect@4.0.0-beta.29)(ioredis@5.9.3)
       '@libsql/client':
         specifier: ^0.17.0
         version: 0.17.0
@@ -30,8 +30,8 @@ importers:
         specifier: ^0.45.1
         version: 0.45.1(@libsql/client-wasm@0.14.0)(@libsql/client@0.17.0)(gel@2.0.2)(postgres@3.4.7)
       effect:
-        specifier: 4.0.0-beta.11
-        version: 4.0.0-beta.11
+        specifier: 4.0.0-beta.29
+        version: 4.0.0-beta.29
     devDependencies:
       '@types/node':
         specifier: ^24.10.3
@@ -85,17 +85,17 @@ packages:
   '@drizzle-team/brocli@0.10.2':
     resolution: {integrity: sha512-z33Il7l5dKjUgGULTqBsQBQwckHh5AbIuxhdsIxDDiZAzBOrZO6q9ogcWC65kU382AfynTfgNumVcNIjuIua6w==}
 
-  '@effect/platform-node-shared@4.0.0-beta.11':
-    resolution: {integrity: sha512-1GdT63U6CpqDO8R5R9vVVn4fcwcJiYJOcKE5Tr208CB9fxAU2VEmp2Qp5rLqllLiHF+50ZYYMDPgqCKtXl8J7w==}
+  '@effect/platform-node-shared@4.0.0-beta.29':
+    resolution: {integrity: sha512-6nV/yI1LgYJ1PzTjb20Ar4a+Z9dBltd2QCNzLj9NmdBQusJO9ve7qk0GBa3IFkmAVAqUfCVXEwhYz3TjnP+lrA==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
-      effect: ^4.0.0-beta.11
+      effect: ^4.0.0-beta.29
 
-  '@effect/platform-node@4.0.0-beta.11':
-    resolution: {integrity: sha512-P31Lqw/GZnsqsaxQiWi9XJz6M8aANgLCYdSUwzx0Kx+yKVnVqYA7+eqZVZPi4jLq0oMGE3LnPhBSOYGtY/eSbw==}
+  '@effect/platform-node@4.0.0-beta.29':
+    resolution: {integrity: sha512-lAJZrx/PnBWkf+X/iox0MRDnc+XpEIbVJEmiLhR7KrpuyzwNrlUmgRy9fHoGJMbcxqkHrXUh+rj9g7UGPYX3rQ==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
-      effect: ^4.0.0-beta.11
+      effect: ^4.0.0-beta.29
       ioredis: ^5.7.0
 
   '@esbuild-kit/core-utils@3.3.2':
@@ -1065,8 +1065,8 @@ packages:
       sqlite3:
         optional: true
 
-  effect@4.0.0-beta.11:
-    resolution: {integrity: sha512-xBUzwvNPoc7bcNUKS1Z7n6Nd5IL9AB/iV64GS1L44qmUgjuPex2A9DAXGUJkolTb8e65G55JerAX9T0Ha5fmRA==}
+  effect@4.0.0-beta.29:
+    resolution: {integrity: sha512-7UoBAEiktoS81XLMX/39Mq/Ymq8whxmqFpsI0MEYdMlbDcbytzQlyuyhvrwEIdrd9qrqa8DZ5mKblWasamryqw==}
 
   env-paths@3.0.0:
     resolution: {integrity: sha512-dtJUTepzMW3Lm/NPxRf3wP4642UWhjL2sQxc+ym2YMj1m/H2zDNQOlezafzkHwn6sMstjHTwG6iQQsctDW/b1A==}
@@ -1394,19 +1394,19 @@ snapshots:
 
   '@drizzle-team/brocli@0.10.2': {}
 
-  '@effect/platform-node-shared@4.0.0-beta.11(effect@4.0.0-beta.11)':
+  '@effect/platform-node-shared@4.0.0-beta.29(effect@4.0.0-beta.29)':
     dependencies:
       '@types/ws': 8.18.1
-      effect: 4.0.0-beta.11
+      effect: 4.0.0-beta.29
       ws: 8.19.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@effect/platform-node@4.0.0-beta.11(effect@4.0.0-beta.11)(ioredis@5.9.3)':
+  '@effect/platform-node@4.0.0-beta.29(effect@4.0.0-beta.29)(ioredis@5.9.3)':
     dependencies:
-      '@effect/platform-node-shared': 4.0.0-beta.11(effect@4.0.0-beta.11)
-      effect: 4.0.0-beta.11
+      '@effect/platform-node-shared': 4.0.0-beta.29(effect@4.0.0-beta.29)
+      effect: 4.0.0-beta.29
       ioredis: 5.9.3
       mime: 4.1.0
       undici: 7.22.0
@@ -1942,7 +1942,7 @@ snapshots:
       gel: 2.0.2
       postgres: 3.4.7
 
-  effect@4.0.0-beta.11:
+  effect@4.0.0-beta.29:
     dependencies:
       '@standard-schema/spec': 1.1.0
       fast-check: 4.5.3
