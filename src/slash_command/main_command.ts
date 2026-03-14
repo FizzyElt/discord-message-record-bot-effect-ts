@@ -22,6 +22,7 @@ export enum CommandName {
     timeout_info = "timeout_info",
     subscribe = "subscribe",
     unsubscribe = "unsubscribe",
+    get_off_work = "get_off_work",
 }
 
 export const commands = [
@@ -83,4 +84,7 @@ export const commands = [
     new SlashCommandBuilder()
         .setName(CommandName.unsubscribe)
         .setDescription("取消民主的一員"),
+    new SlashCommandBuilder()
+        .setName(CommandName.get_off_work)
+        .setDescription("今天這個逼班就上到這了"),
 ];

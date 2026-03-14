@@ -36,6 +36,7 @@ import {
     showSticky,
     subscribe,
     unsubscribe,
+    getOffWork,
 } from "~/tasks";
 
 function commandOperation(
@@ -62,6 +63,8 @@ function commandOperation(
             return listChannels(interaction);
         case CommandName.ban_user:
             return banUser(interaction);
+        case CommandName.get_off_work:
+            return getOffWork(interaction);
 
         case CommandName.subscribe:
             return pipe(
