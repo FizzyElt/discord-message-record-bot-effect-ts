@@ -1,6 +1,11 @@
 import { format } from "date-fns";
 import { MessageReferenceType } from "discord-api-types/v10";
-import type { Message, PartialMessage } from "discord.js";
+import {
+    bold,
+    type Message,
+    type PartialMessage,
+    strikethrough,
+} from "discord.js";
 import { Effect, pipe, Array as ReadonlyArray, String } from "effect";
 import { NoSuchElementError, UnknownError } from "effect/Cause";
 
@@ -10,7 +15,6 @@ import {
     isPublicThreadChannel,
     isTextChannel,
 } from "~/utils/channel";
-import { bold, strikeThrough } from "~/utils/mark_string";
 
 const getChannelNameByMsg = (msg: Message<boolean> | PartialMessage) =>
     isTextChannel(msg.channel) || isPublicThreadChannel(msg.channel)
@@ -142,7 +146,7 @@ const getUpdatedMsgString = (
         [
             `${userName} ${bold("Edit")}`,
             `${channelName} ${timeString}：`,
-            strikeThrough(oldMsg.content || ""),
+            strikethrough(oldMsg.content || ""),
             "",
             String.isString(msg.content) ? msg.content : "",
             "------------------------------------",
