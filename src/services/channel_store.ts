@@ -1,11 +1,11 @@
 import {
+    Context,
     Effect,
     Equal,
     Layer,
     MutableHashMap,
     pipe,
     Array as ReadonlyArray,
-    ServiceMap,
     type Ref,
 } from "effect";
 
@@ -15,7 +15,7 @@ export type ChannelStore = MutableHashMap.MutableHashMap<string, string>;
 
 export type ChannelStoreRef = Ref.Ref<ChannelStore>;
 
-export class ChannelService extends ServiceMap.Service<
+export class ChannelService extends Context.Service<
     ChannelService,
     {
         getChannelStore: () => ChannelStore;

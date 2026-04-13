@@ -5,6 +5,7 @@ import {
 } from "discord.js";
 import {
     Array,
+    Context,
     Data,
     Effect,
     Equal,
@@ -12,7 +13,6 @@ import {
     Number,
     pipe,
     Ref,
-    ServiceMap,
 } from "effect";
 import type { NoSuchElementError } from "effect/Cause";
 
@@ -85,7 +85,7 @@ class GroupLimitError extends Data.TaggedError("GroupLimitError")<{
     message: string;
 }> {}
 
-export class StickyService extends ServiceMap.Service<
+export class StickyService extends Context.Service<
     StickyService,
     Ref.Ref<StickyModel.Sticky[]>
 >()("StickyService") {}

@@ -1,11 +1,11 @@
-import { Effect, Layer, MutableHashSet, pipe, Ref, ServiceMap } from "effect";
+import { Context, Effect, Layer, MutableHashSet, pipe, Ref } from "effect";
 
 export type VotingStore = MutableHashSet.MutableHashSet<string>;
 
 export type VotingStoreRef = Ref.Ref<VotingStore>;
 
 // layer
-export class VotingService extends ServiceMap.Service<
+export class VotingService extends Context.Service<
     VotingService,
     {
         isUserVoting: (userId: string) => Effect.Effect<boolean>;

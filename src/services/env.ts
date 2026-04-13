@@ -1,4 +1,4 @@
-import { Config, ConfigProvider, Effect, Layer, ServiceMap } from "effect";
+import { Config, ConfigProvider, Context, Effect, Layer } from "effect";
 // layer
 
 export interface Env {
@@ -33,9 +33,7 @@ const config = Config.all({
     TURSO_DB_URL: Config.string("TURSO_DB_URL"),
 });
 
-export class EnvConfig extends ServiceMap.Service<EnvConfig, Env>()(
-    "EnvConfig",
-) {}
+export class EnvConfig extends Context.Service<EnvConfig, Env>()("EnvConfig") {}
 
 export const EnvLive = Layer.effect(
     EnvConfig,

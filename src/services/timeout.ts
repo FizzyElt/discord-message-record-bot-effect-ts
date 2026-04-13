@@ -1,10 +1,10 @@
 import {
+    Context,
     Effect,
     Equal,
     Layer,
     pipe,
     Array as ReadonlyArray,
-    ServiceMap,
 } from "effect";
 import { NoSuchElementError } from "effect/Cause";
 
@@ -66,7 +66,7 @@ export const choiceList: Array<TimeoutInfo> = [
     },
 ];
 
-export class TimeoutInfoListService extends ServiceMap.Service<
+export class TimeoutInfoListService extends Context.Service<
     TimeoutInfoListService,
     Array<TimeoutInfo>
 >()("TimeoutInfoListService") {}
