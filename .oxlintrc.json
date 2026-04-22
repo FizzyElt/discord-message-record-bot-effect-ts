@@ -22,6 +22,7 @@
         "typescript/explicit-function-return-type": "off",
         "eslint/no-undefined": "off"
     },
+
     "settings": {
         "jsx-a11y": {
             "polymorphicPropName": null,

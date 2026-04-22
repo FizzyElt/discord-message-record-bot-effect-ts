@@ -4,6 +4,7 @@ import type {
     CommandInteraction,
     InteractionCallbackResponse,
 } from "discord.js";
+
 import { Effect, pipe, Ref } from "effect";
 import { UnknownError } from "effect/Cause";
 

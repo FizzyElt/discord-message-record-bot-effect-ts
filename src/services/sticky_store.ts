@@ -1,3 +1,5 @@
+import type { NoSuchElementError } from "effect/Cause";
+
 import {
     SlashCommandBuilder,
     SlashCommandStringOption,
@@ -14,7 +16,6 @@ import {
     pipe,
     Ref,
 } from "effect";
-import type { NoSuchElementError } from "effect/Cause";
 
 import * as StickyModel from "~/model/sticky";
 import { commands } from "~/slash_command/main_command";

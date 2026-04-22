@@ -3,9 +3,11 @@ import type {
     OmitPartialGroupDMChannel,
     PartialMessage,
 } from "discord.js";
+
 import { Effect, pipe } from "effect";
 
 import type { MainLive } from "~/services";
+
 import { messageGuard, recordUpdateMsg } from "~/tasks";
 
 export const messageUpdateListener =

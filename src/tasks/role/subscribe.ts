@@ -4,6 +4,7 @@ import type {
     InteractionCallbackResponse,
     RoleResolvable,
 } from "discord.js";
+
 import { Effect, pipe } from "effect";
 import { NoSuchElementError, UnknownError } from "effect/Cause";
 

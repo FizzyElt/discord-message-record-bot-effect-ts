@@ -1,4 +1,3 @@
-import { ChannelType } from "discord-api-types/v10";
 import type {
     CategoryChannel,
     Channel,
@@ -8,6 +7,8 @@ import type {
     SendableChannels,
     TextChannel,
 } from "discord.js";
+
+import { ChannelType } from "discord-api-types/v10";
 import { Equal, Option, pipe, Array as ReadonlyArray } from "effect";
 
 export const isTextChannel = (

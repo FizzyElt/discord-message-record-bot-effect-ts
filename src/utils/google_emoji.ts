@@ -11,9 +11,7 @@ const createEmojiRequest = (left: string, right: string) => {
     };
 
     return new Request(
-        `https://tenor.googleapis.com/v2/featured?${new URLSearchParams(
-            searchParams,
-        ).toString()}`,
+        `https://tenor.googleapis.com/v2/featured?${new URLSearchParams(searchParams).toString()}`,
     );
 };
 

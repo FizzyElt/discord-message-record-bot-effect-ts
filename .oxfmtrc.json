@@ -3,10 +3,15 @@
     "ignorePatterns": [],
     "tabWidth": 4,
     "printWidth": 80,
-    "experimentalSortImports": {
+    "endOfLine": "lf",
+    "semi": true,
+    "singleQuote": false,
+    "sortImports": {
         "groups": [
-            ["type-import", "value-builtin", "value-external"],
-            ["type-internal", "value-internal"],
+            "type-import",
+            ["value-builtin", "value-external"],
+            "type-internal",
+            "value-internal",
             ["type-parent", "type-sibling", "type-index"],
             ["value-parent", "value-sibling", "value-index"],
             "unknown"

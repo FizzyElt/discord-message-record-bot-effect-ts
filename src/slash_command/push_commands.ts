@@ -2,6 +2,7 @@ import type {
     SlashCommandOptionsOnlyBuilder,
     SlashCommandSubcommandsOnlyBuilder,
 } from "discord.js";
+
 import { REST, Routes } from "discord.js";
 import { Console, Effect, pipe } from "effect";
 
