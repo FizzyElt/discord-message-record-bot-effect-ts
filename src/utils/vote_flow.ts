@@ -11,15 +11,11 @@ import { UnknownError } from "effect/Cause";
 
 import { minute } from "~/services/timeout";
 
-const awaitReactions =
-    (options?: AwaitReactionsOptions) => (msg: InteractionCallbackResponse) =>
-        Effect.tryPromise(async () =>
-            msg?.resource?.message?.awaitReactions(options),
-        );
+const awaitReactions = (options?: AwaitReactionsOptions) => (msg: InteractionCallbackResponse) =>
+    Effect.tryPromise(async () => msg?.resource?.message?.awaitReactions(options));
 
-const reactMsg =
-    (emoji: EmojiIdentifierResolvable) => (msg: InteractionCallbackResponse) =>
-        Effect.tryPromise(async () => msg?.resource?.message?.react(emoji));
+const reactMsg = (emoji: EmojiIdentifierResolvable) => (msg: InteractionCallbackResponse) =>
+    Effect.tryPromise(async () => msg?.resource?.message?.react(emoji));
 
 const startVoting = (
     interaction: CommandInteraction,
@@ -27,26 +23,19 @@ const startVoting = (
     emoji: EmojiIdentifierResolvable,
 ) =>
     pipe(
-        Effect.tryPromise(() =>
-            interaction.reply({ ...votingContent, withResponse: true }),
-        ),
+        Effect.tryPromise(() => interaction.reply({ ...votingContent, withResponse: true })),
         Effect.tap(reactMsg(emoji)),
     );
 
 const collectVote =
-    (emoji: EmojiIdentifierResolvable, time: number) =>
-    (msg: InteractionCallbackResponse) =>
+    (emoji: EmojiIdentifierResolvable, time: number) => (msg: InteractionCallbackResponse) =>
         pipe(
             msg,
             awaitReactions({
-                filter: (reaction, user) =>
-                    Equal.equals(reaction.emoji.name, emoji) && !user.bot,
+                filter: (reaction, user) => Equal.equals(reaction.emoji.name, emoji) && !user.bot,
                 time: time * minute * 1000,
             }),
-            Effect.map(
-                (collected) =>
-                    (collected?.get(emoji as string)?.count ?? 1) - 1,
-            ),
+            Effect.map((collected) => (collected?.get(emoji as string)?.count ?? 1) - 1),
         );
 
 export const createVoting = <A, E, R, A1, E1, R1>(
@@ -58,16 +47,9 @@ export const createVoting = <A, E, R, A1, E1, R1>(
     },
     callback: {
         started: (msg: InteractionCallbackResponse) => Effect.Effect<A, E, R>;
-        result: (
-            count: number,
-            msg: InteractionCallbackResponse,
-        ) => Effect.Effect<A1, E1, R1>;
+        result: (count: number, msg: InteractionCallbackResponse) => Effect.Effect<A1, E1, R1>;
     },
-): Effect.Effect<
-    InteractionCallbackResponse<boolean>,
-    UnknownError | E | E1,
-    R | R1
-> =>
+): Effect.Effect<InteractionCallbackResponse<boolean>, UnknownError | E | E1, R | R1> =>
     pipe(
         startVoting(interaction, votingContent, votingOptions.emoji),
         Effect.tap(callback.started),

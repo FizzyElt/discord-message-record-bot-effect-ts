@@ -15,11 +15,7 @@ import { getCommandOptionString } from "~/utils/command";
 
 export const showSticky = (
     interaction: ChatInputCommandInteraction<CacheType>,
-): Effect.Effect<
-    InteractionCallbackResponse<boolean>,
-    UnknownError,
-    StickyStore.StickyService
-> => {
+): Effect.Effect<InteractionCallbackResponse<boolean>, UnknownError, StickyStore.StickyService> => {
     const name = interaction.options.getString("name") || "";
 
     return pipe(
@@ -29,9 +25,7 @@ export const showSticky = (
             onFailure: () => `找不到 ${name}`,
         }),
         Effect.flatMap((msg) =>
-            Effect.tryPromise(() =>
-                interaction.reply({ content: msg, withResponse: true }),
-            ),
+            Effect.tryPromise(() => interaction.reply({ content: msg, withResponse: true })),
         ),
     );
 };
@@ -56,9 +50,7 @@ export const createSticky = (
         }),
         Effect.catch(() => Effect.succeed(`新增 ${name} 到 ${group} 失敗`)),
         Effect.flatMap((msg) =>
-            Effect.tryPromise(() =>
-                interaction.reply({ content: msg, withResponse: true }),
-            ),
+            Effect.tryPromise(() => interaction.reply({ content: msg, withResponse: true })),
         ),
     );
 };
@@ -79,38 +71,29 @@ export const deleteSticky = (
             onFailure: () => `刪除 ${name} 失敗`,
         }),
         Effect.flatMap((msg) =>
-            Effect.tryPromise(() =>
-                interaction.reply({ content: msg, withResponse: true }),
-            ),
+            Effect.tryPromise(() => interaction.reply({ content: msg, withResponse: true })),
         ),
     );
 };
 
 export const backupSticky = (
     interaction: CommandInteraction,
-): Effect.Effect<
-    InteractionCallbackResponse<boolean>,
-    UnknownError,
-    StickyStore.StickyService
-> => {
-    return pipe(
+): Effect.Effect<InteractionCallbackResponse<boolean>, UnknownError, StickyStore.StickyService> =>
+    pipe(
         Effect.service(StickyStore.StickyService),
         Effect.flatMap(Ref.get),
-        Effect.flatMap((stickies) => {
-            return Effect.tryPromise(() =>
+        Effect.flatMap((stickies) =>
+            Effect.tryPromise(() =>
                 interaction.reply({
                     content: "資料",
                     files: [
                         {
                             name: "stickies.json",
-                            attachment: Buffer.from(
-                                JSON.stringify(stickies, null, 2),
-                            ),
+                            attachment: Buffer.from(JSON.stringify(stickies, null, 2)),
                         },
                     ],
                     withResponse: true,
                 }),
-            );
-        }),
+            ),
+        ),
     );
-};

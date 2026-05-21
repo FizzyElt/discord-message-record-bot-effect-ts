@@ -15,24 +15,14 @@ export const getEmoJiJi = (
         Effect.tryPromise(() => interaction.deferReply()),
         Effect.flatMap(() =>
             Effect.gen(function* () {
-                const left = pipe(
-                    interaction,
-                    getCommandOptionString("left"),
-                    String.trim,
-                );
-                const right = pipe(
-                    interaction,
-                    getCommandOptionString("right"),
-                    String.trim,
-                );
+                const left = pipe(interaction, getCommandOptionString("left"), String.trim);
+                const right = pipe(interaction, getCommandOptionString("right"), String.trim);
                 return yield fetchEmoji(left, right).pipe(
                     Effect.orElseSucceed(() => "emoji kitchen 找不到組合"),
                 );
             }),
         ),
-        Effect.flatMap((emojijiMsg) =>
-            Effect.tryPromise(() => interaction.editReply(emojijiMsg)),
-        ),
+        Effect.flatMap((emojijiMsg) => Effect.tryPromise(() => interaction.editReply(emojijiMsg))),
     );
 
 export const getCatImage = (

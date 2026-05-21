@@ -31,10 +31,7 @@ export const messageGuard = (
             Effect.tap((msg) =>
                 pipe(
                     hasChannel(msg.channel.id),
-                    Effect.filterOrFail(
-                        Boolean.not,
-                        () => "channel is ignored",
-                    ),
+                    Effect.filterOrFail(Boolean.not, () => "channel is ignored"),
                 ),
             ),
         );

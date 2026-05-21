@@ -6,15 +6,12 @@ import { Database, DatabaseError } from "~/services/database";
 
 export type Sticky = typeof stickiesTable.$inferSelect;
 
-export const stickyCountByGroup = (
-    group: string,
-): Effect.Effect<number, DatabaseError, Database> =>
+export const stickyCountByGroup = (group: string): Effect.Effect<number, DatabaseError, Database> =>
     pipe(
         Effect.service(Database),
         Effect.flatMap((db) =>
             Effect.tryPromise({
-                try: () =>
-                    db.$count(stickiesTable, eq(stickiesTable.group, group)),
+                try: () => db.$count(stickiesTable, eq(stickiesTable.group, group)),
                 catch: (err) => new DatabaseError({ message: err }),
             }),
         ),
@@ -26,9 +23,7 @@ export const groupCount = (): Effect.Effect<number, DatabaseError, Database> =>
         Effect.flatMap((db) =>
             Effect.tryPromise({
                 try: () =>
-                    db
-                        .select({ count: countDistinct(stickiesTable.group) })
-                        .from(stickiesTable),
+                    db.select({ count: countDistinct(stickiesTable.group) }).from(stickiesTable),
                 catch: (err) => new DatabaseError({ message: err }),
             }),
         ),
@@ -42,11 +37,7 @@ export const groupCount = (): Effect.Effect<number, DatabaseError, Database> =>
         ),
     );
 
-export const queryStickies = (): Effect.Effect<
-    Sticky[],
-    DatabaseError,
-    Database
-> =>
+export const queryStickies = (): Effect.Effect<Sticky[], DatabaseError, Database> =>
     pipe(
         Effect.service(Database),
         Effect.flatMap((db) =>
@@ -66,25 +57,19 @@ export const insertSticky = (
         Effect.service(Database),
         Effect.flatMap((db) =>
             Effect.tryPromise({
-                try: () =>
-                    db.insert(stickiesTable).values({ name, imageUrl, group }),
+                try: () => db.insert(stickiesTable).values({ name, imageUrl, group }),
                 catch: (err) => new DatabaseError({ message: err }),
             }),
         ),
         Effect.flatMap(() => Effect.void),
     );
 
-export const deleteSticky = (
-    name: string,
-): Effect.Effect<void, DatabaseError, Database> =>
+export const deleteSticky = (name: string): Effect.Effect<void, DatabaseError, Database> =>
     pipe(
         Effect.service(Database),
         Effect.flatMap((db) =>
             Effect.tryPromise({
-                try: () =>
-                    db
-                        .delete(stickiesTable)
-                        .where(eq(stickiesTable.name, name)),
+                try: () => db.delete(stickiesTable).where(eq(stickiesTable.name, name)),
                 catch: (err) => new DatabaseError({ message: err }),
             }),
         ),

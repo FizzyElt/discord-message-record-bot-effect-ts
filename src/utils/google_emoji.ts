@@ -20,11 +20,6 @@ export const fetchEmoji = (
     right: string,
 ): Effect.Effect<string, UnknownError, never> =>
     pipe(
-        Effect.tryPromise(() =>
-            fetch(createEmojiRequest(left, right)).then((res) => res.json()),
-        ),
-        Effect.map(
-            (data) =>
-                `${left} x ${right}\n${data?.results?.at(0)?.url || "找不到組合"}`,
-        ),
+        Effect.tryPromise(() => fetch(createEmojiRequest(left, right)).then((res) => res.json())),
+        Effect.map((data) => `${left} x ${right}\n${data?.results?.at(0)?.url || "找不到組合"}`),
     );

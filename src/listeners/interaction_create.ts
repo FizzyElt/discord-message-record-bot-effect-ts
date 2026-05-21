@@ -44,9 +44,7 @@ import {
 function commandOperation(
     interaction: ChatInputCommandInteraction<CacheType>,
 ): Effect.Effect<
-    | Message<boolean>
-    | InteractionResponse<boolean>
-    | InteractionCallbackResponse,
+    Message<boolean> | InteractionResponse<boolean> | InteractionCallbackResponse,
     NoSuchElementError | UnknownError,
     | ClientContext
     | ChannelService
@@ -71,16 +69,12 @@ function commandOperation(
         case CommandName.subscribe:
             return pipe(
                 Effect.service(EnvConfig),
-                Effect.flatMap(({ VOTE_ROLE_ID }) =>
-                    subscribe(VOTE_ROLE_ID)(interaction),
-                ),
+                Effect.flatMap(({ VOTE_ROLE_ID }) => subscribe(VOTE_ROLE_ID)(interaction)),
             );
         case CommandName.unsubscribe:
             return pipe(
                 Effect.service(EnvConfig),
-                Effect.flatMap(({ VOTE_ROLE_ID }) =>
-                    unsubscribe(VOTE_ROLE_ID)(interaction),
-                ),
+                Effect.flatMap(({ VOTE_ROLE_ID }) => unsubscribe(VOTE_ROLE_ID)(interaction)),
             );
 
         // sticky commands

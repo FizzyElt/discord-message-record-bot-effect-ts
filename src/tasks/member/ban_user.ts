@@ -35,13 +35,11 @@ import {
 } from "~/utils/reply_msg";
 import { createVoting } from "~/utils/vote_flow";
 
-const reactMsg =
-    (emoji: EmojiIdentifierResolvable) => (msg: InteractionCallbackResponse) =>
-        Effect.tryPromise(async () => msg.resource?.message?.react(emoji));
+const reactMsg = (emoji: EmojiIdentifierResolvable) => (msg: InteractionCallbackResponse) =>
+    Effect.tryPromise(async () => msg.resource?.message?.react(emoji));
 
-const awaitReactions =
-    (options?: AwaitReactionsOptions) => (msg: Message<boolean>) =>
-        Effect.tryPromise(() => msg.awaitReactions(options));
+const awaitReactions = (options?: AwaitReactionsOptions) => (msg: Message<boolean>) =>
+    Effect.tryPromise(() => msg.awaitReactions(options));
 
 const timeoutMember = ({
     count,
@@ -79,9 +77,7 @@ const startVoting = ({
     pipe(
         Effect.tryPromise(() =>
             interaction.reply({
-                allowedMentions: mentionRole
-                    ? { roles: [mentionRole] }
-                    : undefined,
+                allowedMentions: mentionRole ? { roles: [mentionRole] } : undefined,
                 content: startMemberVote(member, timeoutInfo, mentionRole),
                 withResponse: true,
             }),
@@ -102,8 +98,7 @@ const collectVote = ({
     pipe(
         msg,
         awaitReactions({
-            filter: (reaction, user) =>
-                Equal.equals(reaction.emoji.name, emoji) && !user.bot,
+            filter: (reaction, user) => Equal.equals(reaction.emoji.name, emoji) && !user.bot,
             time: timeoutInfo.votingMinutes * minute * 1000,
         }),
         Effect.map((collected) => {
@@ -125,9 +120,7 @@ const votingFlow = (params: {
 }) =>
     pipe(
         startVoting(params),
-        Effect.flatMap((replyMsg) =>
-            Effect.fromNullishOr(replyMsg.resource?.message),
-        ),
+        Effect.flatMap((replyMsg) => Effect.fromNullishOr(replyMsg.resource?.message)),
         // collect and react result
         Effect.tap((replyMsg) => {
             const { member, timeoutInfo, emoji } = params;
@@ -155,9 +148,7 @@ const votingFlow = (params: {
                         });
                     }
 
-                    return Effect.tryPromise(() =>
-                        replyMsg.reply(memberFree(member, count)),
-                    );
+                    return Effect.tryPromise(() => replyMsg.reply(memberFree(member, count)));
                 }),
             );
         }),
@@ -224,18 +215,14 @@ export const banUser = (
     ClientContext | EnvConfig | TimeoutInfoListService | VotingService
 > =>
     Effect.gen(function* () {
-        const timeoutInfo = yield* getTimeoutInfo(
-            getCommandOptionString("time")(interaction),
-        );
+        const timeoutInfo = yield* getTimeoutInfo(getCommandOptionString("time")(interaction));
         const client = yield* ClientContext;
         const env = yield* EnvConfig;
 
         const userId = getCommandOptionString("mention_user")(interaction);
         const member = yield* pipe(
             Effect.fromNullishOr(interaction.guild),
-            Effect.flatMap((guild) =>
-                findUserFromMembers(userId)(guild.members),
-            ),
+            Effect.flatMap((guild) => findUserFromMembers(userId)(guild.members)),
         );
 
         const userVoting = yield* isUserVoting(member.id);

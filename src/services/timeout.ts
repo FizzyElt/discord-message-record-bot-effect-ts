@@ -1,11 +1,4 @@
-import {
-    Context,
-    Effect,
-    Equal,
-    Layer,
-    pipe,
-    Array as ReadonlyArray,
-} from "effect";
+import { Context, Effect, Equal, Layer, pipe, Array as ReadonlyArray } from "effect";
 import { NoSuchElementError } from "effect/Cause";
 
 export type TimeoutInfo = {
@@ -71,18 +64,13 @@ export class TimeoutInfoListService extends Context.Service<
     Array<TimeoutInfo>
 >()("TimeoutInfoListService") {}
 
-export const TimeoutInfoListLive = Layer.succeed(
-    TimeoutInfoListService,
-    choiceList,
-);
+export const TimeoutInfoListLive = Layer.succeed(TimeoutInfoListService, choiceList);
 
 export const getTimeoutInfo = (
     key: string,
 ): Effect.Effect<TimeoutInfo, NoSuchElementError, TimeoutInfoListService> =>
     pipe(
         Effect.service(TimeoutInfoListService),
-        Effect.map(
-            ReadonlyArray.findFirst((info) => Equal.equals(info.key, key)),
-        ),
+        Effect.map(ReadonlyArray.findFirst((info) => Equal.equals(info.key, key))),
         Effect.flatMap(Effect.fromOption),
     );

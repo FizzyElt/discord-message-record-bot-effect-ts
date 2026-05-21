@@ -5,14 +5,7 @@ import type {
     InteractionResponse,
 } from "discord.js";
 
-import {
-    Effect,
-    Equal,
-    flow,
-    Option,
-    pipe,
-    Array as ReadonlyArray,
-} from "effect";
+import { Effect, Equal, flow, Option, pipe, Array as ReadonlyArray } from "effect";
 import { UnknownError } from "effect/Cause";
 
 import { ClientContext } from "~/services";
@@ -56,19 +49,13 @@ const excludeChannels = (channel: Channel) =>
 
 export const addChannelFlow = (
     interaction: ChatInputCommandInteraction,
-): Effect.Effect<
-    InteractionResponse<boolean>,
-    UnknownError,
-    ClientContext | ChannelService
-> =>
+): Effect.Effect<InteractionResponse<boolean>, UnknownError, ClientContext | ChannelService> =>
     Effect.gen(function* () {
         const client = yield* ClientContext;
 
         const idOrName = pipe(interaction, getCommandOptionString("id"));
 
-        const channel = yield* Effect.tryPromise(() =>
-            client.channels.fetch(idOrName),
-        );
+        const channel = yield* Effect.tryPromise(() => client.channels.fetch(idOrName));
 
         return yield* pipe(
             Option.fromNullOr(channel),
@@ -76,9 +63,7 @@ export const addChannelFlow = (
                 onNone: () => Effect.succeed("找不到頻道"),
                 onSome: excludeChannels,
             }),
-            Effect.flatMap((msg) =>
-                Effect.tryPromise(() => interaction.reply(msg)),
-            ),
+            Effect.flatMap((msg) => Effect.tryPromise(() => interaction.reply(msg))),
         );
     });
 
@@ -105,11 +90,7 @@ const includeChannels = (channel: Channel) =>
 
 export const removeChannelFlow = (
     interaction: ChatInputCommandInteraction,
-): Effect.Effect<
-    InteractionResponse<boolean>,
-    UnknownError,
-    ChannelService | ClientContext
-> =>
+): Effect.Effect<InteractionResponse<boolean>, UnknownError, ChannelService | ClientContext> =>
     Effect.gen(function* () {
         const client = yield* ClientContext;
 
@@ -118,17 +99,13 @@ export const removeChannelFlow = (
             getCommandOptionString("id"),
             (idOrName) =>
                 Option.fromNullishOr(
-                    client.channels.cache.find((channel) =>
-                        Equal.equals(channel.id, idOrName),
-                    ),
+                    client.channels.cache.find((channel) => Equal.equals(channel.id, idOrName)),
                 ),
             Option.match({
                 onSome: includeChannels,
                 onNone: () => Effect.succeed("找不到頻道"),
             }),
-            Effect.flatMap((msg) =>
-                Effect.tryPromise(() => interaction.reply(msg)),
-            ),
+            Effect.flatMap((msg) => Effect.tryPromise(() => interaction.reply(msg))),
         );
     });
 
@@ -144,7 +121,5 @@ export const listChannels = (
                 ReadonlyArray.join("\n"),
             ),
         ),
-        Effect.flatMap((msg) =>
-            Effect.tryPromise(() => interaction.reply(msg)),
-        ),
+        Effect.flatMap((msg) => Effect.tryPromise(() => interaction.reply(msg))),
     );

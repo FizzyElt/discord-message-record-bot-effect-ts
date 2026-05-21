@@ -12,9 +12,7 @@ export const getCommandOptionOfType =
         interaction: ChatInputCommandInteraction,
     ): Option.Option<CommandInteractionOption<CacheType>> =>
         pipe(
-            interaction.options.data.find(({ name }) =>
-                Equal.equals(name, optionName),
-            ),
+            interaction.options.data.find(({ name }) => Equal.equals(name, optionName)),
             Option.fromNullishOr,
             Option.filter((option) => Equal.equals(option.type, type)),
         );
@@ -24,10 +22,7 @@ export const getCommandOptionString =
     (interaction: ChatInputCommandInteraction): string =>
         pipe(
             interaction,
-            getCommandOptionOfType(
-                ApplicationCommandOptionType.String,
-                optionName,
-            ),
+            getCommandOptionOfType(ApplicationCommandOptionType.String, optionName),
             Option.map(Struct.get("value")),
             Option.filter(String.isString),
             Option.getOrElse(Function.constant("")),
@@ -38,10 +33,7 @@ export const getCommandOptionInteger =
     (interaction: ChatInputCommandInteraction): number =>
         pipe(
             interaction,
-            getCommandOptionOfType(
-                ApplicationCommandOptionType.Integer,
-                optionName,
-            ),
+            getCommandOptionOfType(ApplicationCommandOptionType.Integer, optionName),
             Option.map(Struct.get("value")),
             Option.filter(Number.isNumber),
             Option.getOrElse(Function.constant(0)),

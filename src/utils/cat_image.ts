@@ -16,8 +16,6 @@ export const fetchCatImage = (): Effect.Effect<string, never, EnvConfig> =>
                 ).then((res) => res.json()),
             ),
         ),
-        Effect.flatMap((data) =>
-            Effect.fromNullishOr(data?.at(0)?.url as string | undefined),
-        ),
+        Effect.flatMap((data) => Effect.fromNullishOr(data?.at(0)?.url as string | undefined)),
         Effect.orElseSucceed(() => "貓貓躲起來了，請重新引誘"),
     );

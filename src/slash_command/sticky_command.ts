@@ -38,7 +38,5 @@ export const stickyCommands = [
                 .setDescription("sticky name")
                 .setRequired(true),
         ),
-    new SlashCommandBuilder()
-        .setName(StickyCommandName.backup_sticky)
-        .setDescription("備份貼圖"),
+    new SlashCommandBuilder().setName(StickyCommandName.backup_sticky).setDescription("備份貼圖"),
 ];

@@ -1,25 +1,14 @@
 import { format } from "date-fns";
 import { MessageReferenceType } from "discord-api-types/v10";
-import {
-    bold,
-    type Message,
-    type PartialMessage,
-    strikethrough,
-} from "discord.js";
+import { bold, type Message, type PartialMessage, strikethrough } from "discord.js";
 import { Effect, pipe, Array as ReadonlyArray, String } from "effect";
 import { NoSuchElementError, UnknownError } from "effect/Cause";
 
 import { ClientContext, EnvConfig } from "~/services";
-import {
-    getTextChannelByClient,
-    isPublicThreadChannel,
-    isTextChannel,
-} from "~/utils/channel";
+import { getTextChannelByClient, isPublicThreadChannel, isTextChannel } from "~/utils/channel";
 
 const getChannelNameByMsg = (msg: Message<boolean> | PartialMessage) =>
-    isTextChannel(msg.channel) || isPublicThreadChannel(msg.channel)
-        ? msg.channel.name
-        : "Other";
+    isTextChannel(msg.channel) || isPublicThreadChannel(msg.channel) ? msg.channel.name : "Other";
 
 const getUserNameByMsg = (msg: Message<boolean> | PartialMessage) =>
     msg.member?.displayName
@@ -30,21 +19,17 @@ const getSendChannel = () =>
     Effect.gen(function* () {
         const client = yield* ClientContext;
         const env = yield* EnvConfig;
-        return yield* getTextChannelByClient(env.BOT_SENDING_CHANNEL_ID)(
-            client,
+        return yield* getTextChannelByClient(env.BOT_SENDING_CHANNEL_ID)(client).pipe(
+            Effect.fromOption,
         );
     });
 
 // ======================================================
 
-const getCreatedMsgString = (
-    msg: Message<boolean> | PartialMessage,
-): string => {
+const getCreatedMsgString = (msg: Message<boolean> | PartialMessage): string => {
     const channelName = getChannelNameByMsg(msg);
     const userName = getUserNameByMsg(msg);
-    const timeString = bold(
-        `[Created：${format(msg.createdAt, "yyyy/MM/dd HH:mm")}]`,
-    );
+    const timeString = bold(`[Created：${format(msg.createdAt, "yyyy/MM/dd HH:mm")}]`);
 
     return pipe(
         [
@@ -59,11 +44,7 @@ const getCreatedMsgString = (
 
 export const recordCreatedMsg = (
     msg: Message<boolean>,
-): Effect.Effect<
-    Message<boolean>,
-    NoSuchElementError | UnknownError,
-    ClientContext | EnvConfig
-> =>
+): Effect.Effect<Message<boolean>, NoSuchElementError | UnknownError, ClientContext | EnvConfig> =>
     pipe(
         Effect.Do,
         Effect.bind("sendChannel", getSendChannel),
@@ -90,14 +71,10 @@ export const recordCreatedMsg = (
 
 // ======================================================
 
-const getDeletedMsgString = (
-    msg: Message<boolean> | PartialMessage,
-): string => {
+const getDeletedMsgString = (msg: Message<boolean> | PartialMessage): string => {
     const channelName = getChannelNameByMsg(msg);
     const userName = getUserNameByMsg(msg);
-    const timeString = bold(
-        `[Deleted：${format(new Date(), "yyyy/MM/dd HH:mm")}]`,
-    );
+    const timeString = bold(`[Deleted：${format(new Date(), "yyyy/MM/dd HH:mm")}]`);
 
     return pipe(
         [
@@ -112,11 +89,7 @@ const getDeletedMsgString = (
 
 export const recordDeleteMsg = (
     msg: Message<boolean> | PartialMessage,
-): Effect.Effect<
-    Message<boolean>,
-    NoSuchElementError | UnknownError,
-    ClientContext | EnvConfig
-> =>
+): Effect.Effect<Message<boolean>, NoSuchElementError | UnknownError, ClientContext | EnvConfig> =>
     pipe(
         getSendChannel(),
         Effect.flatMap((sendChannel) =>
@@ -138,9 +111,7 @@ const getUpdatedMsgString = (
 ): string => {
     const channelName = getChannelNameByMsg(msg);
     const userName = getUserNameByMsg(msg);
-    const timeString = bold(
-        `[Edited：${format(msg.editedAt || new Date(), "yyyy/MM/dd HH:mm")}]`,
-    );
+    const timeString = bold(`[Edited：${format(msg.editedAt || new Date(), "yyyy/MM/dd HH:mm")}]`);
 
     return pipe(
         [
@@ -158,11 +129,7 @@ const getUpdatedMsgString = (
 export const recordUpdateMsg = (
     oldMsg: Message<boolean> | PartialMessage,
     msg: Message<boolean> | PartialMessage,
-): Effect.Effect<
-    Message<boolean>,
-    NoSuchElementError | UnknownError,
-    EnvConfig | ClientContext
-> =>
+): Effect.Effect<Message<boolean>, NoSuchElementError | UnknownError, EnvConfig | ClientContext> =>
     pipe(
         getSendChannel(),
         Effect.flatMap((sendChannel) =>

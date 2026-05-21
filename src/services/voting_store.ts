@@ -40,35 +40,25 @@ export const VotingServiceLive = Layer.effect(
     }),
 );
 
-export const getVotingStore = (): Effect.Effect<
-    VotingStore,
-    never,
-    VotingService
-> =>
+export const getVotingStore = (): Effect.Effect<VotingStore, never, VotingService> =>
     pipe(
         Effect.service(VotingService),
         Effect.flatMap((service) => service.getVotingStore()),
     );
 
-export const removeVoting = (
-    userId: string,
-): Effect.Effect<void, never, VotingService> =>
+export const removeVoting = (userId: string): Effect.Effect<void, never, VotingService> =>
     pipe(
         Effect.service(VotingService),
         Effect.flatMap((service) => service.removeVoting(userId)),
     );
 
-export const isUserVoting = (
-    userId: string,
-): Effect.Effect<boolean, never, VotingService> =>
+export const isUserVoting = (userId: string): Effect.Effect<boolean, never, VotingService> =>
     pipe(
         Effect.service(VotingService),
         Effect.flatMap((service) => service.isUserVoting(userId)),
     );
 
-export const addNewVoting = (
-    userId: string,
-): Effect.Effect<void, never, VotingService> =>
+export const addNewVoting = (userId: string): Effect.Effect<void, never, VotingService> =>
     pipe(
         Effect.service(VotingService),
         Effect.flatMap((service) => service.addNewVoting(userId)),

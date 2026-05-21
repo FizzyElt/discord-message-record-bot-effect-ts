@@ -1,8 +1,4 @@
-import type {
-    Message,
-    OmitPartialGroupDMChannel,
-    PartialMessage,
-} from "discord.js";
+import type { Message, OmitPartialGroupDMChannel, PartialMessage } from "discord.js";
 
 import { Effect, pipe } from "effect";
 

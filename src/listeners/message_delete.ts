@@ -1,9 +1,4 @@
-import type {
-    Awaitable,
-    Message,
-    OmitPartialGroupDMChannel,
-    PartialMessage,
-} from "discord.js";
+import type { Awaitable, Message, OmitPartialGroupDMChannel, PartialMessage } from "discord.js";
 
 import { Effect, pipe } from "effect";
 
@@ -13,9 +8,7 @@ import { messageGuard, recordDeleteMsg } from "~/tasks";
 
 export const messageDeleteListener =
     (live: typeof MainLive) =>
-    (
-        msg: OmitPartialGroupDMChannel<Message<boolean> | PartialMessage>,
-    ): Awaitable<void> => {
+    (msg: OmitPartialGroupDMChannel<Message<boolean> | PartialMessage>): Awaitable<void> => {
         const program = pipe(
             messageGuard(msg),
             Effect.flatMap(recordDeleteMsg),

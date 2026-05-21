@@ -9,10 +9,12 @@ import { choiceList } from "~/services/timeout";
 const createStringChoice = (
     name: string,
     value: string,
-): APIApplicationCommandOptionChoice<string> => ({
-    name: name,
-    value: value,
-});
+): APIApplicationCommandOptionChoice<string> => {
+    return {
+        name: name,
+        value: value,
+    };
+};
 
 export enum CommandName {
     add_channels = "add_channels",
@@ -66,24 +68,14 @@ export const commands = [
             new SlashCommandStringOption()
                 .setName("time")
                 .setDescription("time")
-                .setChoices(
-                    ...choiceList.map((info) =>
-                        createStringChoice(info.name, info.key),
-                    ),
-                )
+                .setChoices(...choiceList.map((info) => createStringChoice(info.name, info.key)))
                 .setRequired(true),
         ),
 
-    new SlashCommandBuilder()
-        .setName(CommandName.timeout_info)
-        .setDescription("投票規則"),
+    new SlashCommandBuilder().setName(CommandName.timeout_info).setDescription("投票規則"),
 
-    new SlashCommandBuilder()
-        .setName(CommandName.subscribe)
-        .setDescription("成為民主的一員"),
-    new SlashCommandBuilder()
-        .setName(CommandName.unsubscribe)
-        .setDescription("取消民主的一員"),
+    new SlashCommandBuilder().setName(CommandName.subscribe).setDescription("成為民主的一員"),
+    new SlashCommandBuilder().setName(CommandName.unsubscribe).setDescription("取消民主的一員"),
     new SlashCommandBuilder()
         .setName(CommandName.get_off_work)
         .setDescription("今天這個逼班就上到這了"),

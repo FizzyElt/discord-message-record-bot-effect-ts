@@ -1,30 +1,16 @@
-import type { NoSuchElementError } from "effect/Cause";
-
 import {
     SlashCommandBuilder,
     SlashCommandStringOption,
     SlashCommandSubcommandBuilder,
 } from "discord.js";
-import {
-    Array,
-    Context,
-    Data,
-    Effect,
-    Equal,
-    Layer,
-    Number,
-    pipe,
-    Ref,
-} from "effect";
+import { Array, Context, Data, Effect, Equal, Layer, Number, pipe, Ref } from "effect";
+import { NoSuchElementError } from "effect/Cause";
 
 import * as StickyModel from "~/model/sticky";
 import { commands } from "~/slash_command/main_command";
 import { memeCommands } from "~/slash_command/meme_command";
 import { pushCommands } from "~/slash_command/push_commands";
-import {
-    StickyCommandName,
-    stickyCommands,
-} from "~/slash_command/sticky_command";
+import { StickyCommandName, stickyCommands } from "~/slash_command/sticky_command";
 
 import { Database, DatabaseError } from "./database";
 import { EnvConfig } from "./env";
@@ -46,10 +32,12 @@ const createStickyCommand = (data: StickyModel.Sticky[]) => {
                         .setName("name")
                         .setDescription("name")
                         .setChoices(
-                            ...stickies.map(({ name }) => ({
-                                name,
-                                value: name,
-                            })),
+                            ...stickies.map(({ name }) => {
+                                return {
+                                    name,
+                                    value: name,
+                                };
+                            }),
                         ),
                 ),
         );
@@ -62,11 +50,7 @@ const syncData = () =>
         StickyModel.queryStickies(),
         Effect.tap((stickies) =>
             Equal.equals(stickies.length, 0)
-                ? pushCommands([
-                      ...commands,
-                      ...memeCommands,
-                      ...stickyCommands,
-                  ])
+                ? pushCommands([...commands, ...memeCommands, ...stickyCommands])
                 : pushCommands([
                       ...commands,
                       ...memeCommands,
@@ -76,9 +60,7 @@ const syncData = () =>
         ),
     );
 
-class StickyOptionLimitError extends Data.TaggedError(
-    "StickyOptionLimitError",
-)<{
+class StickyOptionLimitError extends Data.TaggedError("StickyOptionLimitError")<{
     message: string;
 }> {}
 
@@ -86,10 +68,9 @@ class GroupLimitError extends Data.TaggedError("GroupLimitError")<{
     message: string;
 }> {}
 
-export class StickyService extends Context.Service<
-    StickyService,
-    Ref.Ref<StickyModel.Sticky[]>
->()("StickyService") {}
+export class StickyService extends Context.Service<StickyService, Ref.Ref<StickyModel.Sticky[]>>()(
+    "StickyService",
+) {}
 
 export const StickyStoreLive = Layer.effect(
     StickyService,
@@ -109,9 +90,9 @@ export const getSticky = (
         Effect.service(StickyService),
         Effect.flatMap(Ref.get),
         Effect.flatMap((stickies) =>
-            Array.findFirst(stickies, (sticky) =>
-                Equal.equals(sticky.name, name),
-            ).asEffect(),
+            Array.findFirst(stickies, (sticky) => Equal.equals(sticky.name, name)).pipe(
+                Effect.fromOption,
+            ),
         ),
     );
 

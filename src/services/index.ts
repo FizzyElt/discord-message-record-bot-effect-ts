@@ -19,10 +19,4 @@ export const MainLive = pipe(
     Layer.provide(NodeFileSystem.layer),
 );
 
-export {
-    ChannelService,
-    ClientContext,
-    EnvConfig,
-    TimeoutInfoListService,
-    VotingService,
-};
+export { ChannelService, ClientContext, EnvConfig, TimeoutInfoListService, VotingService };

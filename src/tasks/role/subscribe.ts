@@ -13,9 +13,8 @@ import { findUserFromMembers } from "~/utils/member";
 const addRoleToMember = (roleId: string) => (member: GuildMember) =>
     Effect.tryPromise(() => member.roles.add(roleId));
 
-const removeRoleFromMember =
-    (roleId: RoleResolvable) => (member: GuildMember) =>
-        Effect.tryPromise(() => member.roles.remove(roleId));
+const removeRoleFromMember = (roleId: RoleResolvable) => (member: GuildMember) =>
+    Effect.tryPromise(() => member.roles.remove(roleId));
 
 export const subscribe =
     (roleId: string) =>
@@ -37,9 +36,7 @@ export const subscribe =
                     Effect.flatMap(addRoleToMember(roleId)),
                 ),
             ),
-            Effect.flatMap((guild) =>
-                Effect.tryPromise(() => guild.roles.fetch(roleId)),
-            ),
+            Effect.flatMap((guild) => Effect.tryPromise(() => guild.roles.fetch(roleId))),
             Effect.flatMap((roleInfo) =>
                 Effect.tryPromise(() =>
                     interaction.reply({
@@ -71,9 +68,7 @@ export const unsubscribe =
                     Effect.flatMap(removeRoleFromMember(roleId)),
                 ),
             ),
-            Effect.flatMap((guild) =>
-                Effect.tryPromise(() => guild.roles.fetch(roleId)),
-            ),
+            Effect.flatMap((guild) => Effect.tryPromise(() => guild.roles.fetch(roleId))),
             Effect.flatMap((roleInfo) =>
                 Effect.tryPromise(() =>
                     interaction.reply({

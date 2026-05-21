@@ -20,13 +20,8 @@ export class ChannelService extends Context.Service<
     {
         getChannelStore: () => ChannelStore;
         hasChannel: (channelId: string) => Effect.Effect<boolean>;
-        addChannel: (channelInfo: {
-            id: string;
-            name: string;
-        }) => Effect.Effect<void>;
-        addChannels: (
-            list: Array<{ id: string; name: string }>,
-        ) => Effect.Effect<void>;
+        addChannel: (channelInfo: { id: string; name: string }) => Effect.Effect<void>;
+        addChannels: (list: Array<{ id: string; name: string }>) => Effect.Effect<void>;
         removeChannel: (id: string) => Effect.Effect<void>;
         removeChannels: (ids: Array<string>) => Effect.Effect<void>;
     }
@@ -44,17 +39,10 @@ export const ChannelServiceLive = Layer.effect(
 
         const getChannelStore = () => channelStore;
 
-        const hasChannel = (id: string) =>
-            Effect.succeed(MutableHashMap.has(channelStore, id));
+        const hasChannel = (id: string) => Effect.succeed(MutableHashMap.has(channelStore, id));
 
         const addChannel = (channelInfo: { id: string; name: string }) =>
-            Effect.succeed(
-                MutableHashMap.set(
-                    channelStore,
-                    channelInfo.id,
-                    channelInfo.name,
-                ),
-            );
+            Effect.succeed(MutableHashMap.set(channelStore, channelInfo.id, channelInfo.name));
 
         const addChannels = (list: Array<{ id: string; name: string }>) => {
             for (const { id, name } of list) {
@@ -65,8 +53,10 @@ export const ChannelServiceLive = Layer.effect(
         };
 
         const removeChannel = (id: string) => {
-            if (Equal.equals(id, env.BOT_SENDING_CHANNEL_ID))
+            if (Equal.equals(id, env.BOT_SENDING_CHANNEL_ID)) {
                 return Effect.void;
+            }
+
             return Effect.succeed(MutableHashMap.remove(channelStore, id));
         };
 
@@ -94,17 +84,13 @@ export const ChannelServiceLive = Layer.effect(
     }),
 );
 
-export const removeChannels = (
-    ids: Array<string>,
-): Effect.Effect<void, never, ChannelService> =>
+export const removeChannels = (ids: Array<string>): Effect.Effect<void, never, ChannelService> =>
     pipe(
         Effect.service(ChannelService),
         Effect.flatMap((service) => service.removeChannels(ids)),
     );
 
-export const removeChannel = (
-    id: string,
-): Effect.Effect<void, never, ChannelService> =>
+export const removeChannel = (id: string): Effect.Effect<void, never, ChannelService> =>
     pipe(
         Effect.service(ChannelService),
         Effect.flatMap((service) => service.removeChannel(id)),
@@ -127,19 +113,13 @@ export const addChannels = (
         Effect.flatMap((service) => service.addChannels(list)),
     );
 
-export const getChannelStore = (): Effect.Effect<
-    ChannelStore,
-    never,
-    ChannelService
-> =>
+export const getChannelStore = (): Effect.Effect<ChannelStore, never, ChannelService> =>
     pipe(
         Effect.service(ChannelService),
         Effect.map((service) => service.getChannelStore()),
     );
 
-export const hasChannel = (
-    channelId: string,
-): Effect.Effect<boolean, never, ChannelService> =>
+export const hasChannel = (channelId: string): Effect.Effect<boolean, never, ChannelService> =>
     pipe(
         Effect.service(ChannelService),
         Effect.flatMap((service) => service.hasChannel(channelId)),

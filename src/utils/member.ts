@@ -9,13 +9,10 @@ import { UnknownError } from "effect/Cause";
 
 export const findUserFromMembers =
     (idOrMention: string) =>
-    (
-        members: GuildMemberManager,
-    ): Effect.Effect<GuildMember, UnknownError, never> => {
+    (members: GuildMemberManager): Effect.Effect<GuildMember, UnknownError, never> => {
         if (MessageMentions.UsersPattern.test(idOrMention)) {
-            return pipe(
-                MessageMentions.UsersPattern.exec(idOrMention)?.at(1) || "",
-                (id) => Effect.tryPromise(() => members.fetch(id)),
+            return pipe(MessageMentions.UsersPattern.exec(idOrMention)?.at(1) || "", (id) =>
+                Effect.tryPromise(() => members.fetch(id)),
             );
         }
 

@@ -6,9 +6,7 @@ export enum MemeCommandName {
 }
 
 export const memeCommands = [
-    new SlashCommandBuilder()
-        .setName(MemeCommandName.cat)
-        .setDescription("貓貓"),
+    new SlashCommandBuilder().setName(MemeCommandName.cat).setDescription("貓貓"),
 
     new SlashCommandBuilder()
         .setName(MemeCommandName.emoJiji)
