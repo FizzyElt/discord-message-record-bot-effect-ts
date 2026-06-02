@@ -18,21 +18,21 @@
         "command:clear": "tsx ./src/slash_command/clear.ts"
     },
     "dependencies": {
-        "@effect/platform-node": "4.0.0-beta.70",
-        "@libsql/client": "^0.17.0",
-        "date-fns": "^4.1.0",
+        "@effect/platform-node": "4.0.0-beta.75",
+        "@libsql/client": "^0.17.3",
+        "date-fns": "^4.4.0",
         "date-fns-tz": "^3.2.0",
-        "discord-api-types": "^0.38.37",
-        "discord.js": "^14.25.1",
-        "drizzle-orm": "^0.45.1",
-        "effect": "4.0.0-beta.70"
+        "discord-api-types": "^0.38.48",
+        "discord.js": "^14.26.4",
+        "drizzle-orm": "^0.45.2",
+        "effect": "4.0.0-beta.75"
     },
     "devDependencies": {
-        "@types/node": "^24.10.3",
-        "drizzle-kit": "^0.31.8",
-        "oxfmt": "^0.51.0",
-        "oxlint": "^1.66.0",
-        "tsx": "^4.21.0",
+        "@types/node": "^24.12.4",
+        "drizzle-kit": "^0.31.10",
+        "oxfmt": "^0.53.0",
+        "oxlint": "^1.67.0",
+        "tsx": "^4.22.4",
         "typescript": "^6.0.3"
     },
     "engines": {
