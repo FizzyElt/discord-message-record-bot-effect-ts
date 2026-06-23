@@ -28,3 +28,6 @@ minimumReleaseAgeExclude:
     - "@oxfmt/binding-win32-x64-msvc@0.53.0"
     - effect@4.0.0-beta.75
     - oxfmt@0.53.0
+    - "@effect/platform-node-shared@4.0.0-beta.86"
+    - "@effect/platform-node@4.0.0-beta.86"
+    - effect@4.0.0-beta.86
