@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@effect/platform-node':
-        specifier: 4.0.0-beta.86
-        version: 4.0.0-beta.86(effect@4.0.0-beta.86)(ioredis@5.11.1)
+        specifier: 4.0.0-beta.93
+        version: 4.0.0-beta.93(effect@4.0.0-beta.93)(ioredis@5.11.1)
       '@libsql/client':
         specifier: ^0.17.4
         version: 0.17.4
@@ -30,8 +30,8 @@ importers:
         specifier: ^0.45.2
         version: 0.45.2(@libsql/client@0.17.4)
       effect:
-        specifier: 4.0.0-beta.86
-        version: 4.0.0-beta.86
+        specifier: 4.0.0-beta.93
+        version: 4.0.0-beta.93
     devDependencies:
       '@types/node':
         specifier: ^24.13.2
@@ -85,17 +85,17 @@ packages:
   '@drizzle-team/brocli@0.10.2':
     resolution: {integrity: sha512-z33Il7l5dKjUgGULTqBsQBQwckHh5AbIuxhdsIxDDiZAzBOrZO6q9ogcWC65kU382AfynTfgNumVcNIjuIua6w==}
 
-  '@effect/platform-node-shared@4.0.0-beta.86':
-    resolution: {integrity: sha512-QNixdacCFZ001duRVZTIRUa6BS1YkU9cbC8yN7NnAMc0upUiIuLI6YO9jKMG3HetW1MjZ3PeSOzMM6nneUYPow==}
+  '@effect/platform-node-shared@4.0.0-beta.93':
+    resolution: {integrity: sha512-XUqZ2u5GglBqY8q2jj4Q7GjN5K/enedk8auZM9rY/l5a/myaQTrQp3QnvpIK4/Yg0WFjLGuctGPMKWRk3OLIrA==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
-      effect: ^4.0.0-beta.86
+      effect: ^4.0.0-beta.93
 
-  '@effect/platform-node@4.0.0-beta.86':
-    resolution: {integrity: sha512-K9omw3cICZAHV4caMD9ZVixmnMYZ97+5A8d11orza0VcJiSLoHmwiC9X9nxL+mAcFIUTMvKt4EVR7mCk5hbUzg==}
+  '@effect/platform-node@4.0.0-beta.93':
+    resolution: {integrity: sha512-QagsCGR0ZOXaCQqS5qGR2mcDng4LiP2bYhiiX1D6UC8cT9vsusVVOHiJWn8CupeDx+yVnPcu81QmA/SDt6GM1w==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
-      effect: ^4.0.0-beta.86
+      effect: ^4.0.0-beta.93
       ioredis: ^5.7.0
 
   '@esbuild-kit/core-utils@3.3.2':
@@ -1055,8 +1055,8 @@ packages:
       sqlite3:
         optional: true
 
-  effect@4.0.0-beta.86:
-    resolution: {integrity: sha512-+Y16hy3LhAju/FM3dz3Xp+aGi8dw9AtEzswcvwxREpeEPq+rL8TFS1PgWAO1+/3kKKH4bq9NdBGtfhHzM2K7Ow==}
+  effect@4.0.0-beta.93:
+    resolution: {integrity: sha512-wNS5MKFa3C42uBfIDik2oJ78lhpoYz2hN4oBR0229BeeDCIrkg/FiOvoiPGdCVlWa7MEKxEL5I0f8AILVHSD9A==}
 
   esbuild@0.18.20:
     resolution: {integrity: sha512-ceqxoedUrcayh7Y7ZX6NdbbDzGROiyVBgC4PriJThBKSVPWnnFHZAkfI1lJT8QFkOwH4qOS2SJkS4wvpGl8BpA==}
@@ -1303,19 +1303,19 @@ snapshots:
 
   '@drizzle-team/brocli@0.10.2': {}
 
-  '@effect/platform-node-shared@4.0.0-beta.86(effect@4.0.0-beta.86)':
+  '@effect/platform-node-shared@4.0.0-beta.93(effect@4.0.0-beta.93)':
     dependencies:
       '@types/ws': 8.18.1
-      effect: 4.0.0-beta.86
+      effect: 4.0.0-beta.93
       ws: 8.21.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@effect/platform-node@4.0.0-beta.86(effect@4.0.0-beta.86)(ioredis@5.11.1)':
+  '@effect/platform-node@4.0.0-beta.93(effect@4.0.0-beta.93)(ioredis@5.11.1)':
     dependencies:
-      '@effect/platform-node-shared': 4.0.0-beta.86(effect@4.0.0-beta.86)
-      effect: 4.0.0-beta.86
+      '@effect/platform-node-shared': 4.0.0-beta.93(effect@4.0.0-beta.93)
+      effect: 4.0.0-beta.93
       ioredis: 5.11.1
       mime: 4.1.0
       undici: 8.5.0
@@ -1825,7 +1825,7 @@ snapshots:
     optionalDependencies:
       '@libsql/client': 0.17.4
 
-  effect@4.0.0-beta.86:
+  effect@4.0.0-beta.93:
     dependencies:
       '@standard-schema/spec': 1.1.0
       fast-check: 4.8.0
