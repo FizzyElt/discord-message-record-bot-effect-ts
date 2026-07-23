@@ -2,11 +2,6 @@ allowBuilds:
     esbuild: true
     msgpackr-extract: true
 minimumReleaseAgeExclude:
-    - "@effect/platform-node-shared@4.0.0-beta.75"
-    - "@effect/platform-node@4.0.0-beta.75"
-    - effect@4.0.0-beta.75
-    - "@effect/platform-node-shared@4.0.0-beta.75"
-    - "@effect/platform-node@4.0.0-beta.75"
     - "@oxfmt/binding-android-arm-eabi@0.53.0"
     - "@oxfmt/binding-android-arm64@0.53.0"
     - "@oxfmt/binding-darwin-arm64@0.53.0"
@@ -26,8 +21,7 @@ minimumReleaseAgeExclude:
     - "@oxfmt/binding-win32-arm64-msvc@0.53.0"
     - "@oxfmt/binding-win32-ia32-msvc@0.53.0"
     - "@oxfmt/binding-win32-x64-msvc@0.53.0"
-    - effect@4.0.0-beta.75
     - oxfmt@0.53.0
-    - "@effect/platform-node-shared@4.0.0-beta.86"
-    - "@effect/platform-node@4.0.0-beta.86"
-    - effect@4.0.0-beta.86
+    - "@effect/platform-node-shared@4.0.0-beta.101"
+    - "@effect/platform-node@4.0.0-beta.101"
+    - effect@4.0.0-beta.101
