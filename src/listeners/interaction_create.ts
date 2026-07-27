@@ -18,25 +18,18 @@ import {
     type TimeoutInfoListService,
     type VotingService,
 } from "~/services";
-import type { Database } from "~/services/database";
-import type { StickyService } from "~/services/sticky_store";
 import { CommandName } from "~/slash_command/main_command";
 import { MemeCommandName } from "~/slash_command/meme_command";
-import { StickyCommandName } from "~/slash_command/sticky_command";
 import {
     addChannelFlow,
-    backupSticky,
     banUser,
-    createSticky,
-    deleteSticky,
     getCatImage,
     getEmoJiJi,
+    getOffWork,
     listChannels,
     removeChannelFlow,
-    showSticky,
     subscribe,
     unsubscribe,
-    getOffWork,
 } from "~/tasks";
 
 function commandOperation(
@@ -51,8 +44,6 @@ function commandOperation(
     | EnvConfig
     | TimeoutInfoListService
     | VotingService
-    | StickyService
-    | Database
 > {
     switch (interaction.commandName) {
         case CommandName.add_channels:
@@ -80,16 +71,6 @@ function commandOperation(
                     unsubscribe(VOTE_ROLE_ID)(interaction),
                 ),
             );
-
-        // sticky commands
-        case StickyCommandName.create_sticky:
-            return createSticky(interaction);
-        case StickyCommandName.delete_sticky:
-            return deleteSticky(interaction);
-        case StickyCommandName.sticky:
-            return showSticky(interaction);
-        case StickyCommandName.backup_sticky:
-            return backupSticky(interaction);
 
         // meme commands
         case MemeCommandName.emoJiji:

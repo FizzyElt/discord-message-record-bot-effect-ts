@@ -18,30 +18,21 @@
         "command:clear": "tsx ./src/slash_command/clear.ts"
     },
     "dependencies": {
-        "@libsql/client": "^0.17.0",
-        "date-fns": "^4.1.0",
+        "date-fns": "^4.4.0",
         "date-fns-tz": "^3.2.0",
-        "discord-api-types": "^0.38.37",
-        "discord.js": "^14.25.1",
-        "drizzle-orm": "^0.45.1",
-        "effect": "^3.19.13"
+        "discord-api-types": "^0.38.51",
+        "discord.js": "^14.27.0",
+        "effect": "^3.22.0"
     },
     "devDependencies": {
-        "@types/node": "^24.10.3",
-        "drizzle-kit": "^0.31.8",
+        "@types/node": "^24.13.3",
         "oxfmt": "^0.41.0",
-        "oxlint": "^1.56.0",
-        "tsx": "^4.21.0",
+        "oxlint": "^1.75.0",
+        "tsx": "^4.23.1",
         "typescript": "^5.9.3"
     },
     "engines": {
         "node": ">=22.0.0",
         "pnpm": ">=8.0.0"
-    },
-    "pnpm": {
-        "onlyBuiltDependencies": [
-            "@biomejs/biome",
-            "esbuild"
-        ]
     }
 }
