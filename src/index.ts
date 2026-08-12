@@ -16,7 +16,7 @@ import { pushCommands } from "~/slash_command/push_commands";
 const program = Effect.scoped(
     Effect.gen(function* () {
         yield* pushCommands([...commands, ...memeCommands]);
-        
+
         const client = yield* ClientContext;
 
         client
@@ -28,5 +28,4 @@ const program = Effect.scoped(
     }).pipe(Effect.provide(MainLive)),
 );
 
-// oxlint-disable-next-line no-console
 Effect.runPromise(program).catch((err) => console.log(err));
