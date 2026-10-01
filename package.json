@@ -18,17 +18,17 @@
         "command:clear": "tsx ./src/slash_command/clear.ts"
     },
     "dependencies": {
-        "@effect/platform-node": "4.0.0-rc.108",
+        "@effect/platform-node": "^4.0.0",
         "date-fns": "^4.4.0",
         "date-fns-tz": "^3.2.0",
-        "discord-api-types": "^0.38.55",
+        "discord-api-types": "^0.38.56",
         "discord.js": "^14.27.0",
-        "effect": "4.0.0-rc.108"
+        "effect": "^4.0.0"
     },
     "devDependencies": {
-        "@types/node": "^24.13.6",
+        "@types/node": "^24.19.0",
         "oxfmt": "^0.70.0",
-        "oxlint": "^1.85.0",
+        "oxlint": "^1.86.0",
         "tsx": "^4.23.15",
         "typescript": "^6.0.3"
     },
