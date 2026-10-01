@@ -18,19 +18,19 @@ export interface Env {
 }
 
 const config = Config.all({
-    TOKEN: Config.string("TOKEN"),
-    BOT_SENDING_CHANNEL_ID: Config.string("BOT_SENDING_CHANNEL_ID"),
-    BOT_SENDING_CHANNEL_NAME: Config.string("BOT_SENDING_CHANNEL_NAME"),
-    LOG_CHANNEL_ID: Config.string("LOG_CHANNEL_ID"),
-    ADMIN_ROLE_ID: Config.string("ADMIN_ROLE_ID"),
-    CLIENT_ID: Config.string("CLIENT_ID"),
-    GUILD_ID: Config.string("GUILD_ID"),
-    VOTE_ROLE_ID: Config.string("VOTE_ROLE_ID"),
-    TIMEZONE: Config.string("TIMEZONE"),
-    CAT_API_KEY: Config.string("CAT_API_KEY"),
-    EMOJI_KITCHEN_KEY: Config.string("EMOJI_KITCHEN_KEY"),
-    TURSO_DB_TOKEN: Config.string("TURSO_DB_TOKEN"),
-    TURSO_DB_URL: Config.string("TURSO_DB_URL"),
+    TOKEN: Config.String("TOKEN"),
+    BOT_SENDING_CHANNEL_ID: Config.String("BOT_SENDING_CHANNEL_ID"),
+    BOT_SENDING_CHANNEL_NAME: Config.String("BOT_SENDING_CHANNEL_NAME"),
+    LOG_CHANNEL_ID: Config.String("LOG_CHANNEL_ID"),
+    ADMIN_ROLE_ID: Config.String("ADMIN_ROLE_ID"),
+    CLIENT_ID: Config.String("CLIENT_ID"),
+    GUILD_ID: Config.String("GUILD_ID"),
+    VOTE_ROLE_ID: Config.String("VOTE_ROLE_ID"),
+    TIMEZONE: Config.String("TIMEZONE"),
+    CAT_API_KEY: Config.String("CAT_API_KEY"),
+    EMOJI_KITCHEN_KEY: Config.String("EMOJI_KITCHEN_KEY"),
+    TURSO_DB_TOKEN: Config.String("TURSO_DB_TOKEN"),
+    TURSO_DB_URL: Config.String("TURSO_DB_URL"),
 });
 
 export class EnvConfig extends Context.Service<EnvConfig, Env>()("EnvConfig") {}
