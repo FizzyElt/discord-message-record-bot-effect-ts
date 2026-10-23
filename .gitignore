@@ -2,3 +2,4 @@
 /drizzle
 .env
 .env.*
+/dist

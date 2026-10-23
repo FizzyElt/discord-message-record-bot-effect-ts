@@ -1,4 +1,4 @@
-import { Config, ConfigProvider, Context, Effect, Layer } from "effect";
+import { Config, Context, Layer } from "effect";
 // layer
 
 export interface Env {
@@ -35,11 +35,5 @@ const config = Config.all({
 
 export class EnvConfig extends Context.Service<EnvConfig, Env>()("EnvConfig") {}
 
-export const EnvLive = Layer.effect(
-    EnvConfig,
-    Effect.gen(function* () {
-        const provider = yield* ConfigProvider.fromDotEnv();
-
-        return yield* config.parse(provider);
-    }),
-);
+// 從 process.env 讀取：本機用 `tsx --env-file=.env`，docker 用 compose 的 env_file
+export const EnvLive = Layer.effect(EnvConfig, config);
