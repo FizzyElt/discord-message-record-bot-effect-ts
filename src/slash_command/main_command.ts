@@ -16,20 +16,20 @@ const createStringChoice = (
     };
 };
 
-export enum CommandName {
-    add_channels = "add_channels",
-    remove_channels = "remove_channels",
-    channel_list = "channel_list",
-    ban_user = "ban_user",
-    timeout_info = "timeout_info",
-    subscribe = "subscribe",
-    unsubscribe = "unsubscribe",
-    get_off_work = "get_off_work",
-}
+export const CommandName = {
+    ADD_CHANNELS: "add_channels",
+    REMOVE_CHANNELS: "remove_channels",
+    CHANNEL_LIST: "channel_list",
+    BAN_USER: "ban_user",
+    TIMEOUT_INFO: "timeout_info",
+    SUBSCRIBE: "subscribe",
+    UNSUBSCRIBE: "unsubscribe",
+    GET_OFF_WORK: "get_off_work",
+} as const;
 
 export const commands = [
     new SlashCommandBuilder()
-        .setName(CommandName.add_channels)
+        .setName(CommandName.ADD_CHANNELS)
         .setDescription("add exclusive channels")
         .addStringOption(
             new SlashCommandStringOption()
@@ -40,7 +40,7 @@ export const commands = [
         ),
 
     new SlashCommandBuilder()
-        .setName(CommandName.remove_channels)
+        .setName(CommandName.REMOVE_CHANNELS)
         .setDescription("remove exclusive channels")
         .addStringOption(
             new SlashCommandStringOption()
@@ -51,11 +51,11 @@ export const commands = [
         ),
 
     new SlashCommandBuilder()
-        .setName(CommandName.channel_list)
+        .setName(CommandName.CHANNEL_LIST)
         .setDescription("list exclusive channels"),
 
     new SlashCommandBuilder()
-        .setName(CommandName.ban_user)
+        .setName(CommandName.BAN_USER)
         .setDescription("ban user plus")
         .addStringOption(
             new SlashCommandStringOption()
@@ -72,11 +72,11 @@ export const commands = [
                 .setRequired(true),
         ),
 
-    new SlashCommandBuilder().setName(CommandName.timeout_info).setDescription("投票規則"),
+    new SlashCommandBuilder().setName(CommandName.TIMEOUT_INFO).setDescription("投票規則"),
 
-    new SlashCommandBuilder().setName(CommandName.subscribe).setDescription("成為民主的一員"),
-    new SlashCommandBuilder().setName(CommandName.unsubscribe).setDescription("取消民主的一員"),
+    new SlashCommandBuilder().setName(CommandName.SUBSCRIBE).setDescription("成為民主的一員"),
+    new SlashCommandBuilder().setName(CommandName.UNSUBSCRIBE).setDescription("取消民主的一員"),
     new SlashCommandBuilder()
-        .setName(CommandName.get_off_work)
+        .setName(CommandName.GET_OFF_WORK)
         .setDescription("今天這個逼班就上到這了"),
 ];

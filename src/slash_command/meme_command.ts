@@ -1,15 +1,15 @@
 import { SlashCommandBuilder, SlashCommandStringOption } from "discord.js";
 
-export enum MemeCommandName {
-    cat = "cat",
-    emoJiji = "emo_jiji",
-}
+export const MemeCommandName = {
+    CAT: "cat",
+    EMOJIJI: "emo_jiji",
+} as const;
 
 export const memeCommands = [
-    new SlashCommandBuilder().setName(MemeCommandName.cat).setDescription("貓貓"),
+    new SlashCommandBuilder().setName(MemeCommandName.CAT).setDescription("貓貓"),
 
     new SlashCommandBuilder()
-        .setName(MemeCommandName.emoJiji)
+        .setName(MemeCommandName.EMOJIJI)
         .setDescription("emoji_kitchen")
         .addStringOption(
             new SlashCommandStringOption()

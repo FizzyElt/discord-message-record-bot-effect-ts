@@ -9,13 +9,13 @@ import type {
 } from "discord.js";
 import type { NoSuchElementError, UnknownError } from "effect/Cause";
 
-import { Effect, pipe } from "effect";
+import { Effect, Match, pipe } from "effect";
 
 import {
     type ChannelService,
     type ClientContext,
     EnvConfig,
-    type MainLive,
+    MainLive,
     type TimeoutInfoListService,
     type VotingService,
 } from "~/services";
@@ -40,38 +40,33 @@ function commandOperation(
     NoSuchElementError | UnknownError,
     ClientContext | ChannelService | EnvConfig | TimeoutInfoListService | VotingService
 > {
-    switch (interaction.commandName) {
-        case CommandName.add_channels:
-            return addChannelFlow(interaction);
-        case CommandName.remove_channels:
-            return removeChannelFlow(interaction);
-        case CommandName.channel_list:
-            return listChannels(interaction);
-        case CommandName.ban_user:
-            return banUser(interaction);
-        case CommandName.get_off_work:
-            return getOffWork(interaction);
+    return Match.value(interaction.commandName).pipe(
+        Match.when(CommandName.ADD_CHANNELS, () => addChannelFlow(interaction)),
+        Match.when(CommandName.REMOVE_CHANNELS, () => removeChannelFlow(interaction)),
+        Match.when(CommandName.CHANNEL_LIST, () => listChannels(interaction)),
+        Match.when(CommandName.BAN_USER, () => banUser(interaction)),
+        Match.when(CommandName.GET_OFF_WORK, () => getOffWork(interaction)),
 
-        case CommandName.subscribe:
-            return pipe(
+        Match.when(CommandName.SUBSCRIBE, () =>
+            pipe(
                 Effect.service(EnvConfig),
                 Effect.flatMap(({ VOTE_ROLE_ID }) => subscribe(VOTE_ROLE_ID)(interaction)),
-            );
-        case CommandName.unsubscribe:
-            return pipe(
+            ),
+        ),
+
+        Match.when(CommandName.UNSUBSCRIBE, () =>
+            pipe(
                 Effect.service(EnvConfig),
                 Effect.flatMap(({ VOTE_ROLE_ID }) => unsubscribe(VOTE_ROLE_ID)(interaction)),
-            );
+            ),
+        ),
 
         // meme commands
-        case MemeCommandName.emoJiji:
-            return getEmoJiJi(interaction);
-        case MemeCommandName.cat:
-            return getCatImage(interaction);
+        Match.when(MemeCommandName.EMOJIJI, () => getEmoJiJi(interaction)),
+        Match.when(MemeCommandName.CAT, () => getCatImage(interaction)),
 
-        default:
-            return Effect.tryPromise(() => interaction.reply("不支援的指令"));
-    }
+        Match.orElse(() => Effect.tryPromise(() => interaction.reply("不支援的指令"))),
+    );
 }
 
 export const interactionCreateListener =
